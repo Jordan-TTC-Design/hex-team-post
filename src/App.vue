@@ -1,9 +1,9 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/posts">Posts</router-link> |
+  <div id="nav" class="flex-grow-1">
+    <router-link to="/">Home</router-link> | <router-link to="/posts">Posts</router-link> |
+    <router-link to="/login">Login</router-link> |
   </div>
-  <router-view/>
+  <router-view />
 </template>
 
 <style lang="scss">
