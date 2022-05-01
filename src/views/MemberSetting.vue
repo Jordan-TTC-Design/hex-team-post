@@ -3,37 +3,8 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const postList = ref([
-      {
-        _id: '123',
-        userName: '邊緣小傑',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>搶到想要的 NFT 啦！ya~~</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl:
-          'https://images.unsplash.com/photo-1505440484611-23c171ad6e96?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1154&q=80',
-      },
-      {
-        _id: '456',
-        userName: '波吉',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>我一定要成為很棒棒的國王</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl: '',
-      },
-      {
-        _id: '456',
-        userName: '阿爾敏',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>各位我有一個計畫</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl: '',
-      },
-    ]);
-    return { postList };
+    const pageNavSelect = ref(1);
+    return { pageNavSelect };
   },
 };
 </script>
@@ -45,10 +16,25 @@ export default {
           <h2 class="fs-6 fw-bold">修改個人資料</h2>
         </div>
         <ul class="contentNav">
-          <li class="contentNav__item active">暱稱修改</li>
-          <li class="contentNav__item">重設密碼</li>
+          <li
+            :class="{ active: pageNavSelect === 1 }"
+            class="contentNav__item"
+            @click="pageNavSelect = 1"
+          >
+            暱稱修改
+          </li>
+          <li
+            :class="{ active: pageNavSelect === 2 }"
+            class="contentNav__item"
+            @click="pageNavSelect = 2"
+          >
+            重設密碼
+          </li>
         </ul>
-        <div class="border border-dark p-6 d-flex flex-column align-items-center">
+        <div
+          v-if="pageNavSelect === 1"
+          class="border border-dark p-6 d-flex flex-column align-items-center"
+        >
           <div class="userImg mb-6">
             <img
               class="userImg__img"
@@ -92,6 +78,32 @@ export default {
               </div>
             </div>
             <button type="button" class="btn btn-primary">送出更新</button>
+          </div>
+        </div>
+        <div
+          v-if="pageNavSelect === 2"
+          class="border border-dark p-6 d-flex flex-column align-items-center"
+        >
+          <div class="w-75 d-flex flex-column gap-3">
+            <div>
+              <label for="setting-newPassword" class="form-label">修改密嗎</label>
+              <input
+                type="text"
+                class="form-control inputTool"
+                placeholder="請輸入新密碼"
+                id="setting-newPassword"
+              />
+            </div>
+            <div>
+              <label for="setting-rePassword" class="form-label">再次輸入</label>
+              <input
+                type="text"
+                class="form-control inputTool"
+                placeholder="再次輸入新密碼"
+                id="setting-rePassword"
+              />
+            </div>
+            <button type="button" class="btn btn-primary">重設密碼</button>
           </div>
         </div>
       </div>
