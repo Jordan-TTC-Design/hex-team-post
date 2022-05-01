@@ -31,6 +31,11 @@ const routes = [
     name: 'ThumbUpPage',
     component: () => import('../views/ThumbUpPage.vue'),
   },
+  {
+    path: '/follow',
+    name: 'FollowPage',
+    component: () => import('../views/FollowPage.vue'),
+  },
 ];
 
 const router = createRouter({
