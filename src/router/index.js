@@ -26,6 +26,11 @@ const routes = [
     name: 'MemberSetting',
     component: () => import('../views/MemberSetting.vue'),
   },
+  {
+    path: '/thumb-up',
+    name: 'ThumbUpPage',
+    component: () => import('../views/ThumbUpPage.vue'),
+  },
 ];
 
 const router = createRouter({

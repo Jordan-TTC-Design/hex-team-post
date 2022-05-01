@@ -1,7 +1,11 @@
 <script>
 import { ref } from 'vue';
+import PageTitleBox from '@/components/front/PageTitleBox.vue';
 
 export default {
+  components: {
+    PageTitleBox,
+  },
   setup() {
     const pageNavSelect = ref(1);
     return { pageNavSelect };
@@ -12,9 +16,7 @@ export default {
   <div class="container">
     <div class="row d-flex justify-content-center">
       <div class="col-7">
-        <div class="pageTitleBox mb-6">
-          <h2 class="fs-6 fw-bold">修改個人資料</h2>
-        </div>
+        <PageTitleBox class="mb-6" title-content="修改個人資料" />
         <ul class="contentNav">
           <li
             :class="{ active: pageNavSelect === 1 }"
@@ -111,26 +113,6 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
-.pageTitleBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem;
-  position: relative;
-  border: 2px solid #000;
-  background-color: white;
-  transform-style: preserve-3d;
-  &::after {
-    content: '';
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    border: 2px solid #000;
-    top: 0.35rem;
-    right: 0.35rem;
-    transform: translateZ(-1px);
-  }
-}
 .userImg {
   border-radius: 50%;
   border: 2px solid #000;

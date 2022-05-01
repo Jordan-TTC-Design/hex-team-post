@@ -1,6 +1,6 @@
 <script>
 import { ref } from 'vue';
-import PostCard from '@/components/PostCard.vue';
+import PostCard from '@/components/front/PostCard.vue';
 
 export default {
   components: {
@@ -71,5 +71,4 @@ export default {
     </div>
   </div>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
