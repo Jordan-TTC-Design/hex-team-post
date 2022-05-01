@@ -5,6 +5,7 @@
     <router-link to="/login">Login</router-link> |
     <router-link to="/thumb-up">ThumbUp</router-link> |
     <router-link to="/follow">追蹤名單</router-link> |
+    <router-link to="/person/123">個人頁面</router-link> |
   </div>
   <router-view />
 </template>
