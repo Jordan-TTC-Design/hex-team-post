@@ -21,6 +21,11 @@ const routes = [
     name: 'RegisterPage',
     component: () => import('../views/RegisterPage.vue'),
   },
+  {
+    path: '/member-setting',
+    name: 'MemberSetting',
+    component: () => import('../views/MemberSetting.vue'),
+  },
 ];
 
 const router = createRouter({
