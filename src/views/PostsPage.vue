@@ -2,15 +2,15 @@
 import { ref } from 'vue';
 import PostCard from '@/components/PostCard.vue';
 import Navbar from '@/components/Navbar.vue';
+import DynamicWall from '@/components/DynamicWall.vue';
 
 // 下面為測試元件註冊
-import UsersideCard from '@/components/UsersideCard.vue';
 
 export default {
   components: {
     PostCard,
     Navbar,
-    UsersideCard,
+    DynamicWall,
   },
   setup() {
     const postList = ref([
@@ -50,38 +50,43 @@ export default {
 };
 </script>
 <template>
-  <Navbar :post-item="postList" />
-  <div class="container">
-    <div class="row d-flex justify-content-center">
-      <div class="col-7">
-        <div class="d-flex gap-3 mb-4">
-          <select class="selectTool form-select">
-            <option selected value="最新">最新貼文</option>
-          </select>
-          <div class="input-group inputToolContainer flex-grow-1">
-            <input
-              type="text"
-              class="form-control inputTool"
-              placeholder="搜尋貼文"
-              aria-label="Username"
-              aria-describedby="basic-addon1"
-            />
-            <button class="btn btn-primary" type="button">
-              <i class="bi bi-search text-white"></i>
-            </button>
+  <div>
+    <Navbar :post-item="postList" />
+    <div class="posts-page container">
+      <div class="row d-flex justify-content-between">
+        <div class="col-8">
+          <div class="d-flex gap-3 mb-4">
+            <select class="selectTool form-select">
+              <option selected value="最新">最新貼文</option>
+            </select>
+            <div class="input-group inputToolContainer flex-grow-1">
+              <input
+                type="text"
+                class="form-control inputTool"
+                placeholder="搜尋貼文"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+              <button class="btn btn-primary" type="button">
+                <i class="bi bi-search text-white"></i>
+              </button>
+            </div>
+          </div>
+          <div class="d-flex flex-column gap-4">
+            <template v-for="postItem in postList" :key="postItem._id">
+              <PostCard :post-item="postItem" />
+            </template>
           </div>
         </div>
-        <div class="d-flex flex-column gap-4">
-          <template v-for="postItem in postList" :key="postItem._id">
-            <PostCard :post-item="postItem" />
-          </template>
+        <div class="col-4">
+          <DynamicWall :post-item="postList" />
         </div>
-      </div>
-      <div class="col-7">
-        <UsersideCard :post-item="postList" />
       </div>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
+.posts-page {
+  width: 872px;
+}
 </style>

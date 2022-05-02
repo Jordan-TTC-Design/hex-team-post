@@ -7,7 +7,7 @@ export default {
 </script>
 <template>
   <div class="menu container-fluid">
-    <div class="content">
+    <div class="content container">
       <div class="navbar__title">
         <a href="">MetaWall</a>
       </div>
@@ -27,12 +27,12 @@ export default {
 </template>
 <style lang="scss" scoped>
 .menu {
-  width: 100vw;
+  // width: 100vw;
   border-bottom: 4px solid #000400;
   margin-bottom: 49px;
 }
 .content {
-  max-width: 730px;
+  max-width: 872px;
   margin: 0px auto;
   margin-bottom: 10px;
   display: flex;
