@@ -1,10 +1,16 @@
 <script>
 import { ref } from 'vue';
 import PostCard from '@/components/PostCard.vue';
+import Navbar from '@/components/Navbar.vue';
+
+// 下面為測試元件註冊
+import UsersideCard from '@/components/UsersideCard.vue';
 
 export default {
   components: {
     PostCard,
+    Navbar,
+    UsersideCard,
   },
   setup() {
     const postList = ref([
@@ -14,7 +20,8 @@ export default {
         userImgUrl:
           'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
         creatAt: '2022/1/10 12:00',
-        postContent: '<p>搶到想要的 NFT 啦！ya~~</p><p>搶到想要的 NFT 啦！ya~~</p>',
+        postContent:
+          '<p>搶到想要的 NFT 啦！ya~~</p><p>搶到想要的 NFT 啦！ya~~</p>',
         postImgUrl:
           'https://images.unsplash.com/photo-1505440484611-23c171ad6e96?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1154&q=80',
       },
@@ -24,7 +31,8 @@ export default {
         userImgUrl:
           'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
         creatAt: '2022/1/10 12:00',
-        postContent: '<p>我一定要成為很棒棒的國王</p><p>搶到想要的 NFT 啦！ya~~</p>',
+        postContent:
+          '<p>我一定要成為很棒棒的國王</p><p>搶到想要的 NFT 啦！ya~~</p>',
         postImgUrl: '',
       },
       {
@@ -42,6 +50,7 @@ export default {
 };
 </script>
 <template>
+  <Navbar :post-item="postList" />
   <div class="container">
     <div class="row d-flex justify-content-center">
       <div class="col-7">
@@ -67,6 +76,9 @@ export default {
             <PostCard :post-item="postItem" />
           </template>
         </div>
+      </div>
+      <div class="col-7">
+        <UsersideCard :post-item="postList" />
       </div>
     </div>
   </div>
