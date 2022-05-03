@@ -1,17 +1,23 @@
 <script>
 import userStore from '@/stores/userStore';
+import statusStore from '@/stores/statusStore';
 
 export default {
   setup() {
     const { user } = userStore();
-    return { user };
+    const statusData = statusStore();
+    return { user, statusData };
   },
 };
 </script>
 
 <template>
   <div class="dynamic-wall rounded d-flex flex-column gap-2 px-3 py-3">
-    <button type="button" class="btn--post btn d-flex align-items-center justify-content-center">
+    <button
+      type="button"
+      @click="statusData.newPostModel = true"
+      class="btn--post btn d-flex align-items-center justify-content-center"
+    >
       <p class="text-white">張貼動態</p>
     </button>
     <RouterLink to="/my-page" class="d-flex align-items-center gap-2 py-2">
