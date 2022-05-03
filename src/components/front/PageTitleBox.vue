@@ -6,11 +6,13 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="pageTitleBox">
     <h2 class="pageTitleBox__title">{{ titleContent }}</h2>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .pageTitleBox {
   display: flex;

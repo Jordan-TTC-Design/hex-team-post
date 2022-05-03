@@ -12,6 +12,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="container">
     <div class="row d-flex justify-content-center">
@@ -112,6 +113,7 @@ export default {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .userImg {
   border-radius: 50%;

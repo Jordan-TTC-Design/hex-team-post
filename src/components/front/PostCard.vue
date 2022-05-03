@@ -6,6 +6,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="postBox gap-3">
     <div class="userBox gap-3">
@@ -26,6 +27,7 @@ export default {
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .postBox {
   display: flex;
