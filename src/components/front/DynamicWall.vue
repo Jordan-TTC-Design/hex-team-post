@@ -1,71 +1,53 @@
 <script>
+import userStore from '@/stores/userStore';
+
 export default {
-  props: ['post-item'],
-  setup() {},
+  setup() {
+    const { user } = userStore();
+    return { user };
+  },
 };
 </script>
 
 <template>
-  <div class="dynamic-wall d-flex align-items-center flex-column">
-    <div class="btn d-flex align-items-center justify-content-center">
-      <p>{{ '張貼動態' }}</p>
-    </div>
-    <div class="dynamic">
-      <div class="d-flex ml-2 mb-3 dynamic__name">
-        <a href=""
-          ><img :src="postItem[0].userImgUrl" :alt="`${postItem[0].userName}`"
-        /></a>
-        <p>{{ postItem[0].userName }}</p>
-      </div>
-      <div class="d-flex ml-2 mb-3 dynamic__list">
-        <a href=""><i class="bi bi-bell"></i></a>
-        <p>{{ '追蹤名單' }}</p>
-      </div>
-      <div class="d-flex ml-2 mb-3 dynamic__favorite-article">
-        <a href=""><i class="bi bi-hand-thumbs-up"></i></a>
-        <p>{{ '我按讚的文章' }}</p>
-      </div>
-    </div>
+  <div class="dynamic-wall rounded d-flex flex-column gap-2 px-3 py-3">
+    <button type="button" class="btn--post btn d-flex align-items-center justify-content-center">
+      <p class="text-white">張貼動態</p>
+    </button>
+    <RouterLink to="/person/123" class="d-flex align-items-center gap-2 py-2">
+      <img class="userPhoto" :src="user.photo" :alt="user.name" />
+      <p>{{ user.name }}</p>
+    </RouterLink>
+    <RouterLink to="/follow" class="d-flex align-items-center gap-2 py-2">
+      <i class="bi bi-bell"></i>
+      <p>追蹤名單</p>
+    </RouterLink>
+    <RouterLink to="/thumb-up" class="d-flex align-items-center gap-2 py-2">
+      <i class="bi bi-hand-thumbs-up"></i>
+      <p>我按讚的文章</p>
+    </RouterLink>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .dynamic-wall {
-  width: 100%;
   border: 2px solid #000400;
-  .btn {
+  .btn--post {
     cursor: pointer;
     display: block;
-    margin: 20px auto;
-    width: 220px;
-    height: 54px;
     border-radius: 8px;
     border: 2px solid #000400;
     background: #03438d 0% 0% no-repeat padding-box;
     box-shadow: -2px 2px 0px #000400;
-    p {
-      color: white;
-      line-height: 3;
-    }
   }
-  .dynamic {
-    width: 220px;
-    display: block;
-    margin: 0 auto;
-    p {
-      color: #000400;
-      line-height: 3;
-      margin-left: 16px;
-    }
-    img {
-      width: 50px;
-      height: 50px;
-      border: 2px solid #000400;
-      border-radius: 100%;
-      object-fit: cover;
-      object-position: center;
-      background: #e2edfa;
-    }
-  }
+}
+.userPhoto {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #000400;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #e2edfa;
 }
 </style>

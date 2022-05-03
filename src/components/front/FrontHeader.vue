@@ -1,14 +1,10 @@
 <script>
-import { ref } from 'vue';
+import userStore from '@/stores/userStore';
 
 export default {
   setup() {
-    const userData = ref({
-      name: 'Jordan',
-      photo:
-        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-    });
-    return { userData };
+    const { user } = userStore();
+    return { user };
   },
 };
 </script>
@@ -20,8 +16,8 @@ export default {
         <a href="">MetaWall</a>
       </div>
       <div class="navbar__member d-flex justify-content-center align-items-center">
-        <img :src="userData.photo" :alt="`${userData.name}`" width="30px" height="30px" />
-        <p class="ms-2">{{ userData.name || '尚未的入' }}</p>
+        <img :src="user.photo" :alt="user.name" width="30px" height="30px" />
+        <p class="ms-2">{{ user.name || '尚未的入' }}</p>
       </div>
     </div>
   </div>
