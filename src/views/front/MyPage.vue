@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import PostCard from '@/components/front/PostCard.vue';
 import DynamicWall from '@/components/front/DynamicWall.vue';
+import userStore from '@/stores/userStore';
 
 export default {
   components: {
@@ -9,6 +10,7 @@ export default {
     DynamicWall,
   },
   setup() {
+    const userData = userStore();
     const postList = ref([
       {
         _id: '123',
@@ -39,7 +41,7 @@ export default {
         postImgUrl: '',
       },
     ]);
-    return { postList };
+    return { postList, userData };
   },
 };
 </script>
@@ -50,18 +52,14 @@ export default {
       <div class="col-8">
         <div class="personBox mb-3">
           <div class="personImgBox">
-            <img
-              class="personImgBox__img"
-              src="https://images.unsplash.com/photo-1648737154547-b0dfd281c51e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-              alt="用戶照片"
-            />
+            <img class="personImgBox__img" :src="userData.user.photo" alt="用戶照片" />
           </div>
           <div class="flex-grow-1 d-flex justify-content-between align-items-center p-3">
             <div>
-              <p class="text--title">阿爾敏</p>
+              <p class="text--title">{{ userData.user.name }}</p>
               <p class="text--subTxt">9898人追蹤</p>
             </div>
-            <button type="button" class="btn btn-primary">追蹤</button>
+            <button type="button" class="btn btn-outline-dark">設定</button>
           </div>
         </div>
         <div class="d-flex gap-3 mb-4">
@@ -121,6 +119,7 @@ export default {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 0.5rem 0 0 0.5rem;
     }
   }
 }

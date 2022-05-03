@@ -1,10 +1,12 @@
 <script>
 import { ref } from 'vue';
 import PageTitleBox from '@/components/front/PageTitleBox.vue';
+import DynamicWall from '@/components/front/DynamicWall.vue';
 
 export default {
   components: {
     PageTitleBox,
+    DynamicWall,
   },
   setup() {
     const thumbUpData = ref([
@@ -19,8 +21,8 @@ export default {
 
 <template>
   <div class="container">
-    <div class="row d-flex justify-content-center">
-      <div class="col-7">
+    <div class="row">
+      <div class="col-8">
         <PageTitleBox class="mb-6" title-content="追蹤名單" />
         <ul class="d-flex flex-column gap-3">
           <li v-for="(item, index) in thumbUpData" :key="index">
@@ -40,6 +42,9 @@ export default {
             </div>
           </li>
         </ul>
+      </div>
+      <div class="col-4">
+        <DynamicWall />
       </div>
     </div>
   </div>

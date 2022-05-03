@@ -14,7 +14,7 @@ export default {
     <button type="button" class="btn--post btn d-flex align-items-center justify-content-center">
       <p class="text-white">張貼動態</p>
     </button>
-    <RouterLink to="/person/123" class="d-flex align-items-center gap-2 py-2">
+    <RouterLink to="/my-page" class="d-flex align-items-center gap-2 py-2">
       <img class="userPhoto" :src="user.photo" :alt="user.name" />
       <p>{{ user.name }}</p>
     </RouterLink>
