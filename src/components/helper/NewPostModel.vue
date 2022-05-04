@@ -1,14 +1,39 @@
 <script>
+import { ref } from 'vue';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
+import userStore from '@/stores/userStore';
+import FromArticle from '@/components/helper/FromArticle.vue';
 
 export default {
+  components: {
+    FromArticle,
+  },
   setup() {
+    const userData = userStore();
     const postsData = postsStore();
     const statusData = statusStore();
+    const imgUploadGetter = ref(null);
+    const newPost = ref({
+      postContent: '',
+      postImgUrl: '',
+    });
+    function toogleGetter() {
+      const [file] = imgUploadGetter.value.files;
+      console.log(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        newPost.value.postImgUrl = e.target.result;
+      };
+    }
     return {
+      imgUploadGetter,
       postsData,
       statusData,
+      newPost,
+      userData,
+      toogleGetter,
     };
   },
 };
@@ -24,44 +49,51 @@ export default {
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.newPostModel === true }">
-      <div class="flex flex-grow justify-between sm:flex-row flex-col overflow-auto sm:mb-0 mb-4">
-        <div class="flex flex-col gap-4 md:p-8 p-6">
-          <div class="w-full mb-6 md:mb-0">
-            <label
-              class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 pl-2"
-              for="inputId"
-            >
-              <slot></slot>
-            </label>
-            <textarea
-              class="appearance-none bg-transparent border border-gray-300
-              w-full text-gray-700 py-2 px-2 leading-tight focus:outline-none"
-              id="inputId"
-              rows="2"
-              value="modelValue"
-              placeholder="textHolder"
-            ></textarea>
-          </div>
-          <p>
-            {{ 22 }}
-          </p>
-        </div>
+      <div class="position-relative border-bottom border-dark p-4 d-flex justify-content-center">
+        <h4 class="fs-5 text-center">新增貼文</h4>
+        <button
+          @click="statusData.newPostModel = false"
+          type="button"
+          class="btn position-absolute top-50 end-0 translate-middle"
+        >
+          x
+        </button>
       </div>
-      <div class="flex sm:flex-row flex-col sm:gap-4 gap-2 p-4 pt-0">
-        <button
-          type="button"
-          @click="statusData.newPostModel = false"
-          class="w-full bg-black text-white rounded py-2 px-3 hover:border-gray-300"
-        >
-          確定
-        </button>
-        <button
-          type="button"
-          @click="statusData.newPostModel = false"
-          class="w-full border border-gray-400 rounded py-2 px-3 hover:border-gray-300"
-        >
-          取消
-        </button>
+      <div class="d-flex flex-column gap-2 p-4 h-75 flex-grow-1">
+        <div class="d-flex d-flex align-items-center gap-2 py-2">
+          <img class="userPhoto" :src="userData.user.photo" :alt="userData.user.name" />
+          <p>{{ userData.user.name }}</p>
+        </div>
+        <div class="newPostContentBox">
+          <FromArticle
+            input-id="productContent"
+            input-name="創作內容或文章"
+            text-holder="在想什麼呢？"
+            v-model="newPost.postContent"
+          />
+          <div v-show="newPost.postImgUrl.length > 0" class="newPost__imgBox">
+            <img :src="newPost.postImgUrl" alt="貼文圖片" class="newPost__imgBox__img" />
+          </div>
+        </div>
+        <div class="d-flex flex-column gap-2">
+          <label for="imgUploader" class="newPostUpLoader">{{
+            newPost.postImgUrl.length > 0 ? '變更圖片' : '新增圖片'
+          }}</label>
+          <input
+            ref="imgUploadGetter"
+            id="imgUploader"
+            class="d-none"
+            type="file"
+            @change="toogleGetter"
+          />
+          <button
+            type="button"
+            @click="statusData.newPostModel = false"
+            class="w-100 bg-black text-white rounded py-2 px-3"
+          >
+            發布
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -85,7 +117,6 @@ export default {
     top: 0;
     left: 0;
   }
-
   .popModal {
     opacity: 1;
     z-index: 100;
@@ -97,6 +128,22 @@ export default {
     top: 40%;
     transition: all 0.3s;
     background-color: #fff;
+    width: 600px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 998.98px) {
+      width: 60vw;
+    }
+    @media (max-width: 767.98px) {
+      width: 75vw;
+    }
+    @media (max-width: 575.98px) {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
   }
 }
 
@@ -110,6 +157,51 @@ export default {
     left: 50%;
     top: 50%;
     transform: scaleY(1) translate(-50%, -50%);
+  }
+}
+.userPhoto {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #000400;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: #e2edfa;
+}
+.newPostContentBox {
+  flex-shrink: 1;
+  overflow-y: auto;
+}
+.newPostContentBox::-webkit-scrollbar {
+  border: none;
+  width: 0.5rem;
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 0.5rem;
+}
+.newPostContentBox::-webkit-scrollbar-thumb{
+  background-color: #dddddd;
+  border-radius: 0.5rem;
+}
+.newPostUpLoader {
+  border: 1px solid #e2e2e2;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  display: block;
+}
+.newPost__imgBox {
+  max-width: 100%;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f7;
+  border: 1px solid #e2e2e2;
+  border-radius: 0.5rem;
+  &__img {
+    max-width: 95%;
+    max-height: 95%;
   }
 }
 </style>
