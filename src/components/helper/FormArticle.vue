@@ -1,26 +1,51 @@
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
   props: ['modelValue', 'input-id', 'input-name', 'text-holder'],
-  setup(props) {
+  emits: ['target-text'],
+  setup(props, { emit }) {
     const editor = ref(ClassicEditor);
-    const editorData = ref('<p>請輸入</p>');
+    const editorData = ref('');
+    watch(editorData, (newValue) => {
+      console.log(newValue);
+      emit('target-text', newValue);
+    });
     const editorConfig = ref({
-      toolbar: [],
+      toolbar: ['heading', '|', 'bold', 'italic', 'link'],
       language: 'zh',
       placeholder: `${props.textHolder}`,
+      heading: {
+        options: [
+          {
+            model: 'paragraph',
+            title: 'Paragraph',
+            class: 'ck-heading_paragraph',
+          },
+          {
+            model: 'heading1',
+            view: 'h2',
+            title: 'Heading 1',
+            class: 'ck-heading_heading1',
+          },
+          {
+            model: 'heading2',
+            view: 'h3',
+            title: 'Heading 2',
+            class: 'ck-heading_heading2',
+          },
+        ],
+      },
     });
-    return { editor, editorData, editorConfig };
+    return { editor, editorConfig, editorData };
   },
 };
 </script>
 
 <template>
-  <div class="w-full mb-6 md:mb-0 form__editer">
+  <div class="form__editer">
     <ckeditor
-      class="articalInputArea"
       :editor="editor"
       :config="editorConfig"
       :id="inputId"

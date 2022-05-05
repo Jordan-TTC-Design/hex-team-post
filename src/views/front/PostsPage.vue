@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import PostCard from '@/components/front/PostCard.vue';
 import DynamicWall from '@/components/front/DynamicWall.vue';
+import postsStore from '@/stores/postsStore';
 
 export default {
   components: {
@@ -9,6 +10,8 @@ export default {
     DynamicWall,
   },
   setup() {
+    const postsData = postsStore();
+    postsData.getPosts();
     const postList = ref([
       {
         _id: '123',
@@ -39,7 +42,7 @@ export default {
         postImgUrl: '',
       },
     ]);
-    return { postList };
+    return { postList, postsData };
   },
 };
 </script>
@@ -66,7 +69,7 @@ export default {
           </div>
         </div>
         <div class="d-flex flex-column gap-4">
-          <template v-for="postItem in postList" :key="postItem._id">
+          <template v-for="postItem in postsData.posts" :key="postItem._id">
             <PostCard :post-item="postItem" />
           </template>
         </div>
@@ -78,5 +81,4 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

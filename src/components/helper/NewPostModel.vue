@@ -3,11 +3,11 @@ import { ref } from 'vue';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
-import FromArticle from '@/components/helper/FromArticle.vue';
+import FormArticle from '@/components/helper/FormArticle.vue';
 
 export default {
   components: {
-    FromArticle,
+    FormArticle,
   },
   setup() {
     const userData = userStore();
@@ -15,6 +15,7 @@ export default {
     const statusData = statusStore();
     const imgUploadGetter = ref(null);
     const newPost = ref({
+      user: '62729881e8a0d4cba032e7bc',
       postContent: '',
       postImgUrl: '',
     });
@@ -27,6 +28,16 @@ export default {
         newPost.value.postImgUrl = e.target.result;
       };
     }
+    function toogleAddPost() {
+      // postsData.targetPost.postContent = newPost.value.postContent;
+      // postsData.targetPost.postImgUrl = newPost.value.postImgUrl;
+      console.log(newPost.value);
+      // postsData.addPost(newPost.value);
+    }
+    function getPost(ff) {
+      console.log(ff);
+      // newPost.value.postContent = ff;
+    }
     return {
       imgUploadGetter,
       postsData,
@@ -34,6 +45,8 @@ export default {
       newPost,
       userData,
       toogleGetter,
+      toogleAddPost,
+      getPost,
     };
   },
 };
@@ -65,11 +78,12 @@ export default {
           <p>{{ userData.user.name }}</p>
         </div>
         <div class="newPostContentBox">
-          <FromArticle
-            input-id="productContent"
-            input-name="創作內容或文章"
+          <FormArticle
+            input-id="postContent"
+            input-name="postContent"
             text-holder="在想什麼呢？"
             v-model="newPost.postContent"
+            @targetText="getPost"
           />
           <div v-show="newPost.postImgUrl.length > 0" class="newPost__imgBox">
             <img :src="newPost.postImgUrl" alt="貼文圖片" class="newPost__imgBox__img" />
@@ -88,7 +102,7 @@ export default {
           />
           <button
             type="button"
-            @click="statusData.newPostModel = false"
+            @click="toogleAddPost"
             class="w-100 bg-black text-white rounded py-2 px-3"
           >
             發布
@@ -170,15 +184,16 @@ export default {
 }
 .newPostContentBox {
   flex-shrink: 1;
+  flex-grow: 1;
   overflow-y: auto;
 }
 .newPostContentBox::-webkit-scrollbar {
   border: none;
   width: 0.5rem;
-  background-color: rgba(0,0,0,0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 0.5rem;
 }
-.newPostContentBox::-webkit-scrollbar-thumb{
+.newPostContentBox::-webkit-scrollbar-thumb {
   background-color: #dddddd;
   border-radius: 0.5rem;
 }

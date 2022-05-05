@@ -10,9 +10,9 @@ export default {
 <template>
   <div class="postBox gap-3">
     <div class="userBox gap-3">
-      <img class="userBox__pic" :src="postItem.userImgUrl" :alt="`${postItem.userName}照片`" />
+      <img class="userBox__pic" :src="postItem.user.photo" :alt="`${postItem.user.name}照片`" />
       <div>
-        <p class="userBox__title">{{ postItem.userName }}</p>
+        <p class="userBox__title">{{ postItem.user.name }}</p>
         <p class="userBox__subTxt">{{ postItem.creatAt }}</p>
       </div>
     </div>
