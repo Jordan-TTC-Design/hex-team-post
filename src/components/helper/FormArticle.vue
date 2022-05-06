@@ -1,17 +1,15 @@
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
 export default {
   props: ['modelValue', 'input-id', 'input-name', 'text-holder'],
-  emits: ['target-text'],
+  emits: ['target-text', 'update:modelValue'],
   setup(props, { emit }) {
     const editor = ref(ClassicEditor);
-    const editorData = ref('');
-    watch(editorData, (newValue) => {
-      console.log(newValue);
-      emit('target-text', newValue);
-    });
+    function changeValue(e) {
+      emit('update:modelValue', e);
+    }
     const editorConfig = ref({
       toolbar: ['heading', '|', 'bold', 'italic', 'link'],
       language: 'zh',
@@ -38,7 +36,11 @@ export default {
         ],
       },
     });
-    return { editor, editorConfig, editorData };
+    return {
+      editor,
+      editorConfig,
+      changeValue,
+    };
   },
 };
 </script>
@@ -51,6 +53,7 @@ export default {
       :id="inputId"
       :name="inputName"
       :value="modelValue"
+      @input="changeValue"
     ></ckeditor>
   </div>
 </template>

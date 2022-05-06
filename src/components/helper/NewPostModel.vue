@@ -16,23 +16,25 @@ export default {
     const imgUploadGetter = ref(null);
     const newPost = ref({
       user: '62729881e8a0d4cba032e7bc',
-      postContent: '',
+      postContent: '123',
       postImgUrl: '',
     });
+    const imgData = ref(null);
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
-      console.log(file);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        newPost.value.postImgUrl = e.target.result;
-      };
+      imgData.value = file;
+      // console.log(file);
+      // const reader = new FileReader();
+      // reader.readAsDataURL(file);
+      // reader.onload = (e) => {
+      //   newPost.value.postImgUrl = e.target.result;
+      // };
     }
     function toogleAddPost() {
       // postsData.targetPost.postContent = newPost.value.postContent;
       // postsData.targetPost.postImgUrl = newPost.value.postImgUrl;
       console.log(newPost.value);
-      // postsData.addPost(newPost.value);
+      postsData.upLoadImage(imgData.value);
     }
     function getPost(ff) {
       console.log(ff);
@@ -47,6 +49,7 @@ export default {
       toogleGetter,
       toogleAddPost,
       getPost,
+      imgData,
     };
   },
 };

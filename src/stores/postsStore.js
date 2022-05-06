@@ -37,6 +37,20 @@ const postsStore = defineStore({
           console.dir(err);
         });
     },
+    upLoadImage(data) {
+      console.log(data);
+      const formdata = new FormData();
+      formdata.append('image', data);
+      axios
+        .post('https://hex-post-w4.herokuapp.com/other/image', formdata)
+        .then((res) => {
+          console.log(res.data);
+          // return res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
   },
 });
 export default postsStore;
