@@ -1,4 +1,5 @@
 <script>
+import { ref } from 'vue';
 import PostCard from '@/components/front/PostCard.vue';
 import DynamicWall from '@/components/front/DynamicWall.vue';
 import postsStore from '@/stores/postsStore';
@@ -10,8 +11,19 @@ export default {
   },
   setup() {
     const postsData = postsStore();
+    const postSort = ref('asc');
+    const postQuery = ref('');
     postsData.getPosts();
-    return { postsData };
+    function sortPostsData() {
+      postsData.getPosts(postSort.value, postQuery.value);
+    }
+
+    return {
+      postSort,
+      postQuery,
+      postsData,
+      sortPostsData,
+    };
   },
 };
 </script>
@@ -21,18 +33,18 @@ export default {
     <div class="row">
       <div class="col-8">
         <div class="d-flex gap-3 mb-4">
-          <select class="selectTool form-select">
-            <option selected value="最新">最新貼文</option>
+          <select class="selectTool form-select" v-model="postSort" @change="sortPostsData">
+            <option selected value="asc">最新貼文</option>
+            <option selected value="desc">過去貼文</option>
           </select>
           <div class="input-group inputToolContainer flex-grow-1">
             <input
               type="text"
               class="form-control inputTool"
               placeholder="搜尋貼文"
-              aria-label="Username"
-              aria-describedby="basic-addon1"
+              v-model="postQuery"
             />
-            <button class="btn btn-primary" type="button">
+            <button class="btn btn-primary" type="button" @click="sortPostsData">
               <i class="bi bi-search text-white"></i>
             </button>
           </div>
@@ -82,7 +94,7 @@ export default {
       background-color: red;
     }
     &:nth-child(2) {
-      background-color: #FAA722;
+      background-color: #faa722;
     }
     &:nth-child(3) {
       background-color: green;

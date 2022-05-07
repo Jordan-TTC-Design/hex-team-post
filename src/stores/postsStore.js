@@ -13,9 +13,10 @@ const postsStore = defineStore({
   }),
   getters: {},
   actions: {
-    getPosts() {
+    getPosts(timeSort = 'asc', query = '') {
+      console.log(`https://hex-post-w4.herokuapp.com/posts/all?timeSort=${timeSort}&q=${query}`);
       axios
-        .get('https://hex-post-w4.herokuapp.com/posts/all')
+        .get(`https://hex-post-w4.herokuapp.com/posts/all?timeSort=${timeSort}&q=${query}`)
         .then((res) => {
           console.log(res.data);
           this.posts = res.data.data;
