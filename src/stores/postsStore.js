@@ -19,7 +19,6 @@ const postsStore = defineStore({
         .then((res) => {
           console.log(res.data);
           this.posts = res.data.data;
-          // return res.data;
         })
         .catch((err) => {
           console.dir(err);
@@ -31,25 +30,29 @@ const postsStore = defineStore({
         .post('https://hex-post-w4.herokuapp.com/posts', data)
         .then((res) => {
           console.log(res.data);
-          // return res.data;
+          return res.data;
         })
         .catch((err) => {
           console.dir(err);
         });
     },
-    upLoadImage(data) {
-      console.log(data);
+    async upLoadImage(data) {
+      let resultData = null;
       const formdata = new FormData();
       formdata.append('image', data);
-      axios
-        .post('https://hex-post-w4.herokuapp.com/other/image', formdata)
-        .then((res) => {
-          console.log(res.data);
-          // return res.data;
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+      const config = {
+        method: 'POST',
+        url: 'https://hex-post-w4.herokuapp.com/other/image',
+        data: formdata,
+      };
+      try {
+        const res = await axios(config);
+        console.log(res);
+        resultData = res.data;
+      } catch (err) {
+        console.dir(err);
+      }
+      return resultData;
     },
   },
 });

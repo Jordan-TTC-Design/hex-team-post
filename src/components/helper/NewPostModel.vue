@@ -14,41 +14,57 @@ export default {
     const postsData = postsStore();
     const statusData = statusStore();
     const imgUploadGetter = ref(null);
+    const editPhoto = ref(false);
     const newPost = ref({
       user: '62729881e8a0d4cba032e7bc',
-      postContent: '123',
+      postContent: '',
       postImgUrl: '',
     });
     const imgData = ref(null);
+    const imgHistory = ref('');
+    // function resetData() {
+    //   imgHistory.value = '';
+    //   editPhoto.value = false;
+    // }
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
       imgData.value = file;
-      // console.log(file);
-      // const reader = new FileReader();
-      // reader.readAsDataURL(file);
-      // reader.onload = (e) => {
-      //   newPost.value.postImgUrl = e.target.result;
-      // };
+      imgHistory.value = newPost.value.postImgUrl;
+      const imgShow = window.URL || window.webkitURL;
+      newPost.value.postImgUrl = imgShow.createObjectURL(imgData.value);
+      editPhoto.value = true;
+      console.log(editPhoto.value);
+      console.log(newPost.value.postImgUrl, newPost.value.postImgUrl.length);
     }
-    function toogleAddPost() {
-      // postsData.targetPost.postContent = newPost.value.postContent;
-      // postsData.targetPost.postImgUrl = newPost.value.postImgUrl;
-      console.log(newPost.value);
-      postsData.upLoadImage(imgData.value);
+    async function toogleAddPost() {
+      console.log(editPhoto.value);
+      if (editPhoto.value === true) {
+        try {
+          const result = await postsData.upLoadImage(imgData.value);
+          console.log(result);
+          if (result.status) {
+            newPost.value.postImgUrl = result.data;
+          }
+          postsData.addPost(newPost.value);
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        newPost.value.postImgUrl = imgHistory.value;
+        postsData.addPost(newPost.value);
+      }
+      // resetData();
     }
-    function getPost(ff) {
-      console.log(ff);
-      // newPost.value.postContent = ff;
-    }
+
     return {
       imgUploadGetter,
       postsData,
       statusData,
+      editPhoto,
       newPost,
       userData,
       toogleGetter,
       toogleAddPost,
-      getPost,
       imgData,
     };
   },
@@ -86,7 +102,6 @@ export default {
             input-name="postContent"
             text-holder="在想什麼呢？"
             v-model="newPost.postContent"
-            @targetText="getPost"
           />
           <div v-show="newPost.postImgUrl.length > 0" class="newPost__imgBox">
             <img :src="newPost.postImgUrl" alt="貼文圖片" class="newPost__imgBox__img" />
@@ -102,6 +117,7 @@ export default {
             class="d-none"
             type="file"
             @change="toogleGetter"
+            accept="image/png, image/jpeg"
           />
           <button
             type="button"

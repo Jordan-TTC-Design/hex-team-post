@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 export default {
   props: ['modelValue', 'input-id', 'input-name', 'text-holder'],
-  emits: ['target-text', 'update:modelValue'],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
     const editor = ref(ClassicEditor);
     function changeValue(e) {
