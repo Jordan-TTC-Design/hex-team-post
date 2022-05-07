@@ -1,5 +1,4 @@
 <script>
-import { ref } from 'vue';
 import PostCard from '@/components/front/PostCard.vue';
 import DynamicWall from '@/components/front/DynamicWall.vue';
 import postsStore from '@/stores/postsStore';
@@ -12,37 +11,7 @@ export default {
   setup() {
     const postsData = postsStore();
     postsData.getPosts();
-    const postList = ref([
-      {
-        _id: '123',
-        userName: '邊緣小傑',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>搶到想要的 NFT 啦！ya~~</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl:
-          'https://images.unsplash.com/photo-1505440484611-23c171ad6e96?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1154&q=80',
-      },
-      {
-        _id: '456',
-        userName: '波吉',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>我一定要成為很棒棒的國王</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl: '',
-      },
-      {
-        _id: '456',
-        userName: '阿爾敏',
-        userImgUrl:
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-        creatAt: '2022/1/10 12:00',
-        postContent: '<p>各位我有一個計畫</p><p>搶到想要的 NFT 啦！ya~~</p>',
-        postImgUrl: '',
-      },
-    ]);
-    return { postList, postsData };
+    return { postsData };
   },
 };
 </script>
@@ -72,6 +41,16 @@ export default {
           <template v-for="postItem in postsData.posts" :key="postItem._id">
             <PostCard :post-item="postItem" />
           </template>
+          <div v-show="postsData.posts.length === 0" class="postBox">
+            <div class="postBox__top">
+              <div class="postBox__top__dot"></div>
+              <div class="postBox__top__dot"></div>
+              <div class="postBox__top__dot"></div>
+            </div>
+            <div class="py-6 text-center">
+              <p>目前尚無動態，新增一則貼文吧！</p>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-4">
@@ -81,4 +60,33 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.postBox {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  border: 2px solid #000;
+  box-shadow: 0px 3px 0px #000400;
+}
+.postBox__top {
+  padding: 1rem;
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid #000;
+  &__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    border: 1px solid #000;
+    &:nth-child(1) {
+      background-color: red;
+    }
+    &:nth-child(2) {
+      background-color: #FAA722;
+    }
+    &:nth-child(3) {
+      background-color: green;
+    }
+  }
+}
+</style>
