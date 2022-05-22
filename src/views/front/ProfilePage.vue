@@ -177,8 +177,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 44px;
-  .search {
-  }
 
   .filter {
     width: 180px;
