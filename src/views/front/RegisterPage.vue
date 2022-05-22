@@ -17,7 +17,7 @@ export default {
             </div>
             <div class="col">
               <div class="d-flex flex-column">
-                <h2 class="fw-bold text-primary text-center">MetaWall</h2>
+                <h2 class="fw-bold text-primary text-center">Secert Diary</h2>
                 <p class="fw-bold text-dark text-center mb-7">註冊</p>
                 <div class="input-group inputToolContainer mb-3">
                   <input type="text" class="form-control inputTool" placeholder="暱稱" />
