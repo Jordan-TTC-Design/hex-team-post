@@ -12,6 +12,16 @@ const routes = [
         component: () => import('../views/front/PostsPage.vue'),
       },
       {
+        path: 'Recommend',
+        name: 'RecommendPage',
+        component: () => import('../views/front/RecommendPage.vue'),
+      },
+      {
+        path: 'Profile',
+        name: 'ProfilePage',
+        component: () => import('../views/front/ProfilePage.vue'),
+      },
+      {
         path: '/my-page',
         name: 'Mypage',
         component: () => import('../views/front/MyPage.vue'),
@@ -45,6 +55,28 @@ const routes = [
         path: 'person/:id',
         name: 'PersonPage',
         component: () => import('../views/front/PersonPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/backstage/',
+    name: 'BackstageLayout',
+    component: () => import('../views/BackstageLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'IndexPage',
+        component: () => import('../views/backstage/IndexPage.vue'),
+      },
+      {
+        path: 'Member',
+        name: 'MemberPage',
+        component: () => import('../views/backstage/MemberPage.vue'),
+      },
+      {
+        path: 'Post',
+        name: 'PostPage',
+        component: () => import('../views/backstage/PostPage.vue'),
       },
     ],
   },

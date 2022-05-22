@@ -1,11 +1,11 @@
 <script>
 import FrontHeader from '@/components/front/FrontHeader.vue';
-import NewPostModel from '@/components/helper/NewPostModel.vue';
+// import NewPostModel from '@/components/helper/NewPostModel.vue';
 
 export default {
   components: {
     FrontHeader,
-    NewPostModel,
+    // NewPostModel,
   },
   setup() {
     return {};
@@ -15,8 +15,11 @@ export default {
 
 <template>
   <FrontHeader />
-  <RouterView />
-  <NewPostModel />
+  <main class="front-main">
+    <RouterView />
+  </main>
+  <!-- <NewPostModel /> -->
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
