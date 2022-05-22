@@ -1,0 +1,89 @@
+//頁面
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 1px 2px #00000029;
+
+    .card-body {
+        padding: 12px;
+    }
+
+    .card-title {
+        font-size: 20px;
+        // margin-bottom: 12px;
+        color: #1d1d1d;
+    }
+}
+
+// .card-picture {
+//     margin: 0 -12px;
+//     width: calc(100% + 24px);
+//     margin-bottom: 12px;
+// }
+
+.postCard-response {
+    display: flex;
+    align-items: center;
+
+    .form-control {
+        flex-grow: 1;
+        margin-right: 12px;
+    }
+}
+
+
+.userProfileCard {
+    .userProfileCard-title {
+        font-size: 20px;
+        color: #1d1d1d;
+    }
+
+    .userProfileCard-subtitle {
+        font-size: 12px;
+        color: #979797;
+        margin-top: 4px;
+    }
+
+    .userProfileCard-body {
+        position: relative;
+        display: flex;
+
+        .user-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            margin-right: 16px;
+        }
+
+        .userProfileCard-more {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+
+            &>*+* {
+                margin-left: 8px;
+            }
+        }
+    }
+
+    .userProfileCard-footer {
+        border-top: 1px solid #e2e2e2;
+        display: flex;
+
+        &>.userProfileCard-footer-item {
+            width: 120px;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+
+            &+.userProfileCard-footer-item::before {
+                position: absolute;
+                left: 0;
+                content: '';
+                width: 1px;
+                height: 24px;
+                border-left: 1px solid #e2e2e2;
+            }
+        }
+    }
+}

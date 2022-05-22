@@ -10,51 +10,144 @@ export default {
 </script>
 
 <template>
-  <div class="menu container-fluid">
-    <div class="content container">
-      <div class="navbar__title">
-        <a href="">MetaWall</a>
+  <div class="menu">
+    <img src="../../assets/image/logo.svg" alt="logo" class="menu-logo" />
+    <div class="menu-navbar">
+      <div class="menu-navbar-item active">
+        <a href="#"><i class="bi bi-house-door"></i> 最新動態</a>
       </div>
-      <div class="navbar__member d-flex justify-content-center align-items-center">
-        <img :src="user.photo" :alt="user.name" width="30px" height="30px" />
-        <p class="ms-2">{{ user.name || '尚未的入' }}</p>
+      <div class="menu-navbar-item">
+        <a href="#"><i class="bi bi-question"></i> 追蹤動態</a>
+      </div>
+      <div class="menu-navbar-item">
+        <a href="#"><i class="bi bi-chat-square-heart"></i> 熱賣推薦</a>
+      </div>
+      <div class="menu-navbar-item">
+        <a href="#"><i class="bi bi-envelope-heart"></i> 私密日記本</a>
+      </div>
+    </div>
+    <div class="menu-function">
+      <div class="btn-group">
+        <button class="btn btn-outline text-primary">登入</button>
+        <button class="btn btn-outline">註冊</button>
+      </div>
+      <button class="btn btn-secondary ms-2">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+      <div class="d-flex align-items-center">
+        <img
+          src="../../assets/image/user-picture.png"
+          alt="user-picture"
+          class="user-picture ms-4"
+        />
+        <span>用戶名稱</span>
+      </div>
+      <div class="ms-2">
+        <!-- <button class="btn btn-default">
+          <i class="bi bi-chevron-down"></i>
+        </button> -->
+        <button class="btn btn-primary">
+          <i class="bi bi-chevron-up"></i>
+        </button>
+        <div class="menu-dropdown">
+          <div class="list-group">
+            <div class="list-group-header d-flex">
+              <span>錢包</span>
+              <span class="ms-auto">200 <i class="bi bi-gem"></i> </span>
+            </div>
+            <a href="#" class="list-group-item">查看個人檔案</a>
+            <a href="#" class="list-group-item">消費記錄</a>
+            <a href="#" class="list-group-item">客服支援</a>
+            <a href="#" class="list-group-item">登出</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.menu {
-  border-bottom: 4px solid #000400;
-  margin-bottom: 49px;
-}
-.content {
-  max-width: 872px;
-  margin: 0px auto;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.navbar__member p {
-  font-size: 22px;
-  border-bottom: 2px solid #000;
-  padding-bottom: 0px;
-  color: #000;
-  font-weight: 900px;
-}
-.navbar__member img {
-  width: 30px;
-  height: 30px;
-  border-radius: 100%;
-  background: #000;
-  object-fit: cover;
-  object-position: center;
-}
-.navbar__title a {
-  font-size: 30px;
-  font-weight: 1000px;
+.menu-dropdown {
+  width: 180px;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  display: none;
 
-  color: #000;
+  &.show {
+    display: block;
+  }
+}
+
+.menu {
+  position: static;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  background: white;
+  box-shadow: 0px 1px 1px #00000029;
+
+  padding: 0 24px;
+
+  .menu-logo {
+    position: absolute;
+    left: 24px;
+  }
+
+  .menu-navbar {
+    display: flex;
+    .menu-navbar-item {
+      width: 186px;
+      text-align: center;
+      padding-top: 22px;
+      padding-bottom: 18px;
+      position: relative;
+
+      &.active {
+        &::before {
+          content: '';
+          width: 120px;
+          height: 1px;
+          border-top: 4px solid #892092;
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
+          position: absolute;
+          bottom: 0;
+          left: 33px;
+        }
+        & a {
+          color: #892092;
+        }
+      }
+
+      & a {
+        text-decoration: none;
+        font-size: 16px;
+        color: #1d1d1d;
+      }
+      & + .menu-navbar-item::before {
+        content: '';
+        height: 36px;
+        left: 0;
+        top: 14px;
+        border-left: 1px solid #d6d6d6;
+        position: absolute;
+      }
+    }
+  }
+
+  .menu-function {
+    position: absolute;
+    right: 24px;
+
+    display: flex;
+  }
 }
 </style>

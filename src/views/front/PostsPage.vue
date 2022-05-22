@@ -1,13 +1,14 @@
 <script>
 import { ref } from 'vue';
-import PostCard from '@/components/front/PostCard.vue';
-import DynamicWall from '@/components/front/DynamicWall.vue';
+
+// import PostCard from '@/components/front/PostCard.vue';
+// import DynamicWall from '@/components/front/DynamicWall.vue';
 import postsStore from '@/stores/postsStore';
 
 export default {
   components: {
-    PostCard,
-    DynamicWall,
+    // PostCard,
+    // DynamicWall,
   },
   setup() {
     const postsData = postsStore();
@@ -29,76 +30,187 @@ export default {
 </script>
 
 <template>
-  <div class="posts-page container">
-    <div class="row">
-      <div class="col-8">
-        <div class="d-flex gap-3 mb-4">
-          <select class="selectTool form-select" v-model="postSort" @change="sortPostsData">
-            <option selected value="asc">最新貼文</option>
-            <option selected value="desc">過去貼文</option>
-          </select>
-          <div class="input-group inputToolContainer flex-grow-1">
-            <input
-              type="text"
-              class="form-control inputTool"
-              placeholder="搜尋貼文"
-              v-model="postQuery"
-            />
-            <button class="btn btn-primary" type="button" @click="sortPostsData">
-              <i class="bi bi-search text-white"></i>
-            </button>
+  <div class="container d-flex">
+    <div class="content">
+      <div class="card mb-3">
+        <div class="card-body d-flex align-items-center">
+          <div class="user-picture"></div>
+          <div class="btn btn-default ms-auto me-3">
+            <i class="bi bi-plus-lg"></i> 私密日記
           </div>
-        </div>
-        <div class="d-flex flex-column gap-4">
-          <template v-for="postItem in postsData.posts" :key="postItem._id">
-            <PostCard :post-item="postItem" />
-          </template>
-          <div v-show="postsData.posts.length === 0" class="postBox">
-            <div class="postBox__top">
-              <div class="postBox__top__dot"></div>
-              <div class="postBox__top__dot"></div>
-              <div class="postBox__top__dot"></div>
-            </div>
-            <div class="py-6 text-center">
-              <p>目前尚無動態，新增一則貼文吧！</p>
-            </div>
+          <div class="btn btn-default">
+            <i class="bi bi-plus-lg"></i> 新增貼文
           </div>
         </div>
       </div>
-      <div class="col-4">
-        <DynamicWall />
+      <div class="mb-3 d-flex">
+        <button type="button" class="btn btn-active me-2">全部</button>
+        <button type="button" class="btn btn-white me-2">全部</button>
+        <button type="button" class="btn btn-white me-2">全部</button>
+        <button type="button" class="btn ms-auto">最新貼文</button>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              src="../../assets/image/user-picture.png"
+              alt="user-picture"
+              class="user-picture"
+            />
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+              <span class="user-info-subtitle">200 人追蹤</span>
+            </div>
+            <div class="btn btn-sm">追蹤</div>
+          </div>
+          <div class="">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio illo
+            quis reprehenderit consequatur veritatis fugiat recusandae
+            voluptatem similique. Totam non dicta exercitationem, rem soluta
+            minima. Rem perferendis nesciunt suscipit ab! Voluptate perferendis
+            eum, sit iste maiores temporibus accusantium corrupti ducimus itaque
+            ab et nisi magni sed alias illum molestiae ut rem aperiam cupiditate
+            officia eius
+          </div>
+        </div>
+        <img
+          src="https://images.unsplash.com/photo-1614102073832-030967418971?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738"
+          alt=""
+          class="img-fluid"
+        />
+        <div class="card-body d-flex align-items-center">
+          <div class="icon text-primary">
+            <i class="bi bi-heart-fill"></i>
+            <span class="">1234</span>
+          </div>
+          <div class="icon">
+            <i class="bi bi-share"></i>
+          </div>
+          <span class="ms-auto">2022 / 01 / 01 12:12</span>
+        </div>
+        <div class="card-body border-top postCard-response">
+          <div class="user-picture"></div>
+          <input type="text" class="form-control" placeholder="回覆..." />
+          <button class="btn">
+            <i class="bi bi-play-fill"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              src="../../assets/image/user-picture.png"
+              alt="user-picture"
+              class="user-picture"
+            />
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+              <span class="user-info-subtitle">200 人追蹤</span>
+            </div>
+            <div class="btn btn-sm">追蹤</div>
+          </div>
+          <div class="">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio illo
+            quis reprehenderit consequatur veritatis fugiat recusandae
+            voluptatem similique. Totam non dicta exercitationem, rem soluta
+            minima. Rem perferendis nesciunt suscipit ab! Voluptate perferendis
+            eum, sit iste maiores temporibus accusantium corrupti ducimus itaque
+            ab et nisi magni sed alias illum molestiae ut rem aperiam cupiditate
+            officia eius
+          </div>
+        </div>
+        <img
+          src="https://images.unsplash.com/photo-1614102073832-030967418971?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1738"
+          alt=""
+          class="img-fluid"
+        />
+        <div class="card-body d-flex align-items-center">
+          <div class="icon text-primary">
+            <i class="bi bi-heart-fill"></i>
+            <span class="">1234</span>
+          </div>
+          <div class="icon">
+            <i class="bi bi-share"></i>
+          </div>
+          <span class="ms-auto">2022 / 01 / 01 12:12</span>
+        </div>
+        <div class="card-body border-top postCard-response">
+          <div class="user-picture"></div>
+          <input type="text" class="form-control" placeholder="回覆..." />
+          <button class="btn">
+            <i class="bi bi-play-fill"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-picture"></div>
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+            </div>
+            <div class="btn btn-sm text-primary">追蹤</div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-picture"></div>
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+            </div>
+            <div class="btn btn-sm text-primary">追蹤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="side fix">
+      <div class="card mb-3">
+        <div class="card-body border-bottom">
+          <div class="card-title">推薦追蹤</div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-picture"></div>
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+              <span class="user-info-subtitle">200 人追蹤</span>
+            </div>
+            <div class="btn btn-sm text-primary">追蹤</div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-picture"></div>
+            <div class="user-info">
+              <span class="user-info-title">用戶名稱</span>
+              <span class="user-info-subtitle">200 人追蹤</span>
+            </div>
+            <div class="btn btn-sm text-primary">追蹤</div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-body border-bottom">
+          <div class="card-title">贊助方案</div>
+        </div>
+        <div class="card-body">
+          <div class="sponsor">
+            <span class="sponsor-title">NTD 1001 / 月</span>
+            <span class="sponsor-subtitle">當月私密日記無限觀看</span>
+          </div>
+          <div class="sponsor">
+            <span class="sponsor-title">NTD 1001 / 月</span>
+            <span class="sponsor-subtitle">當月私密日記無限觀看</span>
+          </div>
+          <div class="sponsor active">
+            <span class="sponsor-title">NTD 1001 / 月</span>
+            <span class="sponsor-subtitle">當月私密日記無限觀看</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.postBox {
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.5rem;
-  border: 2px solid #000;
-  box-shadow: 0px 3px 0px #000400;
-}
-.postBox__top {
-  padding: 1rem;
-  display: flex;
-  gap: 0.25rem;
-  border-bottom: 2px solid #000;
-  &__dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    border: 1px solid #000;
-    &:nth-child(1) {
-      background-color: red;
-    }
-    &:nth-child(2) {
-      background-color: #faa722;
-    }
-    &:nth-child(3) {
-      background-color: green;
-    }
-  }
-}
 </style>
