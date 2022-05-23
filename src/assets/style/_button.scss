@@ -6,6 +6,9 @@
     vertical-align: middle;
     cursor: pointer;
     user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
     // background-color: transparent;
     // border: $btn-border-width solid transparent;
 

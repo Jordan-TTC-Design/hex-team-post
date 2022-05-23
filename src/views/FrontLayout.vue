@@ -1,11 +1,11 @@
 <script>
 import FrontHeader from '@/components/front/FrontHeader.vue';
-// import NewPostModel from '@/components/helper/NewPostModel.vue';
+import SignUpModel from '@/components/front/SignUpModel.vue';
 
 export default {
   components: {
     FrontHeader,
-    // NewPostModel,
+    SignUpModel,
   },
   setup() {
     return {};
@@ -18,7 +18,7 @@ export default {
   <main class="front-main">
     <RouterView />
   </main>
-  <!-- <NewPostModel /> -->
+  <SignUpModel />
 </template>
 
 <style lang="scss" scoped>

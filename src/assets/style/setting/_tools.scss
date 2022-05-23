@@ -32,3 +32,59 @@
   font-size: 0.75rem;
   color: #979797;
 }
+// title
+.title {
+  font-size: 20px;
+  color: #1d1d1d;
+}
+
+// user
+.user-picture {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  margin-right: 12px;
+  border: 1px solid #e2e2e2;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-grow: 1;
+}
+
+.user-info-title {
+  font-size: 14px;
+  color: #1d1d1d;
+
+  &:only-child {
+    margin: auto 0;
+  }
+}
+
+.user-info-subtitle {
+  font-size: 12px;
+  color: #989898;
+}
+
+// icon
+.icon {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+
+  i {
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  span {
+    font-size: 14px;
+    margin-left: 4px;
+  }
+}
