@@ -10,13 +10,13 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
     const newUser = ref({
-      name: '',
+      name: 'Ray',
+      email: '123@123.com',
       photo: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      birthday: '',
-      gender: 'male',
+      birthday: '2022-01-01',
+      gender: 'male || female',
+      password: '12345678',
+      confirmPassword: '12345678',
     });
     function goToLogin() {}
     function signUp() {
@@ -36,14 +36,14 @@ export default {
 <template>
   <div
     class="popModalContainer position-fixed top-0 left-0 z-popModal"
-    :class="{ active: statusData.signUpModel === true }"
+    :class="{ active: statusData.logInModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.signUpModel = false" />
+    <div class="popModalCover" @click="statusData.logInModel = false" />
     <!-- Modal-Window -->
-    <div class="signUpModel popModal" :class="{ active: statusData.signUpModel === true }">
+    <div class="signUpModel popModal" :class="{ active: statusData.logInModel === true }">
       <button
-        @click="statusData.signUpModel = false"
+        @click="statusData.logInModel = false"
         type="button"
         class="btn position-absolute popModel__btn"
       >
@@ -81,7 +81,6 @@ export default {
               <input
                 class="form-control bg-white border-gray-middle"
                 id="userBirthday"
-                v-model="newUser.birthday"
                 type="date"
               />
             </div>
@@ -161,7 +160,7 @@ export default {
     opacity: 1;
     z-index: 100;
     position: absolute;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     opacity: 0;
     transform: scaleY(0) translate(-50%, -50%);
     left: 50%;

@@ -5,7 +5,8 @@ const statusStore = defineStore({
   state: () => ({
     isLoading: false,
     newPostModel: false,
-    signUpModel: true,
+    signUpModel: false,
+    logInModel: true,
   }),
   getters: {},
   actions: {},
