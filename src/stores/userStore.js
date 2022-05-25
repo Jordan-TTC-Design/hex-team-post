@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import axios from 'axios';
 
 const userStore = defineStore({
   id: 'userStore',
@@ -10,6 +11,19 @@ const userStore = defineStore({
     },
   }),
   getters: {},
-  actions: {},
+  actions: {
+    signUp(data) {
+      console.log(data);
+      axios
+        .post('https://hex-post-team-api-server.herokuapp.com/api/user', data)
+        .then((res) => {
+          console.log(res);
+          return res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+        });
+    },
+  },
 });
 export default userStore;
