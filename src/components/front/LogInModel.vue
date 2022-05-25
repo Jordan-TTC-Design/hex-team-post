@@ -9,18 +9,22 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    const newUser = ref({
-      name: '',
+    const loginData = ref({
       email: '',
       password: '',
-      confirmPassword: '',
-      birthday: '',
-      gender: 'male',
     });
     function goToSignUp() {}
-    function logIn() {}
+    async function logIn() {
+      const result = await userData.logIn(loginData.value);
+      if (result.status === 'success') {
+        localStorage.setItem('sd-token', result.user.token);
+        userData.userToken = result.user.token;
+      } else {
+        console.log('使用者帳密錯誤');
+      }
+    }
     return {
-      newUser,
+      loginData,
       statusData,
       userData,
       logIn,
@@ -47,38 +51,34 @@ export default {
       >
         <i class="bi bi-x-lg"></i>
       </button>
-        <div class="bg-secondary rounded-top p-6 position-relative overflow-hidden">
-          <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
-          <p class="text-primary">歡迎回來</p>
-          <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
+      <div class="bg-secondary rounded-top p-6 position-relative overflow-hidden">
+        <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
+        <p class="text-primary">歡迎回來</p>
+        <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
+      </div>
+      <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
+        <FormInput v-model="loginData.email" input-id="userEmail" type="text">
+          <template v-slot:default>電子郵件</template>
+        </FormInput>
+        <div>
+          <FormInput v-model="loginData.password" input-id="userPassword" type="text">
+            <template v-slot:default>密碼</template> </FormInput
+          ><button type="button" @click="goToSignUp" class="btn rounded py-1 px-3 align-self-start">
+            <p class="text-danger">忘記密碼?</p>
+          </button>
         </div>
-        <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
-          <FormInput v-model="newUser.email" input-id="userEmail" type="text">
-            <template v-slot:default>電子郵件</template>
-          </FormInput>
-          <div>
-            <FormInput v-model="newUser.password" input-id="userPassword" type="text">
-              <template v-slot:default>密碼</template> </FormInput
-            ><button
-              type="button"
-              @click="goToSignUp"
-              class="btn rounded py-1 px-3 align-self-start"
-            >
-              <p class="text-danger">忘記密碼?</p>
-            </button>
-          </div>
 
-          <button
-            type="button"
-            @click="logIn"
-            class="btn btn-primary w-100 text-white rounded py-2 px-3"
-          >
-            登入
-          </button>
-          <button type="button" @click="goToSignUp" class="btn btn-outline w-100 rounded py-2 px-3">
-            註冊
-          </button>
-        </div>
+        <button
+          type="button"
+          @click="logIn"
+          class="btn btn-primary w-100 text-white rounded py-2 px-3"
+        >
+          登入
+        </button>
+        <button type="button" @click="goToSignUp" class="btn btn-outline w-100 rounded py-2 px-3">
+          註冊
+        </button>
+      </div>
     </div>
   </div>
 </template>

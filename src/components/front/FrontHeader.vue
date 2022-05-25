@@ -4,9 +4,15 @@ import statusStore from '@/stores/statusStore';
 
 export default {
   setup() {
-    const { user } = userStore();
+    const userData = userStore();
     const statusData = statusStore();
-    return { user, statusData };
+    function checkLogin() {
+      const token = localStorage.getItem('sd-token');
+      console.log(token);
+      userData.userToken = token;
+    }
+    checkLogin();
+    return { userData, statusData };
   },
 };
 </script>
@@ -29,22 +35,18 @@ export default {
       </div>
     </div>
     <div class="menu-function">
-      <div class="btn-group" v-if="!statusData.isLogin">
+      <div class="btn-group" v-if="userData.userToken.trim().length === 0">
         <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
           登入
         </button>
         <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
-      <div v-if="statusData.isLogin">
+      <div v-if="userData.userToken.trim().length > 0">
         <button class="btn btn-secondary ms-2">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="d-flex align-items-center">
-          <img
-            src="@/assets/image/user-picture.png"
-            alt="user-picture"
-            class="user-picture ms-4"
-          />
+          <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture ms-4" />
           <span>用戶名稱</span>
         </div>
         <div class="ms-2">
