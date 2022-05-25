@@ -17,7 +17,10 @@ export default {
       birthday: '',
       gender: 'male',
     });
-    function goToLogin() {}
+    function goToLogin() {
+      statusData.signUpModel = false;
+      statusData.logInModel = true;
+    }
     function signUp() {}
     return {
       newUser,
@@ -158,7 +161,7 @@ export default {
     opacity: 1;
     z-index: 100;
     position: absolute;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     opacity: 0;
     transform: scaleY(0) translate(-50%, -50%);
     left: 50%;

@@ -4,8 +4,10 @@ const statusStore = defineStore({
   id: 'statusStore',
   state: () => ({
     isLoading: false,
+    isLogin: false,
     newPostModel: false,
-    signUpModel: true,
+    signUpModel: false,
+    logInModel: false,
   }),
   getters: {},
   actions: {},
