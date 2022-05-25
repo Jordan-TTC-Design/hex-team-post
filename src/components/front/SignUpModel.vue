@@ -21,7 +21,14 @@ export default {
       statusData.signUpModel = false;
       statusData.logInModel = true;
     }
-    function signUp() {}
+    async function signUp() {
+      const result = await userData.signUp(newUser.value);
+      if (result.status === 'success') {
+        localStorage.setItem('sd-token', result.user.token);
+      } else {
+        console.log('使用者帳密錯誤');
+      }
+    }
     return {
       newUser,
       statusData,
@@ -83,6 +90,7 @@ export default {
                 class="form-control bg-white border-gray-middle"
                 id="userBirthday"
                 type="date"
+                v-model="newUser.birthday"
               />
             </div>
             <div class="formRadio w-100 d-flex flex-column gap-1">
