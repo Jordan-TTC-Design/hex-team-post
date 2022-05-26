@@ -7,7 +7,7 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
     function checkLogin() {
-      const token = localStorage.getItem('sd-token');
+      const token = localStorage.getItem('sd-token') || '';
       console.log(token);
       userData.userToken = token;
     }
@@ -35,14 +35,14 @@ export default {
       </div>
     </div>
     <div class="menu-function">
-      <div class="btn-group" v-if="userData.userToken.trim().length === 0">
+      <div class="btn-group" v-if="userData.userToken.length === 0">
         <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
           登入
         </button>
         <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
-      <div v-if="userData.userToken.trim().length > 0">
-        <button class="btn btn-secondary ms-2">
+      <div class="d-flex" v-if="userData.userToken.length > 0">
+        <button class="btn btn-secondary ms-2 px-3">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="d-flex align-items-center">
@@ -50,8 +50,8 @@ export default {
           <span>用戶名稱</span>
         </div>
         <div class="ms-2">
-          <button class="btn btn-primary">
-            <i class="bi bi-chevron-up"></i>
+          <button class="btn btn-primary px-3">
+            <i class="bi bi-chevron-up text-white"></i>
           </button>
           <div class="menu-dropdown">
             <div class="list-group">
