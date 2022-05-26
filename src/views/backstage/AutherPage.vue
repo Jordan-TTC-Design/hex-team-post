@@ -6,7 +6,7 @@ export default {
   setup() {
     const backstatusData = backStatusStore();
     const pageSubNav = ref('全部');
-    backstatusData.nowPage = '會員管理';
+    backstatusData.nowPage = '日記作者管理';
     return {
       backstatusData,
       pageSubNav,
@@ -23,7 +23,7 @@ export default {
     <div class="bg-white p-3 border-top">
       <div class="subNav--row gap-3">
         <div :class="{ active: pageSubNav === '全部' }" class="subNav--row__item">全部</div>
-        <div :class="{ active: pageSubNav === '有消費' }" class="subNav--row__item">有消費</div>
+        <div :class="{ active: pageSubNav === '排行榜' }" class="subNav--row__item">排行榜</div>
         <div :class="{ active: pageSubNav === '需跟進' }" class="subNav--row__item">需跟進</div>
         <div class="subNav--row__item ms-auto">搜尋, 下拉選單</div>
       </div>
@@ -42,11 +42,19 @@ export default {
           <span class="infoListItem__content">200</span>
         </div>
         <div class="infoListItem">
+          <span class="infoListItem__title">秘密日記數</span>
+          <span class="infoListItem__content">200</span>
+        </div>
+        <div class="infoListItem">
           <span class="infoListItem__title">追蹤者數</span>
           <span class="infoListItem__content">20,000</span>
         </div>
         <div class="infoListItem">
-          <span class="infoListItem__title">消費金額</span>
+          <span class="infoListItem__title">訂閱者數</span>
+          <span class="infoListItem__content">20,000</span>
+        </div>
+        <div class="infoListItem">
+          <span class="infoListItem__title">銷售金額</span>
           <span class="infoListItem__content">$20,000</span>
         </div>
         <button type="button" class="btn"><i class="webIcon bi bi-three-dots"></i></button>
