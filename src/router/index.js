@@ -69,12 +69,12 @@ const routes = [
         component: () => import('../views/backstage/IndexPage.vue'),
       },
       {
-        path: 'Member',
+        path: 'member',
         name: 'MemberPage',
         component: () => import('../views/backstage/MemberPage.vue'),
       },
       {
-        path: 'Post',
+        path: 'post',
         name: 'PostPage',
         component: () => import('../views/backstage/PostPage.vue'),
       },
