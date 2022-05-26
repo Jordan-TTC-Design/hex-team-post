@@ -6,7 +6,7 @@ const statusStore = defineStore({
     isLoading: false,
     newPostModel: false,
     signUpModel: false,
-    logInModel: true,
+    logInModel: false,
   }),
   getters: {},
   actions: {},

@@ -1,19 +1,19 @@
 .btn {
-    display: inline-block;
+    // display: inline-block;
     line-height: 1.5rem;
     // color: $body-color;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    // user-select: none;
+    // -moz-user-select: none;
+    // -webkit-user-select: none;
+    // -ms-user-select: none;
     // background-color: transparent;
     // border: $btn-border-width solid transparent;
 
-    border-radius: 12px;
-    padding: calc(10px - 1px) 16px;
+    border-radius: 0.75rem;
+    padding: calc(10px - 1px) 1rem;
     background-color: transparent;
     border: 1px solid transparent;
     color: #1d1d1d;

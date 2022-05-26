@@ -9,6 +9,7 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
+<<<<<<< HEAD
     const newUser = ref({
       name: 'Ray',
       email: '123@123.com',
@@ -28,6 +29,28 @@ export default {
       userData,
       signUp,
       goToLogin,
+=======
+    const loginData = ref({
+      email: '',
+      password: '',
+    });
+    function goToSignUp() {}
+    async function logIn() {
+      const result = await userData.logIn(loginData.value);
+      if (result.status === 'success') {
+        localStorage.setItem('sd-token', result.user.token);
+        userData.userToken = result.user.token;
+      } else {
+        console.log('使用者帳密錯誤');
+      }
+    }
+    return {
+      loginData,
+      statusData,
+      userData,
+      logIn,
+      goToSignUp,
+>>>>>>> feature/signup
     };
   },
 };
@@ -40,6 +63,10 @@ export default {
   >
     <!-- Modal-Overlay -->
     <div class="popModalCover" @click="statusData.logInModel = false" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/signup
     <!-- Modal-Window -->
     <div class="signUpModel popModal" :class="{ active: statusData.logInModel === true }">
       <button
@@ -49,6 +76,7 @@ export default {
       >
         <i class="bi bi-x-lg"></i>
       </button>
+<<<<<<< HEAD
       <div class="d-flex gap-2 h-75 flex-grow-1">
         <div class="w-25 bg-secondary rounded-start p-6 position-relative overflow-hidden">
           <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
@@ -133,6 +161,35 @@ export default {
             </button>
           </div>
         </div>
+=======
+      <div class="bg-secondary rounded-top p-6 position-relative overflow-hidden">
+        <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
+        <p class="text-primary">歡迎回來</p>
+        <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
+      </div>
+      <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
+        <FormInput v-model="loginData.email" input-id="userEmail" type="text">
+          <template v-slot:default>電子郵件</template>
+        </FormInput>
+        <div>
+          <FormInput v-model="loginData.password" input-id="userPassword" type="text">
+            <template v-slot:default>密碼</template> </FormInput
+          ><button type="button" @click="goToSignUp" class="btn rounded py-1 px-3 align-self-start">
+            <p class="text-danger">忘記密碼?</p>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          @click="logIn"
+          class="btn btn-primary w-100 text-white rounded py-2 px-3"
+        >
+          登入
+        </button>
+        <button type="button" @click="goToSignUp" class="btn btn-outline w-100 rounded py-2 px-3">
+          註冊
+        </button>
+>>>>>>> feature/signup
       </div>
     </div>
   </div>
@@ -162,26 +219,51 @@ export default {
     position: absolute;
     border-radius: 0.75rem;
     opacity: 0;
+<<<<<<< HEAD
     transform: scaleY(0) translate(-50%, -50%);
+=======
+    transform: scaleY(0) translate(-50%, 0%);
+>>>>>>> feature/signup
     left: 50%;
     top: 40%;
     transition: all 0.3s;
     background-color: #fff;
+<<<<<<< HEAD
     width: 600px;
     height: 80vh;
     display: flex;
     flex-direction: column;
 
     @media (max-width: 998.98px) {
+=======
+    width: 30vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 1139.98px) {
+>>>>>>> feature/signup
       width: 60vw;
     }
     @media (max-width: 767.98px) {
       width: 75vw;
     }
     @media (max-width: 575.98px) {
+<<<<<<< HEAD
       width: 100vw;
       height: 100vh;
       border-radius: 0;
+=======
+      width: 80vw;
+    }
+  }
+  .signUpModel {
+    &__logoMark {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: translate(-12%, 64%);
+      opacity: 0.3;
+>>>>>>> feature/signup
     }
   }
 }
@@ -197,6 +279,7 @@ export default {
     top: 50%;
     transform: scaleY(1) translate(-50%, -50%);
   }
+<<<<<<< HEAD
   .signUpModel {
     width: 75%;
     &__logoMark {
@@ -210,6 +293,13 @@ export default {
   .popModel__btn {
     top: 0.75rem;
     right: 0.75rem;
+=======
+  .popModel__btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 900;
+    color: #1d1d1d;
+>>>>>>> feature/signup
   }
 }
 .formRadio {

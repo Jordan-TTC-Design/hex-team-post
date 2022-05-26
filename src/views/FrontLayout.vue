@@ -1,11 +1,13 @@
 <script>
 import FrontHeader from '@/components/front/FrontHeader.vue';
 import SignUpModel from '@/components/front/SignUpModel.vue';
+import LogInModel from '@/components/front/LogInModel.vue';
 
 export default {
   components: {
     FrontHeader,
     SignUpModel,
+    LogInModel,
   },
   setup() {
     return {};
@@ -19,6 +21,7 @@ export default {
     <RouterView />
   </main>
   <SignUpModel />
+  <LogInModel />
 </template>
 
 <style lang="scss" scoped>

@@ -18,9 +18,17 @@ export default {
       birthday: '',
       gender: 'male',
     });
-    function goToLogin() {}
-    function signUp() {
-      userData.signUp(newUser.value);
+    function goToLogin() {
+      statusData.signUpModel = false;
+      statusData.logInModel = true;
+    }
+    async function signUp() {
+      const result = await userData.signUp(newUser.value);
+      if (result.status === 'success') {
+        localStorage.setItem('sd-token', result.user.token);
+      } else {
+        console.log('使用者帳密錯誤');
+      }
     }
     return {
       newUser,
@@ -83,6 +91,7 @@ export default {
                 id="userBirthday"
                 v-model="newUser.birthday"
                 type="date"
+                v-model="newUser.birthday"
               />
             </div>
             <div class="formRadio w-100 d-flex flex-column gap-1">
@@ -161,7 +170,7 @@ export default {
     opacity: 1;
     z-index: 100;
     position: absolute;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     opacity: 0;
     transform: scaleY(0) translate(-50%, -50%);
     left: 50%;
