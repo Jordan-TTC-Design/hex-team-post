@@ -6,7 +6,7 @@ export default {
   setup() {
     const backstatusData = backStatusStore();
     const pageSubNav = ref('刊登中');
-    backstatusData.nowPage = '貼文管理';
+    backstatusData.nowPage = '私密日記管理';
     return {
       backstatusData,
       pageSubNav,
@@ -23,6 +23,9 @@ export default {
     <div class="bg-white p-3 border-top">
       <div class="subNav--row gap-3">
         <div :class="{ active: pageSubNav === '刊登中' }" class="subNav--row__item">刊登中</div>
+        <div :class="{ active: pageSubNav === '熱賣排行榜' }" class="subNav--row__item">
+          熱賣排行榜
+        </div>
         <div :class="{ active: pageSubNav === '已下架' }" class="subNav--row__item">已下架</div>
         <div class="subNav--row__item ms-auto">搜尋, 下拉選單</div>
       </div>
@@ -31,7 +34,7 @@ export default {
   <div class="backStageMainContent">
     <div class="row row-cols-3">
       <div class="col mb-3">
-        <div class="backPostCard h-100" @click="backstatusData.postSilderState = true">
+        <div class="backPostCard h-100">
           <div class="d-flex align-items-center p-3 pb-0">
             <div class="user-picture"></div>
             <div class="user-info">
@@ -52,8 +55,10 @@ export default {
           <div class="d-flex justify-content-between ps-3">
             <ul class="iconInfoList">
               <li class="iconInfoList__item"><i class="webIcon--sm bi bi-heart"></i>325</li>
-              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-eye"></i>20</li>
-              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-chat-left-dots"></i>20</li>
+              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-file-person"></i>20</li>
+              <li class="iconInfoList__item">
+                <i class="webIcon--sm bi bi-currency-dollar"></i>20
+              </li>
             </ul>
             <button type="button" class="btn"><i class="bi bi-three-dots"></i></button>
           </div>
@@ -86,8 +91,10 @@ export default {
           <div class="d-flex justify-content-between ps-3">
             <ul class="iconInfoList">
               <li class="iconInfoList__item"><i class="webIcon--sm bi bi-heart"></i>325</li>
-              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-eye"></i>20</li>
-              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-chat-left-dots"></i>20</li>
+              <li class="iconInfoList__item"><i class="webIcon--sm bi bi-file-person"></i>20</li>
+              <li class="iconInfoList__item">
+                <i class="webIcon--sm bi bi-currency-dollar"></i>20
+              </li>
             </ul>
             <button type="button" class="btn"><i class="bi bi-three-dots"></i></button>
           </div>

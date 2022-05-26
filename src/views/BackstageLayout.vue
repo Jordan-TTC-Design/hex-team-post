@@ -1,12 +1,18 @@
 <script>
 import BackstageHeader from '@/components/backstage/BackstageHeader.vue';
+import PostSilder from '@/components/backstage/PostSilder.vue';
+import backStatusStore from '@/stores/backstage/backStatusStore';
 
 export default {
   components: {
     BackstageHeader,
+    PostSilder,
   },
   setup() {
-    return {};
+    const backStageData = backStatusStore();
+    return {
+      backStageData,
+    };
   },
 };
 </script>
@@ -18,6 +24,11 @@ export default {
       <RouterView />
     </main>
   </div>
+  <PostSilder
+    :select-item="backStageData.postItem"
+    @get-posts="backStageData.getPosts"
+    @clear-item="backStageData.clearPostItem"
+  />
 </template>
 
 <style lang="scss" scoped>

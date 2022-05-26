@@ -148,3 +148,87 @@
     color: #646464;
   }
 }
+
+// silder
+.silderBox {
+  width: 100%;
+  height: 95%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background-color: var(--bs-white);
+  transition: all 0.3s;
+  transform: translateY(100%);
+}
+.silderBox.active {
+  transform: translateY(0);
+}
+.silderBg {
+  background-color: rgba(0,0,0,0.5);
+  height: 5%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  transition: all 0.3s;
+}
+.silderBox--x {
+  width: 50%;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bs-white);
+  transition: all 0.3s;
+  transform: translateX(100%);
+}
+.silderBox--x.active {
+  transform: translateX(0);
+}
+.silderBox--y--full {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bs-black);
+  transition: all 0.3s;
+  transform: translateY(100%);
+}
+.silderBox--y--full.active {
+  transform: translateY(0);
+}
+.silderBg--x {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.5);
+  transform: translateX(-100%);
+  transition: all 0.3s;
+}
+
+.silderBg--x.active {
+  transform: translateX(0);
+}
+.silderBg.active {
+  transform: translateX(0);
+}
+@media (max-width: 991.98px) {
+  .silderBox--x {
+    width: 80%;
+  }
+  .silderBg--x {
+    width: 20%;
+  }
+}
+@media (max-width: 767.98px) {
+  .silderBox--x {
+    width: 100%;
+  }
+  .silderBg--x {
+    width: 0%;
+  }
+}
