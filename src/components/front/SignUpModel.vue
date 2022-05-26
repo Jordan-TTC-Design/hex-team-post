@@ -91,7 +91,6 @@ export default {
                 id="userBirthday"
                 v-model="newUser.birthday"
                 type="date"
-                v-model="newUser.birthday"
               />
             </div>
             <div class="formRadio w-100 d-flex flex-column gap-1">
