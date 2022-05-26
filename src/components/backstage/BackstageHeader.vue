@@ -14,7 +14,7 @@ export default {
 <template>
   <nav class="backstageHeader">
     <div class="backstageHeader__logoBox">
-      <img class="w-50" src="@/assets/image/logo-row.svg" alt="sdlogo" />
+      <img class="logo" src="@/assets/image/logo-row.svg" alt="sdlogo" />
       <button type="button" class="btn"><i class="webIcon bi bi-list"></i></button>
     </div>
     <div class="flex-grow-1">
@@ -71,10 +71,7 @@ export default {
     }
   }
   .logo {
-    display: inline-block;
-    width: 42px;
-    height: 42px;
-    background-color: var(--bs-primary);
+    height: 48px;
   }
   &__logoutBox {
     display: flex;
