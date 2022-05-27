@@ -38,10 +38,10 @@ export default {
         </template>
       </div>
     </div>
-    <div class="backstageHeader__logoutBox">
+    <RouterLink to="/" class="backstageHeader__logoutBox">
       <p>Logout</p>
       <i class="webIcon bi bi-box-arrow-right"></i>
-    </div>
+    </RouterLink>
   </nav>
 </template>
 

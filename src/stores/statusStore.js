@@ -7,6 +7,7 @@ const statusStore = defineStore({
     newPostModel: false,
     signUpModel: false,
     logInModel: false,
+    diamondModel: true,
   }),
   getters: {},
   actions: {},
