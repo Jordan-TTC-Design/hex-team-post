@@ -44,7 +44,7 @@ export default {
           class="btn rounded py-1.5 px-2"
           @click="backStageData.postSilderState = false"
         >
-          <i class="webIcon bi bi-x"></i>
+          <i class="webIcon bi bi-x-lg"></i>
         </button>
       </div>
       <div class="flex-grow-1 overflow-auto">

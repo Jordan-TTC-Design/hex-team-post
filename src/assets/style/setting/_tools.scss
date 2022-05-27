@@ -232,3 +232,73 @@
     width: 0%;
   }
 }
+
+
+// 絕對定位工具
+
+.top-2{
+  top:0.5rem
+}
+.top-3{
+  top:0.75rem
+}
+.top-4{
+  top:1rem
+}
+.top-5{
+  top:1.25rem
+}
+.top-6{
+  top:1.5rem
+}
+.end-2{
+  right:0.5rem
+}
+.end-3{
+  right:0.75rem
+}
+.end-4{
+  right:1rem
+}
+.end-5{
+  right:1.25rem
+}
+.end-6{
+  right:1.5rem
+}
+.bottom-2{
+  bottom:0.5rem
+}
+.bottom-3{
+  bottom:0.75rem
+}
+.bottom-4{
+  bottom:1rem
+}
+.bottom-5{
+  bottom:1.25rem
+}
+.bottom-6{
+  bottom:1.5rem
+}
+.start-2{
+  left:0.5rem
+}
+.start-3{
+  left:0.75rem
+}
+.start-4{
+  left:1rem
+}
+.start-5{
+  left:1.25rem
+}
+.start-6{
+  left:1.5rem
+}
+.absolute-middle{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%)
+}
