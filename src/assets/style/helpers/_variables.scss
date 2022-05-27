@@ -79,6 +79,7 @@ $dark: $gray-900  !default;
 $gray-light: #f2f2f2  !default;
 $gray-middle: #e2e2e2  !default;
 $gray-dark: #979797  !default;
+$black: #1d1d1d !default;
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map
@@ -94,6 +95,7 @@ $theme-colors: (
   "gray-light": $gray-light,
   "gray-middle": $gray-middle,
   "gray-dark": $gray-dark,
+  "black": $black,
   "dark": $dark) !default;
 // scss-docs-end theme-colors-map
 
