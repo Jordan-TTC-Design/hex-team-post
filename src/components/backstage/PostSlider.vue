@@ -32,17 +32,17 @@ export default {
 <template>
   <div
     class="silderBg--x z-silder"
-    :class="{ active: backStageData.postSilderState }"
-    @click="backStageData.postSilderState = false"
+    :class="{ active: backStageData.postSliderState }"
+    @click="backStageData.postSliderState = false"
   ></div>
-  <div class="silderBox--x z-silder" :class="{ active: backStageData.postSilderState === true }">
-    <div class="d-flex flex-column postion-relative h-100">
+  <div class="silderBox--x z-silder" :class="{ active: backStageData.postSliderState === true }">
+    <div class="d-flex flex-column posotion-relative h-100">
       <div class="sliderHeader">
         <h3 class="title">貼文</h3>
         <button
           type="button"
           class="btn rounded py-1.5 px-2"
-          @click="backStageData.postSilderState = false"
+          @click="backStageData.postSliderState = false"
         >
           <i class="webIcon bi bi-x-lg"></i>
         </button>
@@ -114,7 +114,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .sliderHeader {
   display: flex;
   justify-content: space-between;

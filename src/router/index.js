@@ -27,16 +27,6 @@ const routes = [
         component: () => import('../views/front/MyPage.vue'),
       },
       {
-        path: 'login',
-        name: 'LoginPage',
-        component: () => import('../views/front/LoginPage.vue'),
-      },
-      {
-        path: 'register',
-        name: 'RegisterPage',
-        component: () => import('../views/front/RegisterPage.vue'),
-      },
-      {
         path: 'member-setting',
         name: 'MemberSetting',
         component: () => import('../views/front/MemberSetting.vue'),
