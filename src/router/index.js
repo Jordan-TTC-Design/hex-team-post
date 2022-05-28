@@ -78,6 +78,16 @@ const routes = [
         name: 'DiaryPage',
         component: () => import('../views/backstage/DiaryPage.vue'),
       },
+      {
+        path: 'payment',
+        name: 'PaymentPage',
+        component: () => import('../views/backstage/PaymentPage.vue'),
+      },
+      {
+        path: 'setting',
+        name: 'SettingPage',
+        component: () => import('../views/backstage/SettingPage.vue'),
+      },
     ],
   },
 ];

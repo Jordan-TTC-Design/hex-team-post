@@ -1,14 +1,16 @@
 <script>
 import BackstageHeader from '@/components/backstage/BackstageHeader.vue';
+import backStatusStore from '@/stores/backstage/backStatusStore';
 import PostSlider from '@/components/backstage/PostSlider.vue';
 import UserSlider from '@/components/backstage/UserSlider.vue';
-import backStatusStore from '@/stores/backstage/backStatusStore';
+import MemberSettingSlider from '@/components/backstage/MemberSettingSlider.vue';
 
 export default {
   components: {
     BackstageHeader,
     PostSlider,
     UserSlider,
+    MemberSettingSlider,
   },
   setup() {
     const backStageData = backStatusStore();
@@ -32,6 +34,11 @@ export default {
     @clear-item="backStageData.clearPostItem"
   />
   <UserSlider
+    :select-item="backStageData.postItem"
+    @get-posts="backStageData.getPosts"
+    @clear-item="backStageData.clearPostItem"
+  />
+  <MemberSettingSlider
     :select-item="backStageData.postItem"
     @get-posts="backStageData.getPosts"
     @clear-item="backStageData.clearPostItem"

@@ -10,7 +10,7 @@ export default {
   setup(props) {
     const backStageData = backStatusStore();
     const modalState = computed(() => props.modalState);
-    const listState = ref(1);
+    const listState = ref(2);
     const subBtnState = ref(1);
     function changeListState(num) {
       listState.value = num;
@@ -86,7 +86,21 @@ export default {
               class="subNav__item"
               @click="changeListState(4)"
             >
-              交易記錄
+              購買記錄
+            </li>
+            <li
+              :class="{ active: listState === 5 }"
+              class="subNav__item"
+              @click="changeListState(5)"
+            >
+              銷售記錄
+            </li>
+            <li
+              :class="{ active: listState === 6 }"
+              class="subNav__item"
+              @click="changeListState(6)"
+            >
+              秘密錢包
             </li>
           </ul>
         </div>
@@ -211,7 +225,202 @@ export default {
               </li>
             </ul>
           </div>
-          <div class="col-10"></div>
+          <div class="col-10">
+            <ul class="backPostList">
+              <li class="backPostListItem">
+                <div class="backPostListItem__img flex-shrink-0"></div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">貼文內容</p>
+                  <p class="infoListItem__content">
+                    今天臺北市新增本土確診病例逼近萬人，很快地，染疫人數可能會超過PCR量能，
+                    造成確診人數失準。但根據各種模型推算，臺北的疫情洪峰將在5月16日到23日之間，我們必須再調整戰略。
+                    現階段最重要的事就是做到
+                    #輕重分流，保留最大醫療量能處理中重症病患。因此今天我記者會結束，
+                    立刻與臺北市各大醫院的院長視訊，商討接下來的 #防疫策略。 #防疫專責病房
+                  </p>
+                </div>
+                <div class="flex-grow-1 flex-shrink-0 d-flex flex-column justify-content-between">
+                  <ul class="iconInfoList">
+                    <li class="iconInfoList__item"><i class="webIcon--sm bi bi-heart"></i>325</li>
+                    <li class="iconInfoList__item"><i class="webIcon--sm bi bi-eye"></i>20</li>
+                    <li class="iconInfoList__item">
+                      <i class="webIcon--sm bi bi-chat-left-dots"></i>20
+                    </li>
+                  </ul>
+                  <p class="text-end text-gray-dark">2022 / 01 / 01 12:12</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row" v-if="listState === 3">
+          <div class="col-2">
+            <ul class="btnNav">
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 1 }"
+                @click="subBtnState = 1"
+              >
+                刊登中
+              </li>
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 2 }"
+                @click="subBtnState = 2"
+              >
+                已下架
+              </li>
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 2 }"
+                @click="subBtnState = 2"
+              >
+                訂閱者
+              </li>
+            </ul>
+          </div>
+          <div class="col-10">
+            <ul class="backPostList">
+              <li class="backPostListItem">
+                <div class="backPostListItem__img flex-shrink-0"></div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">貼文內容</p>
+                  <p class="infoListItem__content">
+                    今天臺北市新增本土確診病例逼近萬人，很快地，染疫人數可能會超過PCR量能，
+                    造成確診人數失準。但根據各種模型推算，臺北的疫情洪峰將在5月16日到23日之間，我們必須再調整戰略。
+                    現階段最重要的事就是做到
+                    #輕重分流，保留最大醫療量能處理中重症病患。因此今天我記者會結束，
+                    立刻與臺北市各大醫院的院長視訊，商討接下來的 #防疫策略。 #防疫專責病房
+                  </p>
+                </div>
+                <div class="flex-grow-1 flex-shrink-0 d-flex flex-column justify-content-between">
+                  <ul class="iconInfoList">
+                    <li class="iconInfoList__item"><i class="webIcon--sm bi bi-heart"></i>325</li>
+                    <li class="iconInfoList__item"><i class="webIcon--sm bi bi-eye"></i>20</li>
+                    <li class="iconInfoList__item">
+                      <i class="webIcon--sm bi bi-chat-left-dots"></i>20
+                    </li>
+                  </ul>
+                  <p class="text-end text-gray-dark">2022 / 01 / 01 12:12</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row" v-if="listState === 4">
+          <div class="col-2">
+            <ul class="btnNav">
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 1 }"
+                @click="subBtnState = 1"
+              >
+                秘密日記
+              </li>
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 2 }"
+                @click="subBtnState = 2"
+              >
+                訂閱作者
+              </li>
+            </ul>
+          </div>
+          <div class="col-10">
+            <ul class="backPostList" v-if="subBtnState === 1">
+              <li class="backPostListItem">
+                <div class="backPostListItem__img flex-shrink-0"></div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">購買項目</p>
+                  <p class="infoListItem__content">#1234567</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">創作者</p>
+                  <p class="infoListItem__content">卡斯柏</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">支付金額</p>
+                  <p class="infoListItem__content">25SD</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">交易日期</p>
+                  <p class="infoListItem__content">2022/11/11 12:12</p>
+                </div>
+                <button type="button" class="btn">
+                  <i class="text-dark webIcon bi bi-three-dots"></i>
+                </button>
+              </li>
+            </ul>
+             <ul class="backPostList" v-if="subBtnState === 2">
+              <li class="backPostListItem">
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">購買項目</p>
+                  <p class="infoListItem__content">一年訂閱</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">創作者</p>
+                  <p class="infoListItem__content">卡斯柏</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">支付金額</p>
+                  <p class="infoListItem__content">25SD</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">交易日期</p>
+                  <p class="infoListItem__content">2022/11/11 12:12</p>
+                </div>
+                <button type="button" class="btn">
+                  <i class="text-dark webIcon bi bi-three-dots"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row" v-if="listState === 5">
+          <div class="col-2">
+            <ul class="btnNav">
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 1 }"
+                @click="subBtnState = 1"
+              >
+                秘密日記
+              </li>
+              <li
+                class="btnNav__item"
+                :class="{ active: subBtnState === 2 }"
+                @click="subBtnState = 2"
+              >
+                訂閱記錄
+              </li>
+            </ul>
+          </div>
+          <div class="col-10">
+            <ul class="backPostList">
+              <li class="backPostListItem">
+                <div class="backPostListItem__img flex-shrink-0"></div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">購買項目</p>
+                  <p class="infoListItem__content">#1234567</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">創作者</p>
+                  <p class="infoListItem__content">卡斯柏</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">支付金額</p>
+                  <p class="infoListItem__content">25SD</p>
+                </div>
+                <div class="infoListItem py-3">
+                  <p class="infoListItem__title">交易日期</p>
+                  <p class="infoListItem__content">2022/11/11 12:12</p>
+                </div>
+                <button type="button" class="btn">
+                  <i class="text-dark webIcon bi bi-three-dots"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -291,6 +500,38 @@ export default {
     &.active {
       background-color: var(--bs-secondary);
       color: var(--bs-primary);
+    }
+  }
+}
+.backPostList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.backPostListItem {
+  padding: 0.75rem;
+  background-color: var(--bs-white);
+  border-radius: 0.75rem;
+  display: flex;
+  gap: 1rem;
+  &__img {
+    width: 6rem;
+    border-radius: 0.5rem;
+    background-color: var(--bs-default);
+  }
+}
+.iconInfoList {
+  display: flex;
+  gap: 0.75rem;
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    &:hover {
+      color: var(--bs-primary);
+      .webIcon--sm {
+        color: var(--bs-primary);
+      }
     }
   }
 }

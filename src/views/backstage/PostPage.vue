@@ -1,15 +1,21 @@
 <script>
 import { ref } from 'vue';
 import backStatusStore from '@/stores/backstage/backStatusStore';
+import Pagination from '@/components/helper/Pagination.vue';
 
 export default {
+  components: {
+    Pagination,
+  },
   setup() {
     const backstatusData = backStatusStore();
     const pageSubNav = ref('刊登中');
     backstatusData.nowPage = '貼文管理';
+    const paginationData = ref({ totalPages: 2, nowPage: 1 });
     return {
       backstatusData,
       pageSubNav,
+      paginationData,
     };
   },
 };
@@ -29,7 +35,7 @@ export default {
     </div>
   </div>
   <div class="backStageMainContent">
-    <div class="row row-cols-3">
+    <div class="row row-cols-3 mb-6">
       <div class="col mb-3">
         <div class="backPostCard h-100" @click="backstatusData.postSilderState = true">
           <div class="d-flex align-items-center p-3 pb-0">
@@ -93,6 +99,12 @@ export default {
           </div>
         </div>
       </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <Pagination
+      :pagination-data="paginationData"
+      @change-page-number="paginationData.nowPage = $event"
+    />
     </div>
   </div>
 </template>
