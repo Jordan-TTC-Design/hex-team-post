@@ -17,8 +17,13 @@ export default {
     async function logIn() {
       const result = await userData.logIn(loginData.value);
       if (result.status === 'success') {
-        localStorage.setItem('sd-token', result.user.token);
-        userData.userToken = result.user.token;
+        userData.user = {
+          name: result.user.name,
+          token: result.user.token,
+          photo: result.user.photo,
+        };
+        localStorage.setItem('sd-user', JSON.stringify(userData.user));
+        statusData.logInModel = false;
       } else {
         console.log('使用者帳密錯誤');
       }

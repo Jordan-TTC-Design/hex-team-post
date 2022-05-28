@@ -6,10 +6,16 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    function checkLogin() {
-      const token = localStorage.getItem('sd-token') || '';
-      console.log(token);
-      userData.userToken = token;
+    async function checkLogin() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      if (localUser.token) {
+        const checkResult = await userData.checkLogIn(localUser.token);
+        if (checkResult.status) {
+          localStorage.setItem('sd-user', JSON.stringify(localUser));
+          userData.user = localUser;
+          console.log(userData.user);
+        }
+      }
     }
     checkLogin();
     return { userData, statusData };
@@ -35,19 +41,19 @@ export default {
       </div>
     </div>
     <div class="menu-function">
-      <div class="btn-group" v-if="userData.userToken.length === 0">
+      <div class="btn-group" v-if="userData.user.token.length === 0">
         <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
           登入
         </button>
         <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
-      <div class="d-flex" v-if="userData.userToken.length > 0">
-        <button class="btn btn-secondary ms-2 px-3">
+      <div class="d-flex" v-if="userData.user.token.length > 0">
+        <button class="btn btn-secondary ms-2 px-3" @click="userData.logOut">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="d-flex align-items-center">
           <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture ms-4" />
-          <span>用戶名稱</span>
+          <span>{{ userData.user.name || '用戶名稱'}}</span>
         </div>
         <div class="ms-2">
           <button class="btn btn-primary px-3">

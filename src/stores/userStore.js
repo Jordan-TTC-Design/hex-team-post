@@ -5,11 +5,10 @@ const userStore = defineStore({
   id: 'userStore',
   state: () => ({
     user: {
-      name: 'Jordan',
-      photo:
-        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+      name: '',
+      token: '',
+      photo: '',
     },
-    userToken: '',
   }),
   getters: {},
   actions: {
@@ -36,6 +35,32 @@ const userStore = defineStore({
           console.log(err.response.data);
           return err.response.data;
         });
+    },
+    logOut() {
+      localStorage.removeItem('sd-user');
+      this.resetUser();
+    },
+    async checkLogIn(data) {
+      return axios({
+        method: 'GET',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/check',
+        headers: {
+          authorization: `${data}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          return res;
+        })
+        .catch((err) => {
+          console.log(err);
+          return err.response.data;
+        });
+    },
+    resetUser() {
+      this.user.name = '';
+      this.user.token = '';
+      this.user.photo = '';
     },
   },
 });
