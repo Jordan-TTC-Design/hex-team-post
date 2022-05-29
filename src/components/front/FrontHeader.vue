@@ -12,7 +12,7 @@ export default {
     const dropDownMenuStatus = ref(false);
     async function checkLogin() {
       const localUser = JSON.parse(localStorage.getItem('sd-user'));
-      if (localUser.token) {
+      if (localUser) {
         const checkResult = await userData.checkLogIn(localUser.token);
         if (checkResult.status) {
           localStorage.setItem('sd-user', JSON.stringify(localUser));

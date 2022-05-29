@@ -5,6 +5,7 @@ import LogInModel from '@/components/front/LogInModel.vue';
 import DiamondModel from '@/components/front/DiamondModel.vue';
 import AskModel from '@/components/helper/AskModel.vue';
 import RemindModel from '@/components/helper/RemindModel.vue';
+import NewPostModel from '@/components/helper/NewPostModel.vue';
 
 export default {
   components: {
@@ -14,6 +15,7 @@ export default {
     DiamondModel,
     AskModel,
     RemindModel,
+    NewPostModel,
   },
   setup() {
     return {};
@@ -32,6 +34,7 @@ export default {
     <LogInModel />
     <AskModel />
     <RemindModel />
+    <NewPostModel />
   </div>
 </template>
 

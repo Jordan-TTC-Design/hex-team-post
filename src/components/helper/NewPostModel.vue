@@ -81,14 +81,14 @@ export default {
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.newPostModel === true }">
-      <div class="position-relative border-bottom border-dark p-4 d-flex justify-content-center">
-        <h4 class="fs-5 text-center">新增貼文</h4>
+      <div class="position-relative border-bottom border-gray-middle p-4">
+        <h4 class="title">新增貼文</h4>
         <button
           @click="statusData.newPostModel = false"
           type="button"
-          class="btn position-absolute top-50 end-0 translate-middle"
+          class="btn position-absolute top-2 end-2"
         >
-          x
+          <i class="webIcon bi bi-x-lg"></i>
         </button>
       </div>
       <div class="d-flex flex-column gap-2 p-4 h-75 flex-grow-1">
@@ -122,7 +122,7 @@ export default {
           <button
             type="button"
             @click="toogleAddPost"
-            class="w-100 bg-black text-white rounded py-2 px-3"
+            class="btn btn-primary text-white rounded"
           >
             發布
           </button>
