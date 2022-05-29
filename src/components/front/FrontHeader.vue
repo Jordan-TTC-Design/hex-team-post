@@ -1,18 +1,21 @@
 <script>
+import { useRoute } from 'vue-router';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
 
 export default {
   setup() {
+    const route = useRoute();
     const userData = userStore();
     const statusData = statusStore();
+
     function checkLogin() {
       const token = localStorage.getItem('sd-token') || '';
       console.log(token);
       userData.userToken = token;
     }
     checkLogin();
-    return { userData, statusData };
+    return { userData, statusData, route };
   },
 };
 </script>
@@ -21,33 +24,55 @@ export default {
   <div class="menu">
     <img src="@/assets/image/logo.svg" alt="logo" class="menu-logo" />
     <div class="menu-navbar">
-      <div class="menu-navbar-item active">
-        <a href="#"><i class="bi bi-house-door"></i> 最新動態</a>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/` }">
+        <RouterLink to="/">
+          <i class="bi bi-house-door"></i> 最新動態
+        </RouterLink>
       </div>
       <div class="menu-navbar-item">
-        <a href="#"><i class="bi bi-bell-fill"></i>追蹤動態</a>
+        <RouterLink to="/Profile">
+          <i class="bi bi-bell-fill"></i> 追蹤動態
+        </RouterLink>
+      </div>
+      <div
+        class="menu-navbar-item"
+        :class="{ active: route.path === `/Recommend` }"
+      >
+        <RouterLink to="/Recommend">
+          <i class="bi bi-chat-square-heart"></i> 熱賣推薦
+        </RouterLink>
       </div>
       <div class="menu-navbar-item">
-        <a href="#"><i class="bi bi-chat-square-heart"></i> 熱賣推薦</a>
-      </div>
-      <div class="menu-navbar-item">
-        <a href="#"><i class="bi bi-envelope-heart"></i> 私密日記本</a>
+        <RouterLink to="/">
+          <i class="bi bi-envelope-heart"></i> 私密日記本
+        </RouterLink>
       </div>
     </div>
     <div class="menu-function">
-      <div class="btn-group" v-if="userData.userToken.length === 0">
-        <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
+      <div class="btn-group" v-if="!userData.userToken">
+        <button
+          @click="statusData.logInModel = true"
+          class="btn btn-outline text-primary"
+        >
           登入
         </button>
-        <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
+        <button @click="statusData.signUpModel = true" class="btn btn-outline">
+          註冊
+        </button>
       </div>
-      <div class="d-flex" v-if="userData.userToken.length > 0">
+      <div class="d-flex" v-if="userData.userToken">
         <button class="btn btn-secondary ms-2 px-3">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="d-flex align-items-center">
-          <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture ms-4" />
-          <span>用戶名稱</span>
+          <img
+            :src="userData.user.photo"
+            alt="user-picture"
+            class="user-picture ms-4"
+          />
+          <RouterLink to="/Profile">
+            <span>{{ userData.user.name }}</span>
+          </RouterLink>
         </div>
         <div class="ms-2">
           <button class="btn btn-primary px-3">
@@ -116,7 +141,7 @@ export default {
       position: relative;
 
       &.active {
-        &::before {
+        &::after {
           content: '';
           width: 120px;
           height: 1px;
