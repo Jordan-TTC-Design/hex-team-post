@@ -17,34 +17,20 @@ const routes = [
         component: () => import('../views/front/RecommendPage.vue'),
       },
       {
-        path: 'Profile',
-        name: 'ProfilePage',
-        component: () => import('../views/front/ProfilePage.vue'),
-      },
-      {
-        path: '/my-page',
-        name: 'Mypage',
-        component: () => import('../views/front/MyPage.vue'),
-      },
-      {
-        path: 'member-setting',
-        name: 'MemberSetting',
-        component: () => import('../views/front/MemberSetting.vue'),
-      },
-      {
-        path: 'thumb-up',
-        name: 'ThumbUpPage',
-        component: () => import('../views/front/ThumbUpPage.vue'),
-      },
-      {
-        path: 'follow',
+        path: 'Follow',
         name: 'FollowPage',
         component: () => import('../views/front/FollowPage.vue'),
       },
+
       {
-        path: 'person/:id',
-        name: 'PersonPage',
-        component: () => import('../views/front/PersonPage.vue'),
+        path: 'Diary',
+        name: 'FrontDiaryPage',
+        component: () => import('../views/front/DiaryPage.vue'),
+      },
+      {
+        path: 'Profile',
+        name: 'ProfilePage',
+        component: () => import('../views/front/ProfilePage.vue'),
       },
     ],
   },
