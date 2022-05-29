@@ -34,8 +34,11 @@ export default {
           <i class="bi bi-house-door"></i> 最新動態
         </RouterLink>
       </div>
-      <div class="menu-navbar-item">
-        <RouterLink to="/Profile">
+      <div
+        class="menu-navbar-item"
+        :class="{ active: route.path === `/Follow` }"
+      >
+        <RouterLink to="/Follow">
           <i class="bi bi-bell-fill"></i> 追蹤動態
         </RouterLink>
       </div>
@@ -47,15 +50,21 @@ export default {
           <i class="bi bi-chat-square-heart"></i> 熱賣推薦
         </RouterLink>
       </div>
-      <div class="menu-navbar-item">
-        <RouterLink to="/">
+      <div
+        class="menu-navbar-item"
+        :class="{ active: route.path === `/Diary` }"
+      >
+        <RouterLink to="/Diary">
           <i class="bi bi-envelope-heart"></i> 私密日記本
         </RouterLink>
       </div>
     </div>
     <div class="menu-function">
       <div class="btn-group" v-if="userData.user.token.length === 0">
-        <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
+        <button
+          @click="statusData.logInModel = true"
+          class="btn btn-outline text-primary"
+        >
           登入
         </button>
         <button @click="statusData.signUpModel = true" class="btn btn-outline">
@@ -67,8 +76,12 @@ export default {
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="d-flex align-items-center">
-          <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture ms-4" />
-          <span>{{ userData.user.name || '用戶名稱'}}</span>
+          <img
+            src="@/assets/image/user-picture.png"
+            alt="user-picture"
+            class="user-picture ms-4"
+          />
+          <span>{{ userData.user.name || '用戶名稱' }}</span>
         </div>
         <div class="ms-2">
           <button class="btn btn-primary px-3">

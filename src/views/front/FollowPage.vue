@@ -1,51 +1,56 @@
 <script>
 import { ref } from 'vue';
-import PageTitleBox from '@/components/front/PageTitleBox.vue';
-import DynamicWall from '@/components/front/DynamicWall.vue';
+import userStore from '@/stores/userStore';
+import postsStore from '@/stores/postsStore';
+import PostFilter from '@/components/front/PostFilter.vue';
+import AddPostCard from '@/components/front/AddPostCard.vue';
+import PostCard from '@/components/front/PostCard.vue';
+import RecommendFollowCard from '@/components/front/RecommendFollowCard.vue';
 
 export default {
   components: {
-    PageTitleBox,
-    DynamicWall,
+    PostFilter,
+    AddPostCard,
+    PostCard,
+    RecommendFollowCard,
   },
   setup() {
-    const thumbUpData = ref([
-      { user: { name: '阿爾敏' }, createdAt: '2022/2/2' },
-      { user: { name: '米卡莎' }, createdAt: '2022/2/2' },
-      { user: { name: '孫悟空' }, createdAt: '2022/2/2' },
-    ]);
-    return { thumbUpData };
+    const userData = userStore();
+    const postsData = postsStore();
+    const postSort = ref('asc');
+    const postQuery = ref('');
+    postsData.getPosts();
+    function sortPostsData() {
+      postsData.getPosts(postSort.value, postQuery.value);
+    }
+    function checkLogin() {
+      const token = localStorage.getItem('sd-token') || '123';
+      console.log(token);
+      userData.userToken = token;
+    }
+    checkLogin();
+
+    return {
+      postSort,
+      postQuery,
+      postsData,
+      sortPostsData,
+      userData,
+    };
   },
 };
 </script>
 
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-8">
-        <PageTitleBox class="mb-6" title-content="追蹤名單" />
-        <ul class="d-flex flex-column gap-3">
-          <li v-for="(item, index) in thumbUpData" :key="index">
-            <div class="thumbUpBox">
-              <div class="d-flex align-items-center gap-3">
-                <img
-                  class="thumbUpBox__img"
-                  src="https://images.unsplash.com/photo-1648737154547-b0dfd281c51e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                  alt=""
-                />
-                <div>
-                  <p class="text--title mb-1">{{ item.user.name }}</p>
-                  <p class="text--subTxt">發文時間：{{ item.createdAt }}</p>
-                </div>
-              </div>
-              <p class="align-self-end">您已經追蹤90天～～～</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="col-4">
-        <DynamicWall />
-      </div>
+  <div class="container d-flex">
+    <div class="side fix">
+      <RecommendFollowCard />
+    </div>
+    <div class="content">
+      <PostFilter class="mb-3" />
+      <AddPostCard class="mb-3" v-if="userData.userToken" />
+      <PostCard class="mb-3" />
+      <PostCard class="mb-3" />
     </div>
   </div>
 </template>
