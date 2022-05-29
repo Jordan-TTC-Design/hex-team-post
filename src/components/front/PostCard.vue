@@ -16,7 +16,6 @@ export default {
     const content = ref(a);
     const isShowMore = ref(a.length <= 200);
     const showMore = () => {
-      console.log(123);
       isShowMore.value = true;
     };
     return {
@@ -39,7 +38,9 @@ export default {
           class="user-picture"
         />
         <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
+          <RouterLink class="user-info-title" to="profile?id=12345">
+            用戶名稱
+          </RouterLink>
           <span class="user-info-subtitle">200 人追蹤</span>
         </div>
         <div class="btn btn-sm">追蹤</div>

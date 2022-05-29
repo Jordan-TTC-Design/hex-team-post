@@ -4,6 +4,7 @@
 export default {
   props: {
     tabType: String,
+    userId: String,
   },
   setup(props, { emit }) {
     // 自己 (貼文 私密日記 追蹤中 喜歡的貼文 設定)
@@ -20,7 +21,7 @@ export default {
       emit('change-tab', newTab);
     };
 
-    console.log(props.tabType);
+    console.log('inner', props.userId);
 
     return {
       TabTypeEnum,
@@ -51,7 +52,7 @@ export default {
         </button>
       </div>
     </div>
-    <div class="userProfileCard-footer" v-if="true">
+    <div class="userProfileCard-footer" v-if="!props.userId">
       <div
         class="userProfileCard-footer-item"
         :class="[props.tabType === TabTypeEnum.POST ? 'active' : '']"
@@ -96,9 +97,27 @@ export default {
       </div>
     </div>
     <div class="userProfileCard-footer" v-else>
-      <div class="userProfileCard-footer-item">貼文</div>
-      <div class="userProfileCard-footer-item">私密日記</div>
-      <div class="userProfileCard-footer-item">追蹤</div>
+      <div
+        class="userProfileCard-footer-item"
+        :class="[props.tabType === TabTypeEnum.POST ? 'active' : '']"
+        @click="handleChangeTab(TabTypeEnum.POST)"
+      >
+        貼文
+      </div>
+      <div
+        class="userProfileCard-footer-item"
+        :class="[props.tabType === TabTypeEnum.DIARY ? 'active' : '']"
+        @click="handleChangeTab(TabTypeEnum.DIARY)"
+      >
+        私密日記
+      </div>
+      <div
+        class="userProfileCard-footer-item"
+        :class="[props.tabType === TabTypeEnum.FOLLOW ? 'active' : '']"
+        @click="handleChangeTab(TabTypeEnum.FOLLOW)"
+      >
+        追蹤
+      </div>
     </div>
   </div>
 </template>
