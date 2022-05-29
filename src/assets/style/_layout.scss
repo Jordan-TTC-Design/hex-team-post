@@ -4,6 +4,7 @@ main.front-main {
 
     .content {
         flex: 1 1 auto;
+        min-height: calc(100vh - 64px);
     }
 
     .side {
@@ -19,4 +20,19 @@ main.front-main {
         margin-right: 0;
         margin-left: 20px;
     }
+
+    .subContent {
+        flex: 1 1 auto;
+    }
+
+    .subSide {
+        margin-right: 20px;
+
+        &.fix {
+            width: 160px;
+            flex-shrink: 0;
+        }
+    }
+
+
 }
