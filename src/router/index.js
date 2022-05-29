@@ -27,16 +27,6 @@ const routes = [
         component: () => import('../views/front/MyPage.vue'),
       },
       {
-        path: 'login',
-        name: 'LoginPage',
-        component: () => import('../views/front/LoginPage.vue'),
-      },
-      {
-        path: 'register',
-        name: 'RegisterPage',
-        component: () => import('../views/front/RegisterPage.vue'),
-      },
-      {
         path: 'member-setting',
         name: 'MemberSetting',
         component: () => import('../views/front/MemberSetting.vue'),
@@ -87,6 +77,16 @@ const routes = [
         path: 'diary',
         name: 'DiaryPage',
         component: () => import('../views/backstage/DiaryPage.vue'),
+      },
+      {
+        path: 'payment',
+        name: 'PaymentPage',
+        component: () => import('../views/backstage/PaymentPage.vue'),
+      },
+      {
+        path: 'setting',
+        name: 'SettingPage',
+        component: () => import('../views/backstage/SettingPage.vue'),
       },
     ],
   },

@@ -37,7 +37,15 @@
   font-size: 20px;
   color: #1d1d1d;
 }
-
+.section__title {
+  font-weight: 700;
+  padding: 0 0 0.75rem 0;
+  border-bottom: 1px solid var(--bs-gray-middle);
+  &__content {
+    color: var(--bs-black);
+    font-size: 1.25rem;
+  }
+}
 // user
 .user-picture {
   width: 44px;
@@ -69,6 +77,12 @@
   color: #989898;
 }
 
+.webTag {
+  padding: 0.125rem 0.5rem;
+  background-color: var(--bs-gray-middle);
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+}
 // icon
 .icon {
   display: flex;
@@ -164,7 +178,7 @@
   transform: translateY(0);
 }
 .silderBg {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   height: 5%;
   width: 100%;
   position: fixed;
@@ -205,7 +219,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   transform: translateX(-100%);
   transition: all 0.3s;
 }
@@ -233,72 +247,71 @@
   }
 }
 
-
 // 絕對定位工具
 
-.top-2{
-  top:0.5rem
+.top-2 {
+  top: 0.5rem;
 }
-.top-3{
-  top:0.75rem
+.top-3 {
+  top: 0.75rem;
 }
-.top-4{
-  top:1rem
+.top-4 {
+  top: 1rem;
 }
-.top-5{
-  top:1.25rem
+.top-5 {
+  top: 1.25rem;
 }
-.top-6{
-  top:1.5rem
+.top-6 {
+  top: 1.5rem;
 }
-.end-2{
-  right:0.5rem
+.end-2 {
+  right: 0.5rem;
 }
-.end-3{
-  right:0.75rem
+.end-3 {
+  right: 0.75rem;
 }
-.end-4{
-  right:1rem
+.end-4 {
+  right: 1rem;
 }
-.end-5{
-  right:1.25rem
+.end-5 {
+  right: 1.25rem;
 }
-.end-6{
-  right:1.5rem
+.end-6 {
+  right: 1.5rem;
 }
-.bottom-2{
-  bottom:0.5rem
+.bottom-2 {
+  bottom: 0.5rem;
 }
-.bottom-3{
-  bottom:0.75rem
+.bottom-3 {
+  bottom: 0.75rem;
 }
-.bottom-4{
-  bottom:1rem
+.bottom-4 {
+  bottom: 1rem;
 }
-.bottom-5{
-  bottom:1.25rem
+.bottom-5 {
+  bottom: 1.25rem;
 }
-.bottom-6{
-  bottom:1.5rem
+.bottom-6 {
+  bottom: 1.5rem;
 }
-.start-2{
-  left:0.5rem
+.start-2 {
+  left: 0.5rem;
 }
-.start-3{
-  left:0.75rem
+.start-3 {
+  left: 0.75rem;
 }
-.start-4{
-  left:1rem
+.start-4 {
+  left: 1rem;
 }
-.start-5{
-  left:1.25rem
+.start-5 {
+  left: 1.25rem;
 }
-.start-6{
-  left:1.5rem
+.start-6 {
+  left: 1.5rem;
 }
-.absolute-middle{
+.absolute-middle {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%)
+  transform: translate(-50%, -50%);
 }
