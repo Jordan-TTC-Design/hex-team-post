@@ -75,6 +75,23 @@
             text-align: center;
             padding: 10px 0;
             position: relative;
+            color: #1d1d1d;
+            cursor: pointer;
+            user-select: none;
+
+            &.active {
+                color: var(--bs-primary);
+
+                &::after {
+                    content: '';
+                    border-radius: 12px 12px 0 0;
+                    border-top: 4px solid var(--bs-primary);
+                    width: 36px;
+                    left: 42px;
+                    bottom: 0;
+                    position: absolute;
+                }
+            }
 
             &+.userProfileCard-footer-item::before {
                 position: absolute;
