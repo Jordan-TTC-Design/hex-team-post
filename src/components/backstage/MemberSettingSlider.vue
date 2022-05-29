@@ -177,10 +177,12 @@ export default {
           </div>
         </div>
       </div>
-      <div class="sliderFooter p-4">
-        <button type="button" class="btn btn-danger me-auto">刪除用戶</button>
-        <button type="button" class="btn btn-outline">取消</button>
-        <button type="button" class="btn btn-primary">確定</button>
+      <div class="sliderFooter p-4 justify-content-between">
+        <button type="button" class="btn btn-danger">刪除用戶</button>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline">取消</button>
+          <button type="button" class="btn btn-primary">確定</button>
+        </div>
       </div>
     </div>
   </div>
@@ -200,7 +202,6 @@ export default {
   padding: 0.75rem;
   border-top: 1px solid var(--bs-gray-middle);
   display: flex;
-  justify-content: end;
   gap: 0.5rem;
 }
 .formRadio {
