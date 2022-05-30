@@ -11,9 +11,9 @@ import UserProfileCard from '@/components/front/UserProfileCard.vue';
 import PostCard from '@/components/front/PostCard.vue';
 import SponsorCard from '@/components/front/SponsorCard.vue';
 import PopularPostCard from '@/components/front/PopularPostCard.vue';
-import PersonalCard from '@/components/front/PersonalCard.vue';
-import PersonalEditCard from '@/components/front/PersonalEditCard.vue';
-import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
+// import PersonalCard from '@/components/front/PersonalCard.vue';
+// import PersonalEditCard from '@/components/front/PersonalEditCard.vue';
+// import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
 import FormRadioButton from '@/components/helper/FormRadioButton.vue';
 
 export default {
@@ -23,9 +23,9 @@ export default {
     PostCard,
     SponsorCard,
     PopularPostCard,
-    PersonalCard,
-    PersonalEditCard,
-    DiamondPurchaseRecordCard,
+    // PersonalCard,
+    // PersonalEditCard,
+    // DiamondPurchaseRecordCard,
     FormRadioButton,
   },
   setup() {
@@ -37,8 +37,7 @@ export default {
 
     const route = useRoute();
     const userId = route.params.id;
-    console.log('userId', userId);
-
+    const postsList = ref([]);
     const handleChangeTab = (newTab) => {
       tabType.value = newTab;
     };
@@ -50,9 +49,12 @@ export default {
       isShowPersonalEditCard.value = false;
     };
     async function init() {
-      // const pageUser = await userData.getProfileUser(userId);
+      console.log(userData.user.token);
       const pageUser = await userData.getMyUser(userData.user.token);
+      // const userPosts = await postsData.getUserPost(userData.user.token);
       console.log(pageUser);
+      postsList.value = [...pageUser.user.posts];
+      console.log(postsList.value.length, postsList.value[0]);
     }
     init();
     return {
@@ -60,6 +62,7 @@ export default {
       postsData,
       tabType,
       isShowPersonalEditCard,
+      postsList,
       handleChangeTab,
       ShowEditPersonal,
       HideEditPersonal,
@@ -72,13 +75,15 @@ export default {
   <div class="container d-flex">
     <div class="content">
       <UserProfileCard :tabType="tabType" @change-tab="handleChangeTab" :userId="userId" />
-      <template v-if="!userId">
-        <template v-if="tabType === 'POST'">
-          <PostFilter class="mb-3" />
-          <PostCard />
-          <PostCard />
-        </template>
-        <template v-if="tabType === 'DIARY'">
+      <div v-if="tabType === 'POST'">
+        <PostFilter class="mb-3" />
+        <div>
+          <template v-for="postItem in postsList" :key="postItem.id">
+            <PostCard :post-item="postItem" />
+          </template>
+        </div>
+      </div>
+      <div v-if="tabType === 'DIARY'">
           <div class="d-flex mb-3">
             <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
             <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
@@ -86,8 +91,8 @@ export default {
           </div>
           <PostCard />
           <PostCard />
-        </template>
-        <template v-if="tabType === 'FOLLOW'">
+        </div>
+        <div v-if="tabType === 'FOLLOW'">
           <div class="card mb-3">
             <div class="card-body">
               <div class="d-flex align-items-center mb-3 py-2">
@@ -128,13 +133,13 @@ export default {
               </div>
             </div>
           </div>
-        </template>
-        <template v-if="tabType === 'LIKE'">
+        </div>
+        <div v-if="tabType === 'LIKE'">
           <PostFilter class="mb-3" />
-          <PostCard />
-          <PostCard />
-        </template>
-        <template v-if="tabType === 'WALLET'">
+          <PostCard :post-item="post" />
+          <PostCard :post-item="post" />
+        </div>
+        <div v-if="tabType === 'WALLET'">
           <div class="d-flex">
             <div class="subSide fix">
               <div class="side-menu-item mb-3">日記購買紀錄</div>
@@ -148,8 +153,8 @@ export default {
               <DiamondPurchaseRecordCard />
             </div>
           </div>
-        </template>
-        <template v-if="tabType === 'SETTING'">
+        </div>
+        <div v-if="tabType === 'SETTING'">
           <div class="d-flex">
             <div class="subSide fix">
               <div class="side-menu-item mb-3 active">個人資料</div>
@@ -161,24 +166,23 @@ export default {
               <PersonalEditCard v-if="isShowPersonalEditCard" @hide-edit="HideEditPersonal" />
             </div>
           </div>
-        </template>
-      </template>
-      <template v-else>
-        <template v-if="tabType === 'POST'">
+        </div>
+      <div v-else>
+        <div v-if="tabType === 'POST'">
           <PostFilter class="mb-3" />
           <PostCard />
           <PostCard />
-        </template>
-        <template v-if="tabType === 'DIARY'">
+        </div>
+        <div v-if="tabType === 'DIARY'">
           <div class="d-flex mb-3">
             <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
             <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
             <PostFilter class="flex-grow-1" />
           </div>
-          <PostCard />
-          <PostCard />
-        </template>
-        <template v-if="tabType === 'FOLLOW'">
+          <PostCard :post-item="post" />
+          <PostCard :post-item="post" />
+        </div>
+        <div v-if="tabType === 'FOLLOW'">
           <div class="card mb-3">
             <div class="card-body">
               <div class="d-flex align-items-center mb-3 py-2">
@@ -219,8 +223,8 @@ export default {
               </div>
             </div>
           </div>
-        </template>
-      </template>
+        </div>
+      </div>
     </div>
     <div class="side fix">
       <SponsorCard />

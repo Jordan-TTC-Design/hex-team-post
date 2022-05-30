@@ -45,6 +45,22 @@ const postsStore = defineStore({
         return err;
       }
     },
+    async getUserPost(userToken) {
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/UserAll',
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
     async upLoadImage(data, userToken) {
       let resultData = null;
       const formdata = new FormData();

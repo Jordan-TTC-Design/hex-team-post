@@ -71,18 +71,17 @@ const userStore = defineStore({
           return err;
         });
     },
-    async getMyUser(data) {
-      console.log(data);
+    async getMyUser(userToken) {
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
         headers: {
-          authorization: `${data}`,
+          authorization: `${userToken}`,
         },
       })
         .then((res) => {
           console.log(res);
-          return res;
+          return res.data.data;
         })
         .catch((err) => {
           console.log(err);

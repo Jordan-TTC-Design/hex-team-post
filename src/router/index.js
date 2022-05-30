@@ -29,7 +29,6 @@ const routes = [
       },
       {
         path: 'profile/:id',
-        name: 'ProfilePage',
         component: () => import('../views/front/ProfilePage.vue'),
       },
     ],
