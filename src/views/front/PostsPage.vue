@@ -19,7 +19,7 @@ export default {
     const postsData = postsStore();
     const postSort = ref('asc');
     const postQuery = ref('');
-    postsData.getPosts();
+    postsData.getPosts(1);
     function sortPostsData() {
       postsData.getPosts(postSort.value, postQuery.value);
     }

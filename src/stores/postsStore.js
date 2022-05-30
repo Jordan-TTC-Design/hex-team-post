@@ -13,45 +13,56 @@ const postsStore = defineStore({
   }),
   getters: {},
   actions: {
-    getPosts(timeSort = 'asc', query = '') {
-      console.log(`https://hex-post-w4.herokuapp.com/posts/all?timeSort=${timeSort}&q=${query}`);
-      axios
-        .get(`https://hex-post-w4.herokuapp.com/posts/all?timeSort=${timeSort}&q=${query}`)
-        .then((res) => {
-          console.log(res.data);
-          this.posts = res.data.data;
-        })
-        .catch((err) => {
-          console.dir(err);
-        });
+    async getPosts(page = 1, timeSort = 'asc', query = '') {
+      try {
+        const res = await axios.get(
+          // eslint-disable-next-line comma-dangle
+          `https://hex-post-team-api-server.herokuapp.com/api/posts/?page=${page}&q=${query}&sort=${timeSort}`
+        );
+        console.log(res);
+        this.posts = res.data.data;
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
     },
-    addPost(data) {
+    async addPost(data, userToken) {
       console.log(data);
-      axios
-        .post('https://hex-post-w4.herokuapp.com/posts', data)
-        .then((res) => {
-          console.log(res.data);
-          return res.data;
-        })
-        .catch((err) => {
-          console.dir(err);
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
+          data,
+          headers: {
+            authorization: `${userToken}`,
+          },
         });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
     },
-    async upLoadImage(data) {
+    async upLoadImage(data, userToken) {
       let resultData = null;
       const formdata = new FormData();
       formdata.append('image', data);
       const config = {
         method: 'POST',
-        url: 'https://hex-post-w4.herokuapp.com/other/image',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/upload/image',
         data: formdata,
+        headers: {
+          authorization: `${userToken}`,
+        },
       };
       try {
         const res = await axios(config);
-        console.log(res);
         resultData = res.data;
       } catch (err) {
         console.dir(err);
+        return err;
       }
       return resultData;
     },

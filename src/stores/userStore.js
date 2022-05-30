@@ -20,8 +20,8 @@ const userStore = defineStore({
           return res.data;
         })
         .catch((err) => {
-          console.log(err.response.data);
-          return err.response.data;
+          console.log(err);
+          return err;
         });
     },
     async logIn(data) {
@@ -32,8 +32,8 @@ const userStore = defineStore({
           return res.data;
         })
         .catch((err) => {
-          console.log(err.response.data);
-          return err.response.data;
+          console.log(err);
+          return err;
         });
     },
     logOut() {
@@ -54,7 +54,39 @@ const userStore = defineStore({
         })
         .catch((err) => {
           console.log(err);
-          return err.response.data;
+          return err;
+        });
+    },
+    async getProfileUser(id = '628e4bbfad29e4c054c9f380') {
+      return axios({
+        method: 'GET',
+        url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
+      })
+        .then((res) => {
+          console.log(res);
+          return res;
+        })
+        .catch((err) => {
+          console.log(err);
+          return err;
+        });
+    },
+    async getMyUser(data) {
+      console.log(data);
+      return axios({
+        method: 'GET',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
+        headers: {
+          authorization: `${data}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          return res;
+        })
+        .catch((err) => {
+          console.log(err);
+          return err;
         });
     },
     resetUser() {

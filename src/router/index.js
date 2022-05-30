@@ -12,23 +12,23 @@ const routes = [
         component: () => import('../views/front/PostsPage.vue'),
       },
       {
-        path: 'Recommend',
+        path: 'recommend',
         name: 'RecommendPage',
         component: () => import('../views/front/RecommendPage.vue'),
       },
       {
-        path: 'Follow',
+        path: 'follow',
         name: 'FollowPage',
         component: () => import('../views/front/FollowPage.vue'),
       },
 
       {
-        path: 'Diary',
+        path: 'diary',
         name: 'FrontDiaryPage',
         component: () => import('../views/front/DiaryPage.vue'),
       },
       {
-        path: 'Profile',
+        path: 'profile/:id',
         name: 'ProfilePage',
         component: () => import('../views/front/ProfilePage.vue'),
       },

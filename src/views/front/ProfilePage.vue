@@ -2,9 +2,12 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import postsStore from '@/stores/postsStore';
+import userStore from '@/stores/userStore';
+
 import PostFilter from '@/components/front/PostFilter.vue';
 import UserProfileCard from '@/components/front/UserProfileCard.vue';
-import postsStore from '@/stores/postsStore';
+
 import PostCard from '@/components/front/PostCard.vue';
 import SponsorCard from '@/components/front/SponsorCard.vue';
 import PopularPostCard from '@/components/front/PopularPostCard.vue';
@@ -27,24 +30,14 @@ export default {
   },
   setup() {
     const postsData = postsStore();
-    const postSort = ref('asc');
-    const postQuery = ref('');
+    const userData = userStore();
 
     const tabType = ref('POST');
     const isShowPersonalEditCard = ref(false);
 
     const route = useRoute();
-    const { id } = route.query;
-
-    console.log('id', id);
-    const userId = ref(id);
-    console.log('userid', userId.value);
-    console.log('type', tabType.value);
-
-    postsData.getPosts();
-    function sortPostsData() {
-      postsData.getPosts(postSort.value, postQuery.value);
-    }
+    const userId = route.params.id;
+    console.log('userId', userId);
 
     const handleChangeTab = (newTab) => {
       tabType.value = newTab;
@@ -56,15 +49,17 @@ export default {
     const HideEditPersonal = () => {
       isShowPersonalEditCard.value = false;
     };
-
+    async function init() {
+      // const pageUser = await userData.getProfileUser(userId);
+      const pageUser = await userData.getMyUser(userData.user.token);
+      console.log(pageUser);
+    }
+    init();
     return {
       userId,
-      postSort,
-      postQuery,
       postsData,
       tabType,
       isShowPersonalEditCard,
-      sortPostsData,
       handleChangeTab,
       ShowEditPersonal,
       HideEditPersonal,
@@ -76,11 +71,7 @@ export default {
 <template>
   <div class="container d-flex">
     <div class="content">
-      <UserProfileCard
-        :tabType="tabType"
-        @change-tab="handleChangeTab"
-        :userId="userId"
-      />
+      <UserProfileCard :tabType="tabType" @change-tab="handleChangeTab" :userId="userId" />
       <template v-if="!userId">
         <template v-if="tabType === 'POST'">
           <PostFilter class="mb-3" />
@@ -167,10 +158,7 @@ export default {
             </div>
             <div class="subContent">
               <PersonalCard class="mb-3" @show-edit="ShowEditPersonal" />
-              <PersonalEditCard
-                v-if="isShowPersonalEditCard"
-                @hide-edit="HideEditPersonal"
-              />
+              <PersonalEditCard v-if="isShowPersonalEditCard" @hide-edit="HideEditPersonal" />
             </div>
           </div>
         </template>

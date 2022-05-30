@@ -32,13 +32,9 @@ export default {
   <div class="card mb-3">
     <div class="card-body">
       <div class="d-flex align-items-center mb-3">
-        <img
-          src="../../assets/image/user-picture.png"
-          alt="user-picture"
-          class="user-picture"
-        />
+        <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
         <div class="user-info">
-          <RouterLink class="user-info-title" to="profile?id=12345">
+          <RouterLink class="user-info-title" :to="`/profile/${userData.user.name}`">
             用戶名稱
           </RouterLink>
           <span class="user-info-subtitle">200 人追蹤</span>
