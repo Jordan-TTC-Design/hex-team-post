@@ -42,14 +42,14 @@ export default {
       <div class="menu-navbar-item" :class="{ active: route.path === `/` }">
         <RouterLink to="/"> <i class="bi bi-house-door"></i> 最新動態 </RouterLink>
       </div>
-      <div class="menu-navbar-item" :class="{ active: route.path === `/Follow` }">
-        <RouterLink to="/Follow"> <i class="bi bi-bell-fill"></i> 追蹤動態 </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/follow` }">
+        <RouterLink to="/follow"> <i class="bi bi-bell-fill"></i> 追蹤動態 </RouterLink>
       </div>
-      <div class="menu-navbar-item" :class="{ active: route.path === `/Recommend` }">
-        <RouterLink to="/Recommend"> <i class="bi bi-chat-square-heart"></i> 熱賣推薦 </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/recommend` }">
+        <RouterLink to="/recommend"> <i class="bi bi-chat-square-heart"></i> 熱賣推薦 </RouterLink>
       </div>
-      <div class="menu-navbar-item" :class="{ active: route.path === `/Diary` }">
-        <RouterLink to="/Diary"> <i class="bi bi-envelope-heart"></i> 私密日記本 </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/diary` }">
+        <RouterLink to="/diary"> <i class="bi bi-envelope-heart"></i> 私密日記本 </RouterLink>
       </div>
     </div>
     <div class="menu-function">
@@ -77,7 +77,7 @@ export default {
                   'bi-chevron-up': dropDownMenuStatus === true,
                   'bi-chevron-down': dropDownMenuStatus === false,
                 }"
-                class="bi "
+                class="bi"
               ></i>
             </button>
             <div class="dropDownMenu__dropdown" v-show="dropDownMenuStatus">
@@ -86,8 +86,12 @@ export default {
                   <p class="text-primary">錢包</p>
                   <span class="ms-auto text-primary">200 <i class="bi bi-gem"></i> </span>
                 </li>
-                <RouterLink to="/profile" class="list-group-item">查看個人檔案</RouterLink>
-                <RouterLink to="/profile" class="list-group-item">消費記錄</RouterLink>
+                <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
+                  >查看個人檔案</RouterLink
+                >
+                <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
+                  >消費記錄</RouterLink
+                >
                 <li class="list-group-item">客服支援</li>
                 <li @click="userData.logOut" class="list-group-item">登出</li>
               </ul>

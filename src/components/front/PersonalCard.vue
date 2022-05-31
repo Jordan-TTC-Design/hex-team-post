@@ -25,7 +25,7 @@ export default {
         "
       >
         個人資料
-        <i class="bi bi-pencil-square c" @click="showEdit"></i>
+        <i class="bi bi-pencil-square" @click="showEdit"></i>
       </div>
       <div class="tmp">
         <p class="a">暱稱</p>

@@ -16,47 +16,52 @@ export default {
     const imgUploadGetter = ref(null);
     const editPhoto = ref(false);
     const newPost = ref({
-      user: '62729881e8a0d4cba032e7bc',
-      postContent: '',
-      postImgUrl: '',
+      content: '',
+      image: '',
     });
     const imgData = ref(null);
     const imgHistory = ref('');
-    // function resetData() {
-    //   imgHistory.value = '';
-    //   editPhoto.value = false;
-    // }
+    function resetData() {
+      imgHistory.value = '';
+      editPhoto.value = false;
+      newPost.value.content = '';
+      newPost.value.image = '';
+    }
+    function closeNewPostModel() {
+      statusData.newPostModel = false;
+      resetData();
+    }
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
       imgData.value = file;
-      imgHistory.value = newPost.value.postImgUrl;
+      imgHistory.value = newPost.value.image;
       const imgShow = window.URL || window.webkitURL;
-      newPost.value.postImgUrl = imgShow.createObjectURL(imgData.value);
+      newPost.value.image = imgShow.createObjectURL(imgData.value);
       editPhoto.value = true;
       console.log(editPhoto.value);
-      console.log(newPost.value.postImgUrl, newPost.value.postImgUrl.length);
+      console.log(newPost.value.image, newPost.value.image.length);
     }
     async function toogleAddPost() {
       console.log(editPhoto.value);
       if (editPhoto.value === true) {
         try {
-          const result = await postsData.upLoadImage(imgData.value);
+          const result = await postsData.upLoadImage(imgData.value, userData.user.token);
           console.log(result);
           if (result.status) {
-            newPost.value.postImgUrl = result.data;
+            newPost.value.image = result.data;
           }
-          postsData.addPost(newPost.value);
+          postsData.addPost(newPost.value, userData.user.token);
         } catch (e) {
           console.log(e);
         }
       } else {
-        newPost.value.postImgUrl = imgHistory.value;
-        postsData.addPost(newPost.value);
+        newPost.value.image = imgHistory.value;
+        postsData.addPost(newPost.value, userData.user.token);
       }
-      // resetData();
+      closeNewPostModel();
     }
-
     return {
+      imgData,
       imgUploadGetter,
       postsData,
       statusData,
@@ -65,7 +70,7 @@ export default {
       userData,
       toogleGetter,
       toogleAddPost,
-      imgData,
+      closeNewPostModel,
     };
   },
 };
@@ -77,14 +82,14 @@ export default {
     :class="{ active: statusData.newPostModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.newPostModel = false" />
+    <div class="popModalCover" @click="closeNewPostModel" />
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.newPostModel === true }">
       <div class="position-relative border-bottom border-gray-middle p-4">
         <h4 class="title">新增貼文</h4>
         <button
-          @click="statusData.newPostModel = false"
+          @click="closeNewPostModel"
           type="button"
           class="btn position-absolute top-2 end-2"
         >
@@ -101,15 +106,15 @@ export default {
             input-id="postContent"
             input-name="postContent"
             text-holder="在想什麼呢？"
-            v-model="newPost.postContent"
+            v-model="newPost.content"
           />
-          <div v-show="newPost.postImgUrl.length > 0" class="newPost__imgBox">
-            <img :src="newPost.postImgUrl" alt="貼文圖片" class="newPost__imgBox__img" />
+          <div v-show="newPost.image.length > 0" class="newPost__imgBox">
+            <img :src="newPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
           </div>
         </div>
         <div class="d-flex flex-column gap-2">
           <label for="imgUploader" class="newPostUpLoader">{{
-            newPost.postImgUrl.length > 0 ? '變更圖片' : '新增圖片'
+            newPost.image.length > 0 ? '變更圖片' : '新增圖片'
           }}</label>
           <input
             ref="imgUploadGetter"
@@ -119,11 +124,7 @@ export default {
             @change="toogleGetter"
             accept="image/png, image/jpeg"
           />
-          <button
-            type="button"
-            @click="toogleAddPost"
-            class="btn btn-primary text-white rounded"
-          >
+          <button type="button" @click="toogleAddPost" class="btn btn-primary text-white rounded">
             發布
           </button>
         </div>
