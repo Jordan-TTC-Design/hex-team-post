@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
+import paymentStore from '@/stores/paymentStore';
 import userStore from '@/stores/userStore';
 
 export default {
@@ -10,21 +11,26 @@ export default {
     const userData = userStore();
     const postsData = postsStore();
     const statusData = statusStore();
-    const imgUploadGetter = ref(null);
-    const editPhoto = ref(false);
-    const newPost = ref({
-      user: '62729881e8a0d4cba032e7bc',
-      postContent: '',
-      postImgUrl: '',
-    });
-
+    const paymentData = paymentStore();
+    const payContent = ref('');
+    paymentData.getDiamonProduct();
+    async function buyDiamond(productId) {
+      const result = await paymentData.payDiamonProduct(productId, userData.user.token);
+      if (result.status === 'success') {
+        const { orderId } = result.data;
+        console.log(orderId);
+        const goToPay = await paymentData.goToPaymentPage(orderId, userData.user.token);
+        console.log(goToPay);
+        payContent.value = goToPay;
+      }
+    }
     return {
-      imgUploadGetter,
       postsData,
       statusData,
-      editPhoto,
-      newPost,
+      paymentData,
       userData,
+      payContent,
+      buyDiamond,
     };
   },
 };
@@ -74,60 +80,33 @@ export default {
               alt="logoMark"
             />
             <p class="position-absolute top-3 end-3 text-primary">
-              秘密鑽石<span class="ms-2 fs-4 fw-bold text-primary ">250 SD</span>
+              秘密鑽石<span class="ms-2 fs-4 fw-bold text-primary">250 SD</span>
             </p>
           </div>
         </div>
         <div class="row row-cols-2 g-3">
-          <div class="col">
-            <div class="buyDiamondBox gap-3">
-              <div class="diamondImg">
-                <i class="webIcon bi bi-gem"></i>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <p class="mb-1">20顆秘密鑽石</p>
-                <p class="mb-3">NTD 100</p>
-                <button type="button" class="btn btn-white align-self-end">點擊購買</button>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="buyDiamondBox gap-3">
-              <div class="diamondImg">
-                <i class="webIcon bi bi-gem"></i>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <p class="mb-1">20顆秘密鑽石</p>
-                <p class="mb-3">NTD 100</p>
-                <button type="button" class="btn btn-white align-self-end">點擊購買</button>
+          <template v-for="product in paymentData.diamondProduct" :key="product._id">
+            <div class="col">
+              <div class="buyDiamondBox gap-3">
+                <div class="diamondImg">
+                  <i class="webIcon bi bi-gem"></i>
+                </div>
+                <div class="d-flex flex-column flex-grow-1">
+                  <p class="mb-1">{{ product.coin }}顆{{ product.name }}</p>
+                  <p class="mb-3">NTD {{ product.price - product.discount }}</p>
+                  <button
+                    @click="buyDiamond(product._id)"
+                    type="button"
+                    class="btn btn-white align-self-end"
+                  >
+                    點擊購買
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="buyDiamondBox gap-3">
-              <div class="diamondImg">
-                <i class="webIcon bi bi-gem"></i>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <p class="mb-1">20顆秘密鑽石</p>
-                <p class="mb-3">NTD 100</p>
-                <button type="button" class="btn btn-white align-self-end">點擊購買</button>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="buyDiamondBox gap-3">
-              <div class="diamondImg">
-                <i class="webIcon bi bi-gem"></i>
-              </div>
-              <div class="d-flex flex-column flex-grow-1">
-                <p class="mb-1">20顆秘密鑽石</p>
-                <p class="mb-3">NTD 100</p>
-                <button type="button" class="btn btn-white align-self-end">點擊購買</button>
-              </div>
-            </div>
-          </div>
+          </template>
         </div>
+        <div v-html="payContent"></div>
       </div>
     </div>
   </div>
