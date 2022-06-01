@@ -8,6 +8,7 @@ const statusStore = defineStore({
     signUpModel: false,
     logInModel: false,
     diamondModel: false,
+    forgetPasswordsModel: true,
     askModel: {
       open: false,
       title: '提醒您',
@@ -26,7 +27,7 @@ const statusStore = defineStore({
   }),
   getters: {},
   actions: {
-    openaskModel(title, text, action) {
+    openAskModel(title, text, action) {
       this.askModel.open = true;
       this.askModel.title = title;
       this.askModel.text = text;
@@ -40,7 +41,24 @@ const statusStore = defineStore({
       //           }
       //         )
     },
-    closeaskModel() {
+    openPopInfoModel(title) {
+      this.popInfoModel.open = true;
+      this.popInfoModel.title = title;
+    },
+    openRemindModel(title, text) {
+      this.remindModel.open = true;
+      this.remindModel.title = title;
+      this.remindModel.text = text;
+    },
+    closePopInfoModel() {
+      this.popInfoModel.open = false;
+      this.popInfoModel.title = '';
+    },
+    closeRemindModel() {
+      this.remindModel.open = false;
+      this.remindModel.title = '';
+    },
+    closeAskModel() {
       this.askModel.open = false;
       this.askModel.title = '';
       this.askModel.text = '';

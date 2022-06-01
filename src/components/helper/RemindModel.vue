@@ -47,7 +47,7 @@ export default {
           <i class="webIcon bi bi-exclamation text-primary absolute-middle"></i>
         </div>
       </div>
-      <div class="d-flex flex-column align-items-center pb-6 gap-4">
+      <div class="d-flex flex-column align-items-center pb-6 gap-4 px-4">
         <h4 class="text-2xl font-bold text-primary">
           {{ statusData.remindModel.title }}
         </h4>
@@ -64,7 +64,7 @@ export default {
 
 <style lang="scss" scoped>
 .z-popModal {
-  z-index: 2400;
+  z-index: 2500;
 }
 .popModalContainer {
   height: 100vh;

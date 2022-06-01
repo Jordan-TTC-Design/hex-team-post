@@ -5,6 +5,7 @@ const postsStore = defineStore({
   id: 'postsStore',
   state: () => ({
     posts: [],
+    userPosts: [],
     targetPost: {
       postContent: '',
       postImgUrl: '',
@@ -14,11 +15,9 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '') {
+      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/?page=${page}&q=${query}&sort=${timeSort}`;
       try {
-        const res = await axios.get(
-          // eslint-disable-next-line comma-dangle
-          `https://hex-post-team-api-server.herokuapp.com/api/posts/?page=${page}&q=${query}&sort=${timeSort}`
-        );
+        const res = await axios.get(apiUrl);
         console.log(res);
         this.posts = res.data.data;
         return res.data;

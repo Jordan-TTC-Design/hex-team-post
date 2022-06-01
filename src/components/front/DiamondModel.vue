@@ -21,7 +21,6 @@ export default {
         console.log(orderId);
         const goToPay = await paymentData.goToPaymentPage(orderId, userData.user.token);
         console.log(goToPay);
-        payContent.value = goToPay;
       }
     }
     return {

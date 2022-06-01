@@ -19,7 +19,7 @@ export default {
     const postsData = postsStore();
     const postSort = ref('asc');
     const postQuery = ref('');
-    postsData.getPosts(1);
+    postsData.getPosts(2, 'asc', '');
     function sortPostsData() {
       postsData.getPosts(postSort.value, postQuery.value);
     }
@@ -29,7 +29,6 @@ export default {
       userData.userToken = token;
     }
     checkLogin();
-
     return {
       postSort,
       postQuery,
@@ -55,5 +54,4 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

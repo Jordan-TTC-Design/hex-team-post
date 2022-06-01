@@ -41,7 +41,6 @@ export default {
     const handleChangeTab = (newTab) => {
       tabType.value = newTab;
     };
-
     const ShowEditPersonal = () => {
       isShowPersonalEditCard.value = true;
     };
@@ -63,12 +62,17 @@ export default {
       console.log(postsList.value.length, postsList.value[0]);
     }
     init();
+    const resetPasswordData = ref({
+      password: '',
+      confirmPassword: '',
+    });
     return {
       userId,
       postsData,
       tabType,
       isShowPersonalEditCard,
       postsList,
+      resetPasswordData,
       handleChangeTab,
       ShowEditPersonal,
       HideEditPersonal,
