@@ -1,20 +1,35 @@
 <script>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import userStore from '@/stores/userStore';
+import postsStore from '@/stores/postsStore';
 
 export default {
   props: ['postItem'],
   setup(props) {
     const userData = userStore();
+    const postsData = postsStore();
+    const newComment = ref('');
     // const isShowMore = ref(a.length <= 200);
     // const showMore = () => {
     //   isShowMore.value = true;
     // };
-    console.log(props.postItem);
     const targetItem = computed(() => props.postItem);
+    async function addComment() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      console.log(targetItem.value.id, newComment.value);
+      const result = await postsData.addComment(
+        newComment.value,
+        targetItem.value.id,
+        localUser.token,
+      );
+      console.log(result);
+    }
     return {
       userData,
+      postsData,
+      newComment,
       targetItem,
+      addComment,
     };
   },
 };
@@ -48,17 +63,17 @@ export default {
     <div class="card-body d-flex align-items-center">
       <div class="icon text-primary">
         <i class="bi bi-heart-fill"></i>
-        <span class="">{{ targetItem.likes.length }}</span>
+        <span class="ms-2">{{ targetItem.likes.length }}</span>
       </div>
       <div class="icon">
-        <i class="bi bi-share"></i>
+        <i class="bi bi-chat"></i>
       </div>
       <span class="ms-auto">2022 / 01 / 01 12:12</span>
     </div>
     <div class="card-body border-top postCard-response">
       <img :src="userData.user.photo" alt="" class="user-picture" />
-      <input type="text" class="form-control" placeholder="回覆..." />
-      <button class="btn">
+      <input type="text" v-model="newComment" class="form-control" placeholder="回覆..." />
+      <button class="btn" @click="addComment">
         <i class="bi bi-play-fill"></i>
       </button>
     </div>

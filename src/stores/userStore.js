@@ -6,12 +6,25 @@ const userStore = defineStore({
   state: () => ({
     user: {
       name: '',
+      id: '',
       token: '',
       photo: '',
     },
   }),
   getters: {},
   actions: {
+    async getLocalToken() {
+      let checkResult = false;
+      const localUser = await JSON.parse(localStorage.getItem('sd-user'));
+      console.log(localUser.token.trim().length);
+      if (localUser.token.trim().length > 0) {
+        this.user = localUser;
+        checkResult = true;
+      } else {
+        localStorage.setItem('sd-user', JSON.stringify(this.user));
+      }
+      return checkResult;
+    },
     async signUp(data) {
       return axios
         .post('https://hex-post-team-api-server.herokuapp.com/api/user', data)
@@ -40,12 +53,12 @@ const userStore = defineStore({
       localStorage.removeItem('sd-user');
       this.resetUser();
     },
-    async checkLogIn(data) {
+    async checkLogIn(userToken) {
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/check',
         headers: {
-          authorization: `${data}`,
+          authorization: `${userToken}`,
         },
       })
         .then((res) => {
@@ -57,14 +70,14 @@ const userStore = defineStore({
           return err;
         });
     },
-    async getProfileUser(id = '628e4bbfad29e4c054c9f380') {
+    async getProfileUser(id) {
       return axios({
         method: 'GET',
         url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
       })
         .then((res) => {
           console.log(res);
-          return res;
+          return res.data.data;
         })
         .catch((err) => {
           console.log(err);
@@ -90,6 +103,7 @@ const userStore = defineStore({
     },
     resetUser() {
       this.user.name = '';
+      this.user.id = '';
       this.user.token = '';
       this.user.photo = '';
     },

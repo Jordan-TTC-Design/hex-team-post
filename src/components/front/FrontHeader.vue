@@ -11,12 +11,14 @@ export default {
     const statusData = statusStore();
     const dropDownMenuStatus = ref(false);
     async function checkLogin() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
-      if (localUser) {
-        const checkResult = await userData.checkLogIn(localUser.token);
+      const checkLocalResult = await userData.getLocalToken();
+      console.log(checkLocalResult);
+      if (checkLocalResult) {
+        const checkResult = await userData.checkLogIn(userData.user.token);
         if (checkResult.status) {
-          localStorage.setItem('sd-user', JSON.stringify(localUser));
-          userData.user = localUser;
+          localStorage.setItem('sd-user', JSON.stringify(userData.user));
+        } else {
+          userData.resetUser();
         }
       }
     }
