@@ -61,6 +61,54 @@ const postsStore = defineStore({
         return err;
       }
     },
+    async getOtherUserPost(userId) {
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}`,
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async addComment(data, postId, userToken) {
+      const commentData = {
+        comment: data,
+      };
+      console.log(commentData);
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${postId}/comment`,
+          data: commentData,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async deleteComment(postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'DELETE',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${postId}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
     async upLoadImage(data, userToken) {
       let resultData = null;
       const formdata = new FormData();
