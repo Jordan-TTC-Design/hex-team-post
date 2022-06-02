@@ -92,15 +92,16 @@ const postsStore = defineStore({
         return err;
       }
     },
-    async deleteComment(postId, userToken) {
+    async deleteComment(commentId, userToken) {
       try {
         const res = await axios({
           method: 'DELETE',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${postId}`,
+          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${commentId}`,
           headers: {
             authorization: `${userToken}`,
           },
         });
+        console.log(res);
         return res.data;
       } catch (err) {
         console.dir(err);

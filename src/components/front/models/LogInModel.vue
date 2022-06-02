@@ -23,12 +23,12 @@ export default {
     }
     async function logIn() {
       const result = await userData.logIn(loginData.value);
+      console.log(result);
       if (result.status === 'success') {
-        userData.user = {
-          name: result.user.name,
-          token: result.user.token,
-          photo: result.user.photo,
-        };
+        userData.user.name = result.user.name;
+        userData.user.token = result.user.token;
+        userData.user.photo = result.user.photo;
+        userData.user.id = result.user._id;
         localStorage.setItem('sd-user', JSON.stringify(userData.user));
         statusData.logInModel = false;
       } else {

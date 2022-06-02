@@ -18,7 +18,7 @@ export default {
     }
     async function sendForgetPassword() {
       const result = await userData.resetPassword(forgetData.value);
-      if (result.status === 'true') {
+      if (result.status === 'success') {
         statusData.openRemindModel(
           '傳送成功',
           `請前往您的信箱${forgetData.value.email}收取新密碼，並重設密碼`,

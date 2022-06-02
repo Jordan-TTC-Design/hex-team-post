@@ -4,7 +4,7 @@ import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 
 export default {
-  props: ['postItem'],
+  props: ['postItem', 'postIndex'],
   setup(props) {
     const userData = userStore();
     const postsData = postsStore();
@@ -16,7 +16,7 @@ export default {
     });
     const commentsShowData = ref({
       needHide: false,
-      isShowAll: false,
+      isShowAll: 2,
     });
     watch(postCardTextContent, (newValue) => {
       if (newValue.clientHeight > 96) {
@@ -34,11 +34,19 @@ export default {
         // eslint-disable-next-line comma-dangle
         localUser.token
       );
-      console.log(result);
+      if (result.status === 'success') {
+        newComment.value = '';
+      }
+    }
+    async function deleteComment(commentId, commentIndex) {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      const result = await postsData.deleteComment(commentId, localUser.token);
+      if (result.status === 'success') {
+        postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
+      }
     }
     function checkComment() {
-      console.log(props.postItem.comments.length);
-      if (props.postItem.comments.length > 1) {
+      if (props.postItem && props.postItem.comments.length > 1) {
         commentsShowData.value.needHide = true;
         console.log(commentsShowData.value);
       }
@@ -53,6 +61,7 @@ export default {
       targetItem,
       postCardTextContent,
       addComment,
+      deleteComment,
     };
   },
 };
@@ -64,7 +73,7 @@ export default {
       <div class="d-flex align-items-center">
         <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
         <div class="user-info">
-          <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="user-info-title">
+          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title">
             {{ targetItem.user.name }}
           </RouterLink>
           <p>
@@ -113,14 +122,25 @@ export default {
       </div>
       <ul class="commentList" :class="{ 'py-1': targetItem.comments.length > 0 }">
         <template v-for="(commentItem, index) in targetItem.comments" :key="commentItem.id">
-          <li v-if="index <= 2" class="commentList__item">
-            <p class="fs-6 fw-bolder text-dark">{{ commentItem.user.name }}</p>
+          <li v-if="index < commentsShowData.isShowAll" class="commentList__item">
+            <RouterLink :to="`/profile/${targetItem.user.id}`" class="fs-6 fw-bolder text-dark">{{
+              commentItem.user.name
+            }}</RouterLink>
             <p class="fs-6">{{ commentItem.comment }}</p>
+            <div
+              v-if="
+                postItem.user.id === userData.user.id || commentItem.user.id === userData.user.id
+              "
+              class="commentList__item__btn ms-auto"
+              @click="deleteComment(commentItem.id, index)"
+            >
+              <i class="webIcon bi bi-three-dots"></i>
+            </div>
           </li>
         </template>
         <li
-          v-if="commentsShowData.needHide && !commentsShowData.isShowAll"
-          @click="commentsShowData.isShowAll = true"
+          v-if="commentsShowData.needHide && commentsShowData.isShowAll <= 2"
+          @click="commentsShowData.isShowAll = targetItem.comments.length"
           class="text-gray-dark handPointer"
         >
           查看全部<span class="text-gray-dark px-1">{{ targetItem.comments.length }}</span
@@ -129,10 +149,9 @@ export default {
       </ul>
     </div>
     <div class="card-body border-top postCard-response">
-      <img :src="userData.user.photo" alt="" class="user-picture" />
       <input type="text" v-model="newComment" class="form-control" placeholder="回覆..." />
-      <button class="btn" @click="addComment">
-        <i class="bi bi-play-fill"></i>
+      <button class="btn btn-default" @click="addComment">
+        <i class="webIcon bi bi-play-fill"></i>
       </button>
     </div>
   </div>
@@ -169,11 +188,37 @@ export default {
 .commentList {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   &__item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    .commentList__item__btn {
+      padding: 0rem 0.25rem;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 1%;
+      height: 1px;
+      opacity: 0;
+      background-color: var(--bs-gray-light);
+      transition: all 0.3s;
+    }
+    &:hover {
+      &::after {
+        width: 100%;
+        opacity: 1;
+      }
+      .commentList__item__btn {
+        opacity: 1;
+      }
+    }
   }
 }
 </style>

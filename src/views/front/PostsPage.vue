@@ -35,18 +35,25 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex postition-relative">
-    <div class="content d-flex flex-column gap-4">
-      <PostFilter />
-      <AddPostCard v-if="userData.user.token" />
-      <template v-for="postItem in postsData.posts" :key="postItem.id">
-        <PostCard :post-item="postItem" />
-      </template>
-    </div>
-    <div class="side fix">
-      <RecommendFollowCard />
+  <div class="container position-relative">
+    <div class="row">
+      <div class="col-8 d-flex flex-column gap-4">
+        <PostFilter />
+        <AddPostCard v-if="userData.user.token" />
+        <template v-for="(postItem,index) in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" :post-index="index" />
+        </template>
+      </div>
+      <div class="col-4 position-relative">
+        <RecommendFollowCard class="side-sticky-top" />
+      </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.side-sticky-top {
+  position:sticky;
+  top:5rem;
+}
+</style>

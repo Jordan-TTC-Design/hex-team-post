@@ -42,20 +42,27 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="side fix">
-      <RecommendFollowCard />
-    </div>
-    <div class="content">
-      <PostFilter class="mb-3" />
-      <AddPostCard class="mb-3" v-if="userData.userToken" />
-      <PostCard class="mb-3" />
-      <PostCard class="mb-3" />
+  <div class="container">
+    <div class="row">
+      <div class="col-8 d-flex flex-column gap-4">
+        <PostFilter />
+        <AddPostCard v-if="userData.userToken" />
+        <template v-for="postItem in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" />
+        </template>
+      </div>
+      <div class="col-4 position-relative">
+        <RecommendFollowCard class="side-sticky-top" />
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.side-sticky-top {
+  position: sticky;
+  top: 5rem;
+}
 .thumbUpBox {
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 0px #000400;

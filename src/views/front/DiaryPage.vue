@@ -42,21 +42,26 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="content">
-      <div class="d-flex mb-3">
-        <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
-        <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
-        <PostFilter class="flex-grow-1" />
+  <div class="container">
+    <div class="row">
+      <div class="col-8 content">
+        <div class="d-flex mb-3">
+          <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
+          <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
+          <PostFilter class="flex-grow-1" />
+        </div>
+        <PostCard class="mb-3" />
+        <PostCard class="mb-3" />
       </div>
-      <PostCard class="mb-3" />
-      <PostCard class="mb-3" />
-    </div>
-    <div class="side fix">
-      <DiaryPurchaseRecordCard />
+      <div class="col-4">
+        <DiaryPurchaseRecordCard  class="side-sticky-top"/>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-</style>
+.side-sticky-top {
+  position:sticky;
+  top:5rem;
+}</style>
