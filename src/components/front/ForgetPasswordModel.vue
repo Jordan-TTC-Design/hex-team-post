@@ -9,39 +9,30 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    const loginData = ref({
+    const forgetData = ref({
       email: '',
-      password: '',
     });
-    function goToForgetPassword() {
-      statusData.logInModel = false;
-      statusData.forgetPasswordsModel = true;
+    function goToLogIn() {
+      statusData.forgetPasswordsModel = false;
+      statusData.logInModel = true;
     }
-    function goToSignUp() {
-      statusData.logInModel = false;
-      statusData.signUpModel = true;
-    }
-    async function logIn() {
-      const result = await userData.logIn(loginData.value);
-      if (result.status === 'success') {
-        userData.user = {
-          name: result.user.name,
-          token: result.user.token,
-          photo: result.user.photo,
-        };
-        localStorage.setItem('sd-user', JSON.stringify(userData.user));
-        statusData.logInModel = false;
+    async function sendForgetPassword() {
+      const result = await userData.resetPassword(forgetData.value);
+      if (result.status === 'true') {
+        statusData.openRemindModel(
+          '傳送成功',
+          `請前往您的信箱${forgetData.value.email}收取新密碼，並重設密碼`,
+        );
       } else {
-        console.log('使用者帳密錯誤');
+        statusData.openPopInfoModel('email錯誤');
       }
     }
     return {
-      loginData,
+      forgetData,
       statusData,
       userData,
-      logIn,
-      goToSignUp,
-      goToForgetPassword,
+      sendForgetPassword,
+      goToLogIn,
     };
   },
 };
@@ -50,14 +41,14 @@ export default {
 <template>
   <div
     class="popModalContainer position-fixed top-0 left-0 z-popModal"
-    :class="{ active: statusData.logInModel === true }"
+    :class="{ active: statusData.forgetPasswordsModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.logInModel = false" />
+    <div class="popModalCover" @click="statusData.forgetPasswordsModel = false" />
     <!-- Modal-Window -->
-    <div class="signUpModel popModal" :class="{ active: statusData.logInModel === true }">
+    <div class="signUpModel popModal" :class="{ active: statusData.forgetPasswordsModel === true }">
       <button
-        @click="statusData.logInModel = false"
+        @click="statusData.forgetPasswordsModel = false"
         type="button"
         class="btn position-absolute popModel__btn"
       >
@@ -65,34 +56,22 @@ export default {
       </button>
       <div class="bg-secondary rounded-top p-6 position-relative overflow-hidden">
         <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
-        <p class="text-primary">歡迎回來</p>
+        <p class="text-primary">忘記密碼</p>
         <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
       </div>
       <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
-        <FormInput v-model="loginData.email" input-id="userEmail" type="text">
+        <FormInput v-model="forgetData.email" input-id="userEmail" type="text">
           <template v-slot:default>電子郵件</template>
         </FormInput>
-        <div>
-          <FormInput v-model="loginData.password" input-id="userPassword" type="text">
-            <template v-slot:default>密碼</template> </FormInput
-          ><button
-            type="button"
-            @click="goToForgetPassword"
-            class="btn rounded py-1 px-3 align-self-start"
-          >
-            <p class="text-danger">忘記密碼?</p>
-          </button>
-        </div>
-
         <button
           type="button"
-          @click="logIn"
+          @click="sendForgetPassword"
           class="btn btn-primary w-100 text-white rounded py-2 px-3"
         >
-          登入
+          傳送新密碼
         </button>
-        <button type="button" @click="goToSignUp" class="btn btn-outline w-100 rounded py-2 px-3">
-          註冊
+        <button type="button" @click="goToLogIn" class="btn btn-outline w-100 rounded py-2 px-3">
+          返回登入
         </button>
       </div>
     </div>

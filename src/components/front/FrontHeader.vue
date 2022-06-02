@@ -84,7 +84,7 @@ export default {
             </button>
             <div class="dropDownMenu__dropdown" v-show="dropDownMenuStatus">
               <ul class="list-group">
-                <li class="list-group-header d-flex">
+                <li class="list-group-header d-flex" @click="statusData.diamondModel = true">
                   <p class="text-primary">錢包</p>
                   <span class="ms-auto text-primary">200 <i class="bi bi-gem"></i> </span>
                 </li>
