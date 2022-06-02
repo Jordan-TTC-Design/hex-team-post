@@ -1,0 +1,255 @@
+<script>
+import { ref, computed, watch } from 'vue';
+import userStore from '@/stores/userStore';
+import postsStore from '@/stores/postsStore';
+import statusStore from '@/stores/statusStore';
+import MoreModel from '@/components/helper/MoreModel.vue';
+
+export default {
+  components: { MoreModel },
+  props: ['postItem', 'postIndex'],
+  setup(props) {
+    const userData = userStore();
+    const postsData = postsStore();
+    const statusData = statusStore();
+    const newComment = ref('');
+    const postCardTextContent = ref(null);
+    const textContentShowData = ref({
+      needHide: false,
+      isShowAll: true,
+    });
+    const commentsShowData = ref({
+      needHide: false,
+      isShowAll: 2,
+    });
+    watch(postCardTextContent, (newValue) => {
+      if (newValue.clientHeight > 96) {
+        textContentShowData.value.needHide = true;
+        textContentShowData.value.isShowAll = false;
+      }
+    });
+    const targetItem = computed(() => props.postItem);
+    async function addComment() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      console.log(targetItem.value.id, newComment.value);
+      const result = await postsData.addComment(
+        newComment.value,
+        targetItem.value.id,
+        // eslint-disable-next-line comma-dangle
+        localUser.token
+      );
+      if (result.status === 'success') {
+        newComment.value = '';
+      }
+    }
+    async function deleteComment(commentId, commentIndex) {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      const result = await postsData.deleteComment(commentId, localUser.token);
+      if (result.status === 'success') {
+        postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
+      }
+    }
+    function checkComment() {
+      if (props.postItem && props.postItem.comments.length > 1) {
+        commentsShowData.value.needHide = true;
+        console.log(commentsShowData.value);
+      }
+    }
+    async function deletePost() {
+      const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
+      console.log(result);
+      if (result.status === 'success') {
+        postsData.posts.splice(props.postIndex, 1);
+      }
+    }
+    async function editPost() {
+      statusData.newPostModel = true;
+      postsData.targetPost.content = targetItem.value.content;
+    }
+    const moreFunctionList = ref([
+      {
+        name: '編輯',
+        func: editPost,
+      },
+      {
+        name: '刪除',
+        func: deletePost,
+      },
+    ]);
+    checkComment();
+    return {
+      userData,
+      postsData,
+      textContentShowData,
+      commentsShowData,
+      newComment,
+      targetItem,
+      postCardTextContent,
+      moreFunctionList,
+      addComment,
+      deleteComment,
+    };
+  },
+};
+</script>
+
+<template>
+  <div class="card" v-if="targetItem !== undefined">
+    <div class="card-body border-bottom border-gray-middle">
+      <div class="d-flex align-items-center">
+        <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
+        <div class="user-info">
+          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title">
+            {{ targetItem.user.name }}
+          </RouterLink>
+          <p>
+            <span class="user-info-subtitle">{{ targetItem.createdAt }}</span>
+          </p>
+        </div>
+        <MoreModel :item-id="targetItem._id" :function-list="moreFunctionList" />
+      </div>
+    </div>
+    <div class="card-body pb-0">
+      <div
+        v-if="targetItem.content.length > 0"
+        ref="postCardTextContent"
+        class="postCard__txtContent"
+        :class="{
+          showAll: textContentShowData.isShowAll === true,
+        }"
+        v-html="targetItem.content"
+      ></div>
+      <p
+        v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
+        @click="textContentShowData.isShowAll = true"
+        class="showMoreBtn"
+      >
+        ... 顯示更多
+      </p>
+      <div class="postCard__imgBox">
+        <img
+          v-if="targetItem.image.length > 0"
+          :src="targetItem.image"
+          :alt="`${targetItem.id}圖片`"
+          class="postCard__imgBox__img"
+        />
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+        <p class="d-flex align-items-center gap-1 2 3 me-4">
+          <i class="webIcon bi bi-heart-fill"></i>
+          {{ targetItem.likes.length }}
+        </p>
+        <p class="d-flex align-items-center gap-1 2 3">
+          <i class="webIcon bi bi-chat-fill"></i>
+          {{ targetItem.comments.length }}
+        </p>
+      </div>
+      <ul class="commentList" :class="{ 'py-1': targetItem.comments.length > 0 }">
+        <template v-for="(commentItem, index) in targetItem.comments" :key="commentItem.id">
+          <li v-if="index < commentsShowData.isShowAll" class="commentList__item">
+            <RouterLink :to="`/profile/${targetItem.user.id}`" class="fs-6 fw-bolder text-dark">{{
+              commentItem.user.name
+            }}</RouterLink>
+            <p class="fs-6">{{ commentItem.comment }}</p>
+            <MoreModel
+              v-if="
+                postItem.user.id === userData.user.id || commentItem.user.id === userData.user.id
+              "
+              :item-id="targetItem._id"
+              :function-list="[
+                {
+                  name: '刪除',
+                  func() {
+                    deleteComment(commentItem.id, userData.user.token);
+                  },
+                },
+              ]"
+            />
+          </li>
+        </template>
+        <li
+          v-if="commentsShowData.needHide && commentsShowData.isShowAll < 2"
+          @click="commentsShowData.isShowAll = targetItem.comments.length"
+          class="text-gray-dark handPointer"
+        >
+          查看全部<span class="text-gray-dark px-1">{{ targetItem.comments.length }}</span
+          >則留言
+        </li>
+      </ul>
+    </div>
+    <div class="card-body border-top postCard-response">
+      <input type="text" v-model="newComment" class="form-control" placeholder="回覆..." />
+      <button class="btn btn-default" @click="addComment">
+        <i class="webIcon bi bi-play-fill"></i>
+      </button>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.showMoreBtn {
+  cursor: pointer;
+  color: var(--bs-primary);
+  text-align: start;
+  background-color: #fff;
+  padding: 0.5rem 0;
+}
+.postCard {
+  &__imgBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bs-gray-light);
+    border-radius: 0.25rem;
+    &__img {
+      width: 100%;
+      border-radius: 0.25rem;
+    }
+  }
+  &__txtContent {
+    max-height: 6rem;
+    overflow: hidden;
+    &.showAll {
+      max-height: none;
+    }
+  }
+}
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    .commentList__item__btn {
+      padding: 0rem 0.25rem;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 1%;
+      height: 1px;
+      opacity: 0;
+      background-color: var(--bs-gray-light);
+      transition: all 0.3s;
+    }
+    &:hover {
+      &::after {
+        width: 100%;
+        opacity: 1;
+      }
+      .commentList__item__btn {
+        opacity: 1;
+      }
+    }
+  }
+}
+</style>

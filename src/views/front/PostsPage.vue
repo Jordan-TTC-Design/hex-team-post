@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import PostFilter from '@/components/front/PostFilter.vue';
-import AddPostCard from '@/components/front/AddPostCard.vue';
-import PostCard from '@/components/front/PostCard.vue';
-import RecommendFollowCard from '@/components/front/RecommendFollowCard.vue';
+import AddPostCard from '@/components/front/cards/AddPostCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
+import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
 
 export default {
   components: {
@@ -19,39 +19,41 @@ export default {
     const postsData = postsStore();
     const postSort = ref('asc');
     const postQuery = ref('');
-    postsData.getPosts(2, 'asc', '');
+    postsData.getPosts(1, 'asc', '');
     function sortPostsData() {
-      postsData.getPosts(postSort.value, postQuery.value);
+      postsData.getPosts(1, postSort.value, postQuery.value);
     }
-    function checkLogin() {
-      const token = localStorage.getItem('sd-token') || '123';
-      console.log(token);
-      userData.userToken = token;
-    }
-    checkLogin();
     return {
+      userData,
+      postsData,
       postSort,
       postQuery,
-      postsData,
       sortPostsData,
-      userData,
     };
   },
 };
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="content">
-      <PostFilter class="mb-3" />
-      <AddPostCard class="mb-3" v-if="userData.userToken" />
-      <PostCard class="mb-3" />
-      <PostCard class="mb-3" />
-    </div>
-    <div class="side fix">
-      <RecommendFollowCard />
+  <div class="container position-relative">
+    <div class="row">
+      <div class="col-8 d-flex flex-column gap-4">
+        <PostFilter />
+        <AddPostCard v-if="userData.user.token" />
+        <template v-for="(postItem,index) in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" :post-index="index" />
+        </template>
+      </div>
+      <div class="col-4 position-relative">
+        <RecommendFollowCard class="side-sticky-top" />
+      </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.side-sticky-top {
+  position:sticky;
+  top:5rem;
+}
+</style>

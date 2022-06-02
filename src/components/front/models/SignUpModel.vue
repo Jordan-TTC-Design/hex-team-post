@@ -25,7 +25,7 @@ export default {
     async function signUp() {
       const result = await userData.signUp(newUser.value);
       if (result.status === 'success') {
-        localStorage.setItem('sd-token', result.user.token);
+        localStorage.setItem('sd-user', JSON.stringify(userData.user));
       } else {
         console.log('使用者帳密錯誤');
       }

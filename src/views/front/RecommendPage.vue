@@ -1,9 +1,9 @@
 <script>
 import { ref } from 'vue';
 
-// import PostCard from '@/components/front/PostCard.vue';
-import UserCard from '@/components/front/UserCard.vue';
-import ArticleCard from '@/components/front/ArticleCard.vue';
+// import PostCard from '@/components/front/cards/PostCard.vue';
+import UserCard from '@/components/front/cards/UserCard.vue';
+import ArticleCard from '@/components/front/cards/ArticleCard.vue';
 import postsStore from '@/stores/postsStore';
 
 export default {

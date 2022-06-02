@@ -16,47 +16,54 @@ export default {
     const imgUploadGetter = ref(null);
     const editPhoto = ref(false);
     const newPost = ref({
+      contentType: 'article',
       content: '',
       image: '',
+      tag: '貼文',
     });
     const imgData = ref(null);
     const imgHistory = ref('');
     function resetData() {
       imgHistory.value = '';
       editPhoto.value = false;
-      newPost.value.content = '';
-      newPost.value.image = '';
+      postsData.targetPost.content = '';
+      postsData.targetPost.image = '';
     }
     function closeNewPostModel() {
-      statusData.newPostModel = false;
       resetData();
+      statusData.newPostModel = false;
     }
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
       imgData.value = file;
-      imgHistory.value = newPost.value.image;
+      imgHistory.value = postsData.targetPost.image;
       const imgShow = window.URL || window.webkitURL;
-      newPost.value.image = imgShow.createObjectURL(imgData.value);
+      postsData.targetPost.image = imgShow.createObjectURL(imgData.value);
       editPhoto.value = true;
       console.log(editPhoto.value);
-      console.log(newPost.value.image, newPost.value.image.length);
+      console.log(postsData.targetPost.image, postsData.targetPost.image.length);
     }
     async function toogleAddPost() {
       console.log(editPhoto.value);
+      if (editPhoto.value) {
+        postsData.targetPost.contentType = 'photography';
+      } else {
+        postsData.targetPost.contentType = 'article';
+      }
       if (editPhoto.value === true) {
         try {
           const result = await postsData.upLoadImage(imgData.value, userData.user.token);
           console.log(result);
-          if (result.status) {
-            newPost.value.image = result.data;
+          if (result.status === 'success') {
+            postsData.targetPost.image = result.data.imgUrl;
           }
-          postsData.addPost(newPost.value, userData.user.token);
+          postsData.addPost(postsData.targetPost, userData.user.token);
         } catch (e) {
           console.log(e);
         }
       } else {
-        newPost.value.image = imgHistory.value;
-        postsData.addPost(newPost.value, userData.user.token);
+        postsData.targetPost.image = imgHistory.value;
+        postsData.addPost(postsData.targetPost, userData.user.token);
       }
       closeNewPostModel();
     }
@@ -88,11 +95,7 @@ export default {
     <div class="popModal" :class="{ active: statusData.newPostModel === true }">
       <div class="position-relative border-bottom border-gray-middle p-4">
         <h4 class="title">新增貼文</h4>
-        <button
-          @click="closeNewPostModel"
-          type="button"
-          class="btn position-absolute top-2 end-2"
-        >
+        <button @click="closeNewPostModel" type="button" class="btn position-absolute top-2 end-2">
           <i class="webIcon bi bi-x-lg"></i>
         </button>
       </div>
@@ -106,15 +109,15 @@ export default {
             input-id="postContent"
             input-name="postContent"
             text-holder="在想什麼呢？"
-            v-model="newPost.content"
+            v-model="postsData.targetPost.content"
           />
-          <div v-show="newPost.image.length > 0" class="newPost__imgBox">
-            <img :src="newPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
+          <div v-show="postsData.targetPost.image.length > 0" class="newPost__imgBox">
+            <img :src="postsData.targetPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
           </div>
         </div>
         <div class="d-flex flex-column gap-2">
           <label for="imgUploader" class="newPostUpLoader">{{
-            newPost.image.length > 0 ? '變更圖片' : '新增圖片'
+            postsData.targetPost.image.length > 0 ? '變更圖片' : '新增圖片'
           }}</label>
           <input
             ref="imgUploadGetter"

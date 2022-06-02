@@ -6,13 +6,13 @@ import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 
 import PostFilter from '@/components/front/PostFilter.vue';
-import UserProfileCard from '@/components/front/UserProfileCard.vue';
+import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
 
-import PostCard from '@/components/front/PostCard.vue';
-import SponsorCard from '@/components/front/SponsorCard.vue';
-import PopularPostCard from '@/components/front/PopularPostCard.vue';
-import PersonalCard from '@/components/front/PersonalCard.vue';
-import PersonalEditCard from '@/components/front/PersonalEditCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
+import SponsorCard from '@/components/front/cards/SponsorCard.vue';
+import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
+import PersonalCard from '@/components/front/cards/PersonalCard.vue';
+import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
 import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
 import FormRadioButton from '@/components/helper/FormRadioButton.vue';
 
@@ -86,21 +86,22 @@ export default {
     <div class="content">
       <UserProfileCard :tabType="tabType" @change-tab="handleChangeTab" :userId="userId" />
       <div v-if="tabType === 'POST'">
-        <PostFilter class="mb-3" />
-        <div>
-          <template v-for="postItem in postsList" :key="postItem.id">
+        <div class="d-flex flex-column gap-4">
+          <PostFilter />
+          <template v-for="postItem in postsData.posts" :key="postItem.id">
             <PostCard :post-item="postItem" />
           </template>
         </div>
       </div>
-      <div v-if="tabType === 'DIARY'">
-        <div class="d-flex mb-3">
+      <div v-if="tabType === 'DIARY'" class="d-flex flex-column gap-4">
+        <div class="d-flex">
           <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
           <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
           <PostFilter class="flex-grow-1" />
         </div>
-        <PostCard />
-        <PostCard />
+        <template v-for="postItem in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" />
+        </template>
       </div>
       <div v-if="tabType === 'FOLLOW'">
         <div class="card mb-3">
@@ -146,8 +147,9 @@ export default {
       </div>
       <div v-if="tabType === 'LIKE'">
         <PostFilter class="mb-3" />
-        <PostCard :post-item="post" />
-        <PostCard :post-item="post" />
+        <template v-for="postItem in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" />
+        </template>
       </div>
       <div v-if="tabType === 'WALLET'">
         <div class="d-flex">

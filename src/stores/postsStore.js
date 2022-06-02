@@ -7,15 +7,16 @@ const postsStore = defineStore({
     posts: [],
     userPosts: [],
     targetPost: {
-      postContent: '',
-      postImgUrl: '',
-      tags: [],
+      contentType: 'article',
+      content: '123',
+      image: '',
+      tag: ['貼文'],
     },
   }),
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '') {
-      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/?page=${page}&q=${query}&sort=${timeSort}`;
+      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&q=${query}&sort=${timeSort}`;
       try {
         const res = await axios.get(apiUrl);
         console.log(res);
@@ -27,7 +28,6 @@ const postsStore = defineStore({
       }
     },
     async addPost(data, userToken) {
-      console.log(data);
       try {
         const res = await axios({
           method: 'POST',
@@ -49,6 +49,22 @@ const postsStore = defineStore({
         const res = await axios({
           method: 'GET',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/UserAll',
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async deletePost(postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'DELETE',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${postId}`,
           headers: {
             authorization: `${userToken}`,
           },
@@ -87,21 +103,24 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
+        console.log(res.data);
         return res.data;
       } catch (err) {
         console.dir(err);
         return err;
       }
     },
-    async deleteComment(postId, userToken) {
+    async deleteComment(commentId, userToken) {
+      console.log(commentId, userToken);
       try {
         const res = await axios({
           method: 'DELETE',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${postId}`,
+          url: `https://hex-post-team-api-server.herokuapp.com/api/comment/${commentId}`,
           headers: {
             authorization: `${userToken}`,
           },
         });
+        console.log(res);
         return res.data;
       } catch (err) {
         console.dir(err);

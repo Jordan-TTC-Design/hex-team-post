@@ -14,7 +14,6 @@ const paymentStore = defineStore({
           method: 'GET',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/products/',
         });
-        console.log(res.data);
         if (res.data.status === 'success') {
           this.diamondProduct = res.data.data;
         }
@@ -37,7 +36,6 @@ const paymentStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
         return res.data;
       } catch (err) {
         console.dir(err);
