@@ -14,8 +14,11 @@ export default {
       needHide: false,
       isShowAll: true,
     });
-    watch(postCardTextContent, (newValue, oldValue) => {
-      console.log('watch search', newValue.clientHeight, oldValue);
+    const commentsShowData = ref({
+      needHide: false,
+      isShowAll: false,
+    });
+    watch(postCardTextContent, (newValue) => {
       if (newValue.clientHeight > 96) {
         textContentShowData.value.needHide = true;
         textContentShowData.value.isShowAll = false;
@@ -28,14 +31,24 @@ export default {
       const result = await postsData.addComment(
         newComment.value,
         targetItem.value.id,
-        localUser.token,
+        // eslint-disable-next-line comma-dangle
+        localUser.token
       );
       console.log(result);
     }
+    function checkComment() {
+      console.log(props.postItem.comments.length);
+      if (props.postItem.comments.length > 1) {
+        commentsShowData.value.needHide = true;
+        console.log(commentsShowData.value);
+      }
+    }
+    checkComment();
     return {
       userData,
       postsData,
       textContentShowData,
+      commentsShowData,
       newComment,
       targetItem,
       postCardTextContent,
@@ -47,18 +60,22 @@ export default {
 
 <template>
   <div class="card" v-if="targetItem !== undefined">
-    <div class="card-body">
-      <div class="d-flex align-items-center mb-3">
+    <div class="card-body border-bottom border-gray-middle">
+      <div class="d-flex align-items-center">
         <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
         <div class="user-info">
-          <RouterLink class="user-info-title" to="/profile/628e4bbfad29e4c054c9f380">
-            用戶名稱
+          <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="user-info-title">
+            {{ targetItem.user.name }}
           </RouterLink>
-          <span class="user-info-subtitle">200 人追蹤</span>
+          <p>
+            <span class="user-info-subtitle">{{ targetItem.createdAt }}</span>
+          </p>
         </div>
-        <div class="btn btn-sm">追蹤</div>
+        <div class="btn btn-sm"><i class="webIcon bi bi-three-dots"></i></div>
       </div>
-        <div
+    </div>
+    <div class="card-body pb-0">
+      <div
         v-if="targetItem.content.length > 0"
         ref="postCardTextContent"
         class="postCard__txtContent"
@@ -74,24 +91,42 @@ export default {
       >
         ... 顯示更多
       </p>
-    </div>
-    <div class="postCard__imgBox">
-      <img
-        v-if="targetItem.image.length > 0"
-        :src="targetItem.image"
-        :alt="`${targetItem.id}圖片`"
-        class="postCard__imgBox__img"
-      />
-    </div>
-    <div class="card-body d-flex align-items-center">
-      <div class="icon text-primary">
-        <i class="bi bi-heart-fill"></i>
-        <span class="ms-2">{{ targetItem.likes.length }}</span>
+      <div class="postCard__imgBox">
+        <img
+          v-if="targetItem.image.length > 0"
+          :src="targetItem.image"
+          :alt="`${targetItem.id}圖片`"
+          class="postCard__imgBox__img"
+        />
       </div>
-      <div class="icon">
-        <i class="bi bi-chat"></i>
+    </div>
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+        <p class="d-flex align-items-center gap-1 2 3 me-4">
+          <i class="webIcon bi bi-heart-fill"></i>
+          {{ targetItem.likes.length }}
+        </p>
+        <p class="d-flex align-items-center gap-1 2 3">
+          <i class="webIcon bi bi-chat-fill"></i>
+          {{ targetItem.comments.length }}
+        </p>
       </div>
-      <span class="ms-auto">2022 / 01 / 01 12:12</span>
+      <ul class="commentList" :class="{ 'py-1': targetItem.comments.length > 0 }">
+        <template v-for="(commentItem, index) in targetItem.comments" :key="commentItem.id">
+          <li v-if="index <= 2" class="commentList__item">
+            <p class="fs-6 fw-bolder text-dark">{{ commentItem.user.name }}</p>
+            <p class="fs-6">{{ commentItem.comment }}</p>
+          </li>
+        </template>
+        <li
+          v-if="commentsShowData.needHide && !commentsShowData.isShowAll"
+          @click="commentsShowData.isShowAll = true"
+          class="text-gray-dark handPointer"
+        >
+          查看全部<span class="text-gray-dark px-1">{{ targetItem.comments.length }}</span
+          >則留言
+        </li>
+      </ul>
     </div>
     <div class="card-body border-top postCard-response">
       <img :src="userData.user.photo" alt="" class="user-picture" />
@@ -107,7 +142,7 @@ export default {
 .showMoreBtn {
   cursor: pointer;
   color: var(--bs-primary);
-  text-align:start;
+  text-align: start;
   background-color: #fff;
   padding: 0.5rem 0;
 }
@@ -117,8 +152,10 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: var(--bs-gray-light);
+    border-radius: 0.25rem;
     &__img {
       width: 100%;
+      border-radius: 0.25rem;
     }
   }
   &__txtContent {
@@ -127,6 +164,16 @@ export default {
     &.showAll {
       max-height: none;
     }
+  }
+}
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 </style>
