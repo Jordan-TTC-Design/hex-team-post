@@ -26,44 +26,44 @@ export default {
     function resetData() {
       imgHistory.value = '';
       editPhoto.value = false;
-      newPost.value.content = '';
-      newPost.value.image = '';
+      postsData.targetPost.content = '';
+      postsData.targetPost.image = '';
     }
     function closeNewPostModel() {
-      statusData.newPostModel = false;
       resetData();
+      statusData.newPostModel = false;
     }
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
       imgData.value = file;
-      imgHistory.value = newPost.value.image;
+      imgHistory.value = postsData.targetPost.image;
       const imgShow = window.URL || window.webkitURL;
-      newPost.value.image = imgShow.createObjectURL(imgData.value);
+      postsData.targetPost.image = imgShow.createObjectURL(imgData.value);
       editPhoto.value = true;
       console.log(editPhoto.value);
-      console.log(newPost.value.image, newPost.value.image.length);
+      console.log(postsData.targetPost.image, postsData.targetPost.image.length);
     }
     async function toogleAddPost() {
       console.log(editPhoto.value);
       if (editPhoto.value) {
-        newPost.value.contentType = 'photography';
+        postsData.targetPost.contentType = 'photography';
       } else {
-        newPost.value.contentType = 'article';
+        postsData.targetPost.contentType = 'article';
       }
       if (editPhoto.value === true) {
         try {
           const result = await postsData.upLoadImage(imgData.value, userData.user.token);
           console.log(result);
           if (result.status === 'success') {
-            newPost.value.image = result.data.imgUrl;
+            postsData.targetPost.image = result.data.imgUrl;
           }
-          postsData.addPost(newPost.value, userData.user.token);
+          postsData.addPost(postsData.targetPost, userData.user.token);
         } catch (e) {
           console.log(e);
         }
       } else {
-        newPost.value.image = imgHistory.value;
-        postsData.addPost(newPost.value, userData.user.token);
+        postsData.targetPost.image = imgHistory.value;
+        postsData.addPost(postsData.targetPost, userData.user.token);
       }
       closeNewPostModel();
     }
@@ -109,15 +109,15 @@ export default {
             input-id="postContent"
             input-name="postContent"
             text-holder="在想什麼呢？"
-            v-model="newPost.content"
+            v-model="postsData.targetPost.content"
           />
-          <div v-show="newPost.image.length > 0" class="newPost__imgBox">
-            <img :src="newPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
+          <div v-show="postsData.targetPost.image.length > 0" class="newPost__imgBox">
+            <img :src="postsData.targetPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
           </div>
         </div>
         <div class="d-flex flex-column gap-2">
           <label for="imgUploader" class="newPostUpLoader">{{
-            newPost.image.length > 0 ? '變更圖片' : '新增圖片'
+            postsData.targetPost.image.length > 0 ? '變更圖片' : '新增圖片'
           }}</label>
           <input
             ref="imgUploadGetter"

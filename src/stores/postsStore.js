@@ -7,9 +7,10 @@ const postsStore = defineStore({
     posts: [],
     userPosts: [],
     targetPost: {
-      postContent: '',
-      postImgUrl: '',
-      tags: [],
+      contentType: 'article',
+      content: '123',
+      image: '',
+      tag: ['貼文'],
     },
   }),
   getters: {},
@@ -59,6 +60,22 @@ const postsStore = defineStore({
         return err;
       }
     },
+    async deletePost(postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'DELETE',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${postId}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
     async getOtherUserPost(userId) {
       try {
         const res = await axios({
@@ -86,6 +103,7 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
+        console.log(res.data);
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -93,6 +111,7 @@ const postsStore = defineStore({
       }
     },
     async deleteComment(commentId, userToken) {
+      console.log(commentId, userToken);
       try {
         const res = await axios({
           method: 'DELETE',

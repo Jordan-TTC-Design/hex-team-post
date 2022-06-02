@@ -2,12 +2,16 @@
 import { ref, computed, watch } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
+import statusStore from '@/stores/statusStore';
+import MoreModel from '@/components/helper/MoreModel.vue';
 
 export default {
+  components: { MoreModel },
   props: ['postItem', 'postIndex'],
   setup(props) {
     const userData = userStore();
     const postsData = postsStore();
+    const statusData = statusStore();
     const newComment = ref('');
     const postCardTextContent = ref(null);
     const textContentShowData = ref({
@@ -51,6 +55,27 @@ export default {
         console.log(commentsShowData.value);
       }
     }
+    async function deletePost() {
+      const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
+      console.log(result);
+      if (result.status === 'success') {
+        postsData.posts.splice(props.postIndex, 1);
+      }
+    }
+    async function editPost() {
+      statusData.newPostModel = true;
+      postsData.targetPost.content = targetItem.value.content;
+    }
+    const moreFunctionList = ref([
+      {
+        name: '編輯',
+        func: editPost,
+      },
+      {
+        name: '刪除',
+        func: deletePost,
+      },
+    ]);
     checkComment();
     return {
       userData,
@@ -60,6 +85,7 @@ export default {
       newComment,
       targetItem,
       postCardTextContent,
+      moreFunctionList,
       addComment,
       deleteComment,
     };
@@ -80,7 +106,7 @@ export default {
             <span class="user-info-subtitle">{{ targetItem.createdAt }}</span>
           </p>
         </div>
-        <div class="btn btn-sm"><i class="webIcon bi bi-three-dots"></i></div>
+        <MoreModel :item-id="targetItem._id" :function-list="moreFunctionList" />
       </div>
     </div>
     <div class="card-body pb-0">
@@ -127,19 +153,24 @@ export default {
               commentItem.user.name
             }}</RouterLink>
             <p class="fs-6">{{ commentItem.comment }}</p>
-            <div
+            <MoreModel
               v-if="
                 postItem.user.id === userData.user.id || commentItem.user.id === userData.user.id
               "
-              class="commentList__item__btn ms-auto"
-              @click="deleteComment(commentItem.id, index)"
-            >
-              <i class="webIcon bi bi-three-dots"></i>
-            </div>
+              :item-id="targetItem._id"
+              :function-list="[
+                {
+                  name: '刪除',
+                  func() {
+                    deleteComment(commentItem.id, userData.user.token);
+                  },
+                },
+              ]"
+            />
           </li>
         </template>
         <li
-          v-if="commentsShowData.needHide && commentsShowData.isShowAll <= 2"
+          v-if="commentsShowData.needHide && commentsShowData.isShowAll < 2"
           @click="commentsShowData.isShowAll = targetItem.comments.length"
           class="text-gray-dark handPointer"
         >
