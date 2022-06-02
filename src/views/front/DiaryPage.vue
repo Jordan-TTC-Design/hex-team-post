@@ -4,7 +4,7 @@ import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import FormRadioButton from '@/components/helper/FormRadioButton.vue';
-import PostCard from '@/components/front/PostCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
 import DiaryPurchaseRecordCard from '@/components/front/DiaryPurchaseRecordCard.vue';
 
 export default {

@@ -1,5 +1,5 @@
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 
@@ -9,10 +9,18 @@ export default {
     const userData = userStore();
     const postsData = postsStore();
     const newComment = ref('');
-    // const isShowMore = ref(a.length <= 200);
-    // const showMore = () => {
-    //   isShowMore.value = true;
-    // };
+    const postCardTextContent = ref(null);
+    const textContentShowData = ref({
+      needHide: false,
+      isShowAll: true,
+    });
+    watch(postCardTextContent, (newValue, oldValue) => {
+      console.log('watch search', newValue.clientHeight, oldValue);
+      if (newValue.clientHeight > 96) {
+        textContentShowData.value.needHide = true;
+        textContentShowData.value.isShowAll = false;
+      }
+    });
     const targetItem = computed(() => props.postItem);
     async function addComment() {
       const localUser = JSON.parse(localStorage.getItem('sd-user'));
@@ -27,8 +35,10 @@ export default {
     return {
       userData,
       postsData,
+      textContentShowData,
       newComment,
       targetItem,
+      postCardTextContent,
       addComment,
     };
   },
@@ -36,7 +46,7 @@ export default {
 </script>
 
 <template>
-  <div class="card mb-3" v-if="targetItem !== undefined">
+  <div class="card" v-if="targetItem !== undefined">
     <div class="card-body">
       <div class="d-flex align-items-center mb-3">
         <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
@@ -48,18 +58,31 @@ export default {
         </div>
         <div class="btn btn-sm">追蹤</div>
       </div>
-      <div v-html="targetItem.content"></div>
-      <!-- <div class="" v-else>
-        {{ content.substring(0, 200) }}
-        <span @click="showMore" class="showMore">... 顯示更多</span>
-      </div> -->
+        <div
+        v-if="targetItem.content.length > 0"
+        ref="postCardTextContent"
+        class="postCard__txtContent"
+        :class="{
+          showAll: textContentShowData.isShowAll === true,
+        }"
+        v-html="targetItem.content"
+      ></div>
+      <p
+        v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
+        @click="textContentShowData.isShowAll = true"
+        class="showMoreBtn"
+      >
+        ... 顯示更多
+      </p>
     </div>
-    <img
-      v-if="targetItem.image.length > 0"
-      :src="targetItem.image"
-      :alt="`${targetItem.id}圖片`"
-      class="img-fluid"
-    />
+    <div class="postCard__imgBox">
+      <img
+        v-if="targetItem.image.length > 0"
+        :src="targetItem.image"
+        :alt="`${targetItem.id}圖片`"
+        class="postCard__imgBox__img"
+      />
+    </div>
     <div class="card-body d-flex align-items-center">
       <div class="icon text-primary">
         <i class="bi bi-heart-fill"></i>
@@ -81,8 +104,29 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.showMore {
-  user-select: none;
+.showMoreBtn {
   cursor: pointer;
+  color: var(--bs-primary);
+  text-align:start;
+  background-color: #fff;
+  padding: 0.5rem 0;
+}
+.postCard {
+  &__imgBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bs-gray-light);
+    &__img {
+      width: 100%;
+    }
+  }
+  &__txtContent {
+    max-height: 6rem;
+    overflow: hidden;
+    &.showAll {
+      max-height: none;
+    }
+  }
 }
 </style>

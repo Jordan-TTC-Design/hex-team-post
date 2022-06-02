@@ -36,7 +36,7 @@ export default {
   <div class="card userProfileCard mb-3">
     <div class="card-body userProfileCard-body">
       <img
-        src="../../assets/image/user-picture.png"
+        src="@/assets/image/user-picture.png"
         alt="user-picture"
         class="user-picture"
       />

@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import PostFilter from '@/components/front/PostFilter.vue';
-import AddPostCard from '@/components/front/AddPostCard.vue';
-import PostCard from '@/components/front/PostCard.vue';
-import RecommendFollowCard from '@/components/front/RecommendFollowCard.vue';
+import AddPostCard from '@/components/front/cards/AddPostCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
+import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
 
 export default {
   components: {

@@ -16,7 +16,6 @@ const userStore = defineStore({
     async getLocalToken() {
       let checkResult = false;
       const localUser = await JSON.parse(localStorage.getItem('sd-user'));
-      console.log(localUser.token.trim().length);
       if (localUser.token.trim().length > 0) {
         this.user = localUser;
         checkResult = true;

@@ -122,7 +122,7 @@ export default {
   align-items: center;
   .diamondImg {
     position: relative;
-    background-image: url('../../assets/image/diamond-fill.svg');
+    background-image: url('../../../assets/image/diamond-fill.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

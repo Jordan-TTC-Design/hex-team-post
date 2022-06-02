@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import PostFilter from '@/components/front/PostFilter.vue';
-import AddPostCard from '@/components/front/AddPostCard.vue';
-import PostCard from '@/components/front/PostCard.vue';
-import RecommendFollowCard from '@/components/front/RecommendFollowCard.vue';
+import AddPostCard from '@/components/front/cards/AddPostCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
+import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
 
 export default {
   components: {
@@ -19,34 +19,29 @@ export default {
     const postsData = postsStore();
     const postSort = ref('asc');
     const postQuery = ref('');
-    postsData.getPosts(2, 'asc', '');
+    postsData.getPosts(1, 'asc', '');
     function sortPostsData() {
-      postsData.getPosts(postSort.value, postQuery.value);
+      postsData.getPosts(1, postSort.value, postQuery.value);
     }
-    function checkLogin() {
-      const token = localStorage.getItem('sd-token') || '123';
-      console.log(token);
-      userData.userToken = token;
-    }
-    checkLogin();
     return {
+      userData,
+      postsData,
       postSort,
       postQuery,
-      postsData,
       sortPostsData,
-      userData,
     };
   },
 };
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="content">
-      <PostFilter class="mb-3" />
-      <AddPostCard class="mb-3" v-if="userData.userToken" />
-      <PostCard class="mb-3" />
-      <PostCard class="mb-3" />
+  <div class="container d-flex postition-relative">
+    <div class="content d-flex flex-column gap-4">
+      <PostFilter />
+      <AddPostCard v-if="userData.user.token" />
+      <template v-for="postItem in postsData.posts" :key="postItem.id">
+        <PostCard :post-item="postItem" />
+      </template>
     </div>
     <div class="side fix">
       <RecommendFollowCard />

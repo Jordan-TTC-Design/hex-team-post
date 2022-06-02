@@ -8,7 +8,7 @@ const statusStore = defineStore({
     signUpModel: false,
     logInModel: false,
     diamondModel: false,
-    forgetPasswordsModel: true,
+    forgetPasswordsModel: false,
     askModel: {
       open: false,
       title: '提醒您',

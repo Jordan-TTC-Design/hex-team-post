@@ -15,7 +15,7 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '') {
-      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/?page=${page}&q=${query}&sort=${timeSort}`;
+      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&q=${query}&sort=${timeSort}`;
       try {
         const res = await axios.get(apiUrl);
         console.log(res);
@@ -27,7 +27,6 @@ const postsStore = defineStore({
       }
     },
     async addPost(data, userToken) {
-      console.log(data);
       try {
         const res = await axios({
           method: 'POST',

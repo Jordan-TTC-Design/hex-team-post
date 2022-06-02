@@ -16,8 +16,10 @@ export default {
     const imgUploadGetter = ref(null);
     const editPhoto = ref(false);
     const newPost = ref({
+      contentType: 'article',
       content: '',
       image: '',
+      tag: '貼文',
     });
     const imgData = ref(null);
     const imgHistory = ref('');
@@ -43,12 +45,17 @@ export default {
     }
     async function toogleAddPost() {
       console.log(editPhoto.value);
+      if (editPhoto.value) {
+        newPost.value.contentType = 'photography';
+      } else {
+        newPost.value.contentType = 'article';
+      }
       if (editPhoto.value === true) {
         try {
           const result = await postsData.upLoadImage(imgData.value, userData.user.token);
           console.log(result);
-          if (result.status) {
-            newPost.value.image = result.data;
+          if (result.status === 'success') {
+            newPost.value.image = result.data.imgUrl;
           }
           postsData.addPost(newPost.value, userData.user.token);
         } catch (e) {
@@ -88,11 +95,7 @@ export default {
     <div class="popModal" :class="{ active: statusData.newPostModel === true }">
       <div class="position-relative border-bottom border-gray-middle p-4">
         <h4 class="title">新增貼文</h4>
-        <button
-          @click="closeNewPostModel"
-          type="button"
-          class="btn position-absolute top-2 end-2"
-        >
+        <button @click="closeNewPostModel" type="button" class="btn position-absolute top-2 end-2">
           <i class="webIcon bi bi-x-lg"></i>
         </button>
       </div>

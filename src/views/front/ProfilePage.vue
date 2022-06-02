@@ -6,13 +6,13 @@ import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 
 import PostFilter from '@/components/front/PostFilter.vue';
-import UserProfileCard from '@/components/front/UserProfileCard.vue';
+import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
 
-import PostCard from '@/components/front/PostCard.vue';
-import SponsorCard from '@/components/front/SponsorCard.vue';
-import PopularPostCard from '@/components/front/PopularPostCard.vue';
-import PersonalCard from '@/components/front/PersonalCard.vue';
-import PersonalEditCard from '@/components/front/PersonalEditCard.vue';
+import PostCard from '@/components/front/cards/PostCard.vue';
+import SponsorCard from '@/components/front/cards/SponsorCard.vue';
+import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
+import PersonalCard from '@/components/front/cards/PersonalCard.vue';
+import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
 import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
 import FormRadioButton from '@/components/helper/FormRadioButton.vue';
 
