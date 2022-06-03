@@ -1,15 +1,15 @@
 <script>
 import userStore from '@/stores/userStore';
-import statusStore from '@/stores/statusStore';
+import postsStore from '@/stores/postsStore';
 
 export default {
   setup(props) {
     const userData = userStore();
-    const statusData = statusStore();
+    const postsData = postsStore();
     return {
       props,
       userData,
-      statusData,
+      postsData,
     };
   },
 };
@@ -23,10 +23,10 @@ export default {
         <p>{{ userData.user.name }}</p>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <button @click="statusData.newPostModel = true" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 新增貼文
         </button>
-        <button @click="statusData.newPostModel = true" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 私密日記
         </button>
       </div>

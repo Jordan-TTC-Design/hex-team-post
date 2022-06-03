@@ -3,12 +3,14 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
+import postsStore from '@/stores/postsStore';
 
 export default {
   setup() {
     const route = useRoute();
     const userData = userStore();
     const statusData = statusStore();
+    const postsData = postsStore();
     const dropDownMenuStatus = ref(false);
     async function checkLogin() {
       const checkLocalResult = await userData.getLocalToken();
@@ -29,6 +31,7 @@ export default {
     return {
       userData,
       statusData,
+      postsData,
       route,
       dropDownMenuStatus,
       openDropModel,
@@ -62,7 +65,7 @@ export default {
         <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
       <div class="d-flex align-items-center gap-2" v-if="userData.user.token.length > 0">
-        <button class="btn btn-secondary ms-2 px-3" @click="statusData.newPostModel = true">
+        <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel()">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="border d-flex align-items-center gap-2 rounded-pill" @click="openDropModel">

@@ -7,10 +7,17 @@ const postsStore = defineStore({
     posts: [],
     userPosts: [],
     targetPost: {
+      action: 'new',
+      id: '',
       contentType: 'article',
-      content: '123',
+      content: '',
       image: '',
-      tag: ['貼文'],
+      tag: [],
+    },
+    newPostModel: {
+      open: false,
+      action: 'new',
+      id: '',
     },
   }),
   getters: {},
@@ -32,6 +39,23 @@ const postsStore = defineStore({
         const res = await axios({
           method: 'POST',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
+          data,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async updatePost(data, postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'PUT',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${postId}`,
           data,
           headers: {
             authorization: `${userToken}`,
@@ -147,6 +171,22 @@ const postsStore = defineStore({
         return err;
       }
       return resultData;
+    },
+    resetPosts() {
+      this.targetPost.contentType = 'article';
+      this.targetPost.content = '';
+      this.targetPost.image = '';
+      this.targetPost.tag = [];
+      console.log(this.targetPost);
+      this.newPostModel.open = false;
+      this.newPostModel.action = 'new';
+      this.newPostModel.id = '';
+    },
+    openPostModel() {
+      this.newPostModel.open = true;
+    },
+    closePostModel() {
+      this.resetPosts();
     },
   },
 });

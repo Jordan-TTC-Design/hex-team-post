@@ -15,23 +15,12 @@ export default {
     const statusData = statusStore();
     const imgUploadGetter = ref(null);
     const editPhoto = ref(false);
-    const newPost = ref({
-      contentType: 'article',
-      content: '',
-      image: '',
-      tag: '貼文',
-    });
     const imgData = ref(null);
     const imgHistory = ref('');
-    function resetData() {
+    function closeNewPostModel() {
       imgHistory.value = '';
       editPhoto.value = false;
-      postsData.targetPost.content = '';
-      postsData.targetPost.image = '';
-    }
-    function closeNewPostModel() {
-      resetData();
-      statusData.newPostModel = false;
+      postsData.closePostModel();
     }
     function toogleGetter() {
       const [file] = imgUploadGetter.value.files;
@@ -44,7 +33,6 @@ export default {
       console.log(postsData.targetPost.image, postsData.targetPost.image.length);
     }
     async function toogleAddPost() {
-      console.log(editPhoto.value);
       if (editPhoto.value) {
         postsData.targetPost.contentType = 'photography';
       } else {
@@ -57,7 +45,15 @@ export default {
           if (result.status === 'success') {
             postsData.targetPost.image = result.data.imgUrl;
           }
-          postsData.addPost(postsData.targetPost, userData.user.token);
+          if (postsData.newPostModel.action === 'new') {
+            postsData.addPost(postsData.targetPost, userData.user.token);
+          } else {
+            postsData.updatePost(
+              postsData.targetPost,
+              postsData.newPostModel.id,
+              userData.user.token,
+            );
+          }
         } catch (e) {
           console.log(e);
         }
@@ -73,7 +69,6 @@ export default {
       postsData,
       statusData,
       editPhoto,
-      newPost,
       userData,
       toogleGetter,
       toogleAddPost,
@@ -86,15 +81,17 @@ export default {
 <template>
   <div
     class="popModalContainer position-fixed top-0 left-0 z-popModal"
-    :class="{ active: statusData.newPostModel === true }"
+    :class="{ active: postsData.newPostModel.open === true }"
   >
     <!-- Modal-Overlay -->
     <div class="popModalCover" @click="closeNewPostModel" />
 
     <!-- Modal-Window -->
-    <div class="popModal" :class="{ active: statusData.newPostModel === true }">
+    <div class="popModal" :class="{ active: postsData.newPostModel.open === true }">
       <div class="position-relative border-bottom border-gray-middle p-4">
-        <h4 class="title">新增貼文</h4>
+        <h4 class="title">
+          {{ postsData.newPostModel.action === 'new' ? '新增貼文' : '編輯貼文' }}
+        </h4>
         <button @click="closeNewPostModel" type="button" class="btn position-absolute top-2 end-2">
           <i class="webIcon bi bi-x-lg"></i>
         </button>
