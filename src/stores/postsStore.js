@@ -12,6 +12,8 @@ const postsStore = defineStore({
       content: '',
       image: '',
       tag: [],
+      pay: 0,
+      type: 'group',
     },
     newPostModel: {
       open: false,
@@ -34,20 +36,38 @@ const postsStore = defineStore({
       }
     },
     async addPost(data, userToken) {
-      try {
-        const res = await axios({
-          method: 'POST',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
-          data,
-          headers: {
-            authorization: `${userToken}`,
-          },
-        });
-        console.log(res.data);
-        return res.data;
-      } catch (err) {
-        console.dir(err);
-        return err;
+      if (data.type === 'group') {
+        try {
+          const res = await axios({
+            method: 'POST',
+            url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
+            data,
+            headers: {
+              authorization: `${userToken}`,
+            },
+          });
+          console.log(res.data);
+          return res.data;
+        } catch (err) {
+          console.dir(err);
+          return err;
+        }
+      } else {
+        try {
+          const res = await axios({
+            method: 'POST',
+            url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/private',
+            data,
+            headers: {
+              authorization: `${userToken}`,
+            },
+          });
+          console.log(res.data);
+          return res.data;
+        } catch (err) {
+          console.dir(err);
+          return err;
+        }
       }
     },
     async updatePost(data, postId, userToken) {
@@ -228,12 +248,12 @@ const postsStore = defineStore({
       this.targetPost.content = '';
       this.targetPost.image = '';
       this.targetPost.tag = [];
-      console.log(this.targetPost);
       this.newPostModel.open = false;
       this.newPostModel.action = 'new';
       this.newPostModel.id = '';
     },
-    openPostModel() {
+    openPostModel(postType) {
+      this.targetPost.type = postType;
       this.newPostModel.open = true;
     },
     closePostModel() {

@@ -23,10 +23,10 @@ export default {
         <p>{{ userData.user.name }}</p>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel('group')" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 新增貼文
         </button>
-        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel('person')" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 私密日記
         </button>
       </div>

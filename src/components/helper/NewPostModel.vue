@@ -74,6 +74,12 @@ export default {
         closeNewPostModel();
       }
     }
+    const tagTextContent = ref('');
+    function addPostTag() {
+      console.log(tagTextContent.value);
+      postsData.targetPost.tag.push(tagTextContent.value);
+      tagTextContent.value = '';
+    }
     return {
       imgData,
       imgUploadGetter,
@@ -81,9 +87,11 @@ export default {
       statusData,
       editPhoto,
       userData,
+      tagTextContent,
       toogleGetter,
       toogleAddPost,
       closeNewPostModel,
+      addPostTag,
     };
   },
 };
@@ -101,7 +109,8 @@ export default {
     <div class="popModal" :class="{ active: postsData.newPostModel.open === true }">
       <div class="position-relative border-bottom border-gray-middle p-4">
         <h4 class="title">
-          {{ postsData.newPostModel.action === 'new' ? '新增貼文' : '編輯貼文' }}
+          {{ postsData.newPostModel.action === 'new' ? '新增' : '編輯'
+          }}{{ postsData.targetPost.type === 'group' ? '貼文' : '秘密日記' }}
         </h4>
         <button @click="closeNewPostModel" type="button" class="btn position-absolute top-2 end-2">
           <i class="webIcon bi bi-x-lg"></i>
@@ -123,7 +132,23 @@ export default {
             <img :src="postsData.targetPost.image" alt="貼文圖片" class="newPost__imgBox__img" />
           </div>
         </div>
-        <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-3">
+          <ul class="d-flex gap-1 flex-wrap">
+            <li><p class="fs-6">文章標籤：</p></li>
+            <li v-for="(tagItem, index) in postsData.targetPost.tag" :key="`${tagItem}${index}`">
+              <p class="postTag">
+                {{ tagItem
+                }}<i class="bi bi-x" @click="postsData.targetPost.tag.splice(index, 1)"></i>
+              </p>
+            </li>
+            <li
+              class="postTagInput"
+              v-show="postsData.targetPost.tag || postsData.targetPost.tag.length < 3"
+            >
+              <input class="postTagInput__content" type="text" v-model="tagTextContent" />
+              <i @click="addPostTag" class="postTagInput__btn bi bi-check"></i>
+            </li>
+          </ul>
           <label for="imgUploader" class="newPostUpLoader">{{
             postsData.targetPost.image.length > 0 ? '變更圖片' : '新增圖片'
           }}</label>
@@ -135,6 +160,53 @@ export default {
             @change="toogleGetter"
             accept="image/png, image/jpeg"
           />
+          <div
+            v-if="postsData.targetPost.type === 'person'"
+            class="formRadio w-100 d-flex align-items-center gap-1"
+          >
+            <p class="fs-6">價格：</p>
+            <div class="d-flex gap-2">
+              <input
+                class="formRadio__input"
+                type="radio"
+                id="postPrice-5"
+                :value="5"
+                v-model="postsData.targetPost.pay"
+              />
+              <label
+                :class="{ active: postsData.targetPost.pay === 5 }"
+                class="formRadio__label py-1"
+                for="postPrice-5"
+                >5 SD</label
+              >
+              <input
+                class="formRadio__input"
+                type="radio"
+                id="postPrice-10"
+                :value="10"
+                v-model="postsData.targetPost.pay"
+              />
+              <label
+                :class="{ active: postsData.targetPost.pay === 10 }"
+                class="formRadio__label py-1"
+                for="postPrice-10"
+                >10 SD</label
+              >
+              <input
+                class="formRadio__input"
+                type="radio"
+                id="postPrice-15"
+                :value="15"
+                v-model="postsData.targetPost.pay"
+              />
+              <label
+                :class="{ active: postsData.targetPost.pay === 15 }"
+                class="formRadio__label py-1"
+                for="postPrice-15"
+                >15 SD</label
+              >
+            </div>
+          </div>
           <button type="button" @click="toogleAddPost" class="btn btn-primary text-white rounded">
             發布
           </button>
@@ -248,6 +320,36 @@ export default {
   &__img {
     max-width: 95%;
     max-height: 95%;
+  }
+}
+.postTag {
+  font-size: 0.875rem;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid var(--bs-gray-middle);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid var(--bs-gray-dark);
+    color: var(--bs-dark);
+  }
+}
+.postTagInput {
+  font-size: 0.875rem;
+  border: 1px solid var(--bs-gray-middle);
+  border-radius: 0.25rem;
+  &__content {
+    padding: 0.125rem;
+    border: none;
+    width: 4rem;
+    &:focus {
+      outline: none;
+    }
+  }
+  &__btn {
+    padding: 0.25rem 0.5rem;
+    background-color: var(--bs-secondary);
+    color: var(--bs-primary);
+    cursor: pointer;
   }
 }
 </style>

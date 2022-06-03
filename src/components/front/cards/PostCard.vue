@@ -45,7 +45,7 @@ export default {
         newComment.value,
         targetItem.value.id,
         // eslint-disable-next-line comma-dangle
-        localUser.token
+        localUser.token,
       );
       if (result.status === 'success') {
         newComment.value = '';
@@ -71,8 +71,8 @@ export default {
       postsData.targetPost.content = targetItem.value.content;
       postsData.targetPost.image = targetItem.value.image;
       postsData.targetPost.contentType = targetItem.value.contentType;
-      postsData.targetPost.tag = targetItem.value.tag;
-      postsData.openPostModel();
+      postsData.targetPost.tag = targetItem.value.tag || [];
+      postsData.openPostModel('group');
     }
     const isFollowed = computed(() => {
       const result = followData.myFollowUser.findIndex(
