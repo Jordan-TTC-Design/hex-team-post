@@ -74,20 +74,24 @@ export default {
       postsData.targetPost.tag = targetItem.value.tag;
       postsData.openPostModel();
     }
-    async function followUser() {
-      const result = await followData.addFollow(targetItem.value.user._id, userData.user.token);
-      console.log(result);
+    const isFollowed = computed(() => {
+      const result = followData.myFollowUser.findIndex(
+        (item) => item._id === targetItem.value.user._id,
+      );
+      return result;
+    });
+    async function toggleFollow() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      if (localUser) {
+        if (isFollowed.value + 1 > 0) {
+          console.log('刪除');
+          followData.deleteFollow(targetItem.value.user._id, userData.user.token);
+        } else {
+          console.log('新增');
+          followData.addFollow(targetItem.value.user._id, userData.user.token);
+        }
+      }
     }
-    const moreFunctionList = ref([
-      {
-        name: '編輯',
-        func: editPost,
-      },
-      {
-        name: '刪除',
-        func: deletePost,
-      },
-    ]);
     async function toogleLike() {
       const localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
@@ -102,16 +106,18 @@ export default {
     return {
       userData,
       postsData,
-      followUser,
+      isFollowed,
       textContentShowData,
       commentsShowData,
       newComment,
       targetItem,
       postCardTextContent,
-      moreFunctionList,
       addComment,
       deleteComment,
       toogleLike,
+      editPost,
+      deletePost,
+      toggleFollow,
     };
   },
 };
@@ -128,17 +134,30 @@ export default {
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              @click="followUser"
+              v-if="targetItem.user.id !== userData.user.id"
+              @click="toggleFollow"
               type="button"
               class="followBtn"
-              v-if="targetItem.user.id !== userData.user.id"
+              :class="{ followed: isFollowed >= 0 }"
             >
-              追蹤
+              {{ isFollowed >= 0 ? '已追蹤' : '追蹤' }}
             </button>
             <p class="user-info-subtitle">{{ targetItem.createdAt }}</p>
           </div>
         </div>
-        <MoreModel :item-id="targetItem._id" :function-list="moreFunctionList" />
+        <MoreModel
+          :item-id="targetItem._id"
+          :function-list="[
+            {
+              name: '編輯貼文',
+              func: editPost,
+            },
+            {
+              name: '刪除貼文',
+              func: deletePost,
+            },
+          ]"
+        />
       </div>
     </div>
     <div class="card-body pb-0">
@@ -297,6 +316,11 @@ export default {
   cursor: pointer;
   &:hover {
     background-color: var(--bs-secondary);
+  }
+  &.followed {
+    border: 1px solid var(--bs-gray-light);
+    background-color: var(--bs-gray-light);
+    color: var(--bs-gray-dark);
   }
 }
 </style>

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
 import postsStore from '@/stores/postsStore';
+import followStore from '@/stores/followStore';
 
 export default {
   setup() {
@@ -11,6 +12,7 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
     const postsData = postsStore();
+    const followData = followStore();
     const dropDownMenuStatus = ref(false);
     async function checkLogin() {
       const checkLocalResult = await userData.getLocalToken();
@@ -19,6 +21,7 @@ export default {
         const checkResult = await userData.checkLogIn(userData.user.token);
         if (checkResult.status) {
           localStorage.setItem('sd-user', JSON.stringify(userData.user));
+          followData.getMyFollow(userData.user.token);
         } else {
           userData.resetUser();
         }
