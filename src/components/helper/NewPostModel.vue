@@ -46,8 +46,10 @@ export default {
             postsData.targetPost.image = result.data.imgUrl;
           }
           if (postsData.newPostModel.action === 'new') {
+            console.log('新貼文');
             postsData.addPost(postsData.targetPost, userData.user.token);
           } else {
+            console.log('更新');
             postsData.updatePost(
               postsData.targetPost,
               postsData.newPostModel.id,
@@ -57,11 +59,20 @@ export default {
         } catch (e) {
           console.log(e);
         }
+        closeNewPostModel();
       } else {
-        postsData.targetPost.image = imgHistory.value;
-        postsData.addPost(postsData.targetPost, userData.user.token);
+        if (postsData.newPostModel.action === 'new') {
+          postsData.addPost(postsData.targetPost, userData.user.token);
+        } else {
+          console.log('更新');
+          postsData.updatePost(
+            postsData.targetPost,
+            postsData.newPostModel.id,
+            userData.user.token,
+          );
+        }
+        closeNewPostModel();
       }
-      closeNewPostModel();
     }
     return {
       imgData,

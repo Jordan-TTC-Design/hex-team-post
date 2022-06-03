@@ -22,13 +22,22 @@ export default {
       needHide: false,
       isShowAll: 2,
     });
+    const targetItem = computed(() => props.postItem);
     watch(postCardTextContent, (newValue) => {
       if (newValue.clientHeight > 96) {
         textContentShowData.value.needHide = true;
         textContentShowData.value.isShowAll = false;
       }
     });
-    const targetItem = computed(() => props.postItem);
+    function checkComment() {
+      if (props.postItem && props.postItem.comments.length > 1) {
+        commentsShowData.value.needHide = true;
+      }
+    }
+    watch(targetItem.value.comments, () => {
+      checkComment();
+    });
+    checkComment();
     async function addComment() {
       const localUser = JSON.parse(localStorage.getItem('sd-user'));
       console.log(targetItem.value.id, newComment.value);
@@ -49,12 +58,6 @@ export default {
         postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
       }
     }
-    function checkComment() {
-      if (props.postItem && props.postItem.comments.length > 1) {
-        commentsShowData.value.needHide = true;
-        console.log(commentsShowData.value);
-      }
-    }
     async function deletePost() {
       const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
       console.log(result);
@@ -63,13 +66,13 @@ export default {
       }
     }
     async function editPost() {
-      postsData.openPostModel();
       postsData.newPostModel.action = 'edit';
       postsData.newPostModel.id = targetItem.value._id;
       postsData.targetPost.content = targetItem.value.content;
       postsData.targetPost.image = targetItem.value.image;
       postsData.targetPost.contentType = targetItem.value.contentType;
       postsData.targetPost.tag = targetItem.value.tag;
+      postsData.openPostModel();
     }
     async function followUser() {
       const result = await followData.addFollow(targetItem.value.user._id, userData.user.token);
@@ -85,7 +88,17 @@ export default {
         func: deletePost,
       },
     ]);
-    checkComment();
+    async function toogleLike() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      if (localUser) {
+        const isLiked = targetItem.value.likes.findIndex((item) => item._id === localUser.id);
+        if (isLiked + 1 > 0) {
+          postsData.deleteLike(targetItem.value._id, localUser.token);
+        } else {
+          postsData.addLike(targetItem.value._id, localUser.token);
+        }
+      }
+    }
     return {
       userData,
       postsData,
@@ -98,6 +111,7 @@ export default {
       moreFunctionList,
       addComment,
       deleteComment,
+      toogleLike,
     };
   },
 };
@@ -155,7 +169,7 @@ export default {
     </div>
     <div class="card-body">
       <div class="d-flex align-items-center">
-        <p class="d-flex align-items-center gap-1 2 3 me-4">
+        <p @click="toogleLike" class="d-flex align-items-center gap-1 2 3 me-4">
           <i class="webIcon bi bi-heart-fill"></i>
           {{ targetItem.likes.length }}
         </p>
@@ -188,7 +202,9 @@ export default {
           </li>
         </template>
         <li
-          v-if="commentsShowData.needHide && commentsShowData.isShowAll < 2"
+          v-if="
+            commentsShowData.needHide && commentsShowData.isShowAll !== targetItem.comments.length
+          "
           @click="commentsShowData.isShowAll = targetItem.comments.length"
           class="text-gray-dark handPointer"
         >
