@@ -32,7 +32,7 @@ const userStore = defineStore({
           return res.data;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
           return err;
         });
     },

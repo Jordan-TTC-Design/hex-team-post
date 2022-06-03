@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
-import statusStore from '@/stores/statusStore';
+import followStore from '@/stores/followStore';
 import MoreModel from '@/components/helper/MoreModel.vue';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   setup(props) {
     const userData = userStore();
     const postsData = postsStore();
-    const statusData = statusStore();
+    const followData = followStore();
     const newComment = ref('');
     const postCardTextContent = ref(null);
     const textContentShowData = ref({
@@ -63,8 +63,17 @@ export default {
       }
     }
     async function editPost() {
-      statusData.newPostModel = true;
+      postsData.openPostModel();
+      postsData.newPostModel.action = 'edit';
+      postsData.newPostModel.id = targetItem.value._id;
       postsData.targetPost.content = targetItem.value.content;
+      postsData.targetPost.image = targetItem.value.image;
+      postsData.targetPost.contentType = targetItem.value.contentType;
+      postsData.targetPost.tag = targetItem.value.tag;
+    }
+    async function followUser() {
+      const result = await followData.addFollow(targetItem.value.user._id, userData.user.token);
+      console.log(result);
     }
     const moreFunctionList = ref([
       {
@@ -80,6 +89,7 @@ export default {
     return {
       userData,
       postsData,
+      followUser,
       textContentShowData,
       commentsShowData,
       newComment,
@@ -99,12 +109,20 @@ export default {
       <div class="d-flex align-items-center">
         <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
         <div class="user-info">
-          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title">
+          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title mb-1">
             {{ targetItem.user.name }}
           </RouterLink>
-          <p>
-            <span class="user-info-subtitle">{{ targetItem.createdAt }}</span>
-          </p>
+          <div class="d-flex align-items-center gap-2">
+            <button
+              @click="followUser"
+              type="button"
+              class="followBtn"
+              v-if="targetItem.user.id !== userData.user.id"
+            >
+              追蹤
+            </button>
+            <p class="user-info-subtitle">{{ targetItem.createdAt }}</p>
+          </div>
         </div>
         <MoreModel :item-id="targetItem._id" :function-list="moreFunctionList" />
       </div>
@@ -250,6 +268,19 @@ export default {
         opacity: 1;
       }
     }
+  }
+}
+.followBtn {
+  padding: 0.125rem 0.25rem;
+  border: 1px solid var(--bs-primary);
+  color: var(--bs-primary);
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--bs-white);
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--bs-secondary);
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 export default {
   props: ['modelValue', 'input-id', 'input-name', 'text-holder'],
@@ -36,7 +36,22 @@ export default {
         ],
       },
     });
+    // 監聽傳進來的值來改變編輯器的預設文字
+    const modelData = computed(() => props.modelValue);
+    const targetEditor = ref(null);
+    const timeCount = ref(1);
+    watch(modelData, (newValue) => {
+      if (newValue !== '' && timeCount.value === 1) {
+        targetEditor.value.instance.setData(newValue);
+        console.dir(targetEditor.value.editor);
+        timeCount.value = 2;
+      } else if (newValue === '') {
+        timeCount.value = 1;
+        targetEditor.value.instance.setData('');
+      }
+    });
     return {
+      targetEditor,
       editor,
       editorConfig,
       changeValue,
@@ -48,6 +63,7 @@ export default {
 <template>
   <div class="form__editer">
     <ckeditor
+      ref="targetEditor"
       :editor="editor"
       :config="editorConfig"
       :id="inputId"
