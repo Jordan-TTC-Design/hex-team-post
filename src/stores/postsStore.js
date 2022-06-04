@@ -5,6 +5,7 @@ const postsStore = defineStore({
   id: 'postsStore',
   state: () => ({
     posts: [],
+    diaries: [],
     getPostsData: {
       page: 1,
       total: 1,
@@ -124,6 +125,34 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async getUserDiary(userId) {
+      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}`;
+      try {
+        const res = await axios.get(apiUrl);
+        console.log(res);
+        this.diarys = res.data.data;
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async buyDiary(data, userToken) {
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/order/pay/private',
+          data,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
         return res.data;
       } catch (err) {
         console.dir(err);
