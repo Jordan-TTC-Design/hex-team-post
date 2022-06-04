@@ -78,11 +78,7 @@ export default {
             :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
             :alt="userData.user.name"
             class="userPhoto"
-            @click="
-              statusData.openUserImageCropper(
-                userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png',
-              )
-            "
+            @click="statusData.openUserImageCropper()"
           />
           <span>{{ userData.user.name || '用戶名稱' }}</span>
           <div class="dropDownMenu">

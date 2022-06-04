@@ -11,7 +11,7 @@ const statusStore = defineStore({
     forgetPasswordsModel: false,
     imgCropperModel: {
       open: false,
-      url: '',
+      url: 'https://i.imgur.com/ZWHoRPi.png',
       newUrl: '',
     },
     askModel: {
@@ -83,9 +83,9 @@ const statusStore = defineStore({
     shiftLoading() {
       this.isLoading.shift();
     },
-    openUserImageCropper(imgUrl) {
+    openUserImageCropper() {
       this.imgCropperModel.open = true;
-      this.imgCropperModel.url = imgUrl;
+      // this.imgCropperModel.url = this.;
     },
   },
 });

@@ -3,8 +3,13 @@ import { ref } from 'vue';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 
 export default {
+  components: {
+    Cropper,
+  },
   setup() {
     const userData = userStore();
     const postsData = postsStore();
@@ -21,66 +26,98 @@ export default {
       statusData.imgCropperModel.url = '';
       statusData.imgCropperModel.newUrl = '';
     }
-    function toogleGetter() {
+    const imgCropper = ref(null);
+    const updateImg = ref(null);
+    function change({ coordinates, canvas }) {
+      console.log(coordinates, canvas);
+    }
+    function getImg() {
+      // eslint-disable-next-line object-curly-newline
+      const { image, canvas } = imgCropper.value.getResult();
+      console.log(image, canvas);
+      statusData.imgCropperModel.url = canvas.toDataURL();
+      updateImg.value = statusData.imgCropperModel.url;
+    }
+    function defaultSize({ imageSize, visibleArea }) {
+      return {
+        width: (visibleArea || imageSize).width,
+        height: (visibleArea || imageSize).height,
+      };
+    }
+    // const watchUrl = computed(() => statusData.imgCropperModel.url);
+    // watch(watchUrl, (newV) => {
+    //   // console.log(newV);
+    // });
+    function toogleInput() {
       const [file] = imgUploadGetter.value.files;
       imgData.value = file;
-      imgHistory.value = postsData.targetPost.image;
-      const imgShow = window.URL || window.webkitURL;
-      postsData.targetPost.image = imgShow.createObjectURL(imgData.value);
+      // console.log(imgData.value);
+      imgHistory.value = statusData.imgCropperModel.url;
+      const imgShowData = window.URL || window.webkitURL;
+      statusData.imgCropperModel.url = imgShowData.createObjectURL(imgData.value);
       editPhoto.value = true;
-      console.log(editPhoto.value);
-      console.log(postsData.targetPost.image, postsData.targetPost.image.length);
+      // console.log(statusData.imgCropperModel.url, statusData.imgCropperModel.url.length);
     }
+    // 將base64轉換為blob
+    function dataURLtoBlob(dataurl) {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      // eslint-disable-next-line no-plusplus
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    }
+    // 將blob轉換為file
+    function blobToFile(theBlob, fileName) {
+      // eslint-disable-next-line no-param-reassign
+      theBlob.lastModifiedDate = new Date();
+      // eslint-disable-next-line no-param-reassign
+      theBlob.name = fileName;
+      return theBlob;
+    }
+
+    // 呼叫
     async function toogleUpdateImg() {
-      if (editPhoto.value) {
-        postsData.targetPost.contentType = 'photography';
-      } else {
-        postsData.targetPost.contentType = 'article';
-      }
-      if (editPhoto.value === true) {
-        try {
-          const result = await postsData.upLoadImage(imgData.value, userData.user.token);
-          console.log(result);
-          if (result.status === 'success') {
-            postsData.targetPost.image = result.data.imgUrl;
-          }
-          if (postsData.newPostModel.action === 'new') {
-            console.log('新貼文');
-            postsData.addPost(postsData.targetPost, userData.user.token);
-          } else {
-            console.log('更新');
-            postsData.updatePost(
-              postsData.targetPost,
-              postsData.newPostModel.id,
-              userData.user.token,
-            );
-          }
-        } catch (e) {
-          console.log(e);
-        }
-        closeModel();
-      } else {
-        if (postsData.newPostModel.action === 'new') {
-          postsData.addPost(postsData.targetPost, userData.user.token);
-        } else {
-          console.log('更新');
-          postsData.updatePost(
-            postsData.targetPost,
-            postsData.newPostModel.id,
-            userData.user.token,
-          );
-        }
-        closeModel();
-      }
+      getImg();
+      console.log(statusData.imgCropperModel.url);
+      // 呼叫
+      const blob = dataURLtoBlob(updateImg.value);
+      const file = blobToFile(blob, '123');
+
+      // const files = statusData.imgCropperModel.url.toDataURL('image/jpeg');
+      console.log(statusData.imgCropperModel.url, file);
+      const result = await postsData.upLoadImage(file, userData.user.token);
+      console.log(result);
+      // if (editPhoto.value === true) {
+      //   try {
+      //     const result = await postsData.upLoadImage(file, userData.user.token);
+      //     console.log(result);
+      //     if (result.status === 'success') {
+      //       statusData.imgCropperModel.url = result.data.imgUrl;
+      //     }
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // } else {
+
+      // }
     }
 
     return {
       imgUploadGetter,
       postsData,
       statusData,
-      toogleGetter,
+      imgCropper,
+      getImg,
+      toogleInput,
       toogleUpdateImg,
       closeModel,
+      change,
+      defaultSize,
     };
   },
 };
@@ -103,9 +140,28 @@ export default {
         </button>
       </div>
       <div class="d-flex flex-column gap-2 p-4 h-75 flex-grow-1">
-        <div class="newPostContentBox">
-          <div v-show="statusData.imgCropperModel.url.length > 0" class="imgCropper">
-            <img :src="statusData.imgCropperModel.url" alt="貼文圖片" class="imgCropper__img" />
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="myCropper">
+            <Cropper
+              ref="imgCropper"
+              class="myCropper__cropper"
+              :src="statusData.imgCropperModel.url"
+              :stencil-size="{
+                width: 320,
+                height: 320,
+              }"
+              :stencil-props="{
+                handlers: {},
+                width: 320,
+                height: 320,
+                movable: false,
+                resizable: false,
+                aspectRatio: 1,
+              }"
+              @change="getImg"
+              :default-size="defaultSize"
+            ></Cropper>
+            <img class="myCropper__cover" src="https://i.imgur.com/x8Q1LT7.png" alt="" />
           </div>
         </div>
         <div class="d-flex flex-column gap-3">
@@ -117,7 +173,7 @@ export default {
             id="imgUploader"
             class="d-none"
             type="file"
-            @change="toogleGetter"
+            @change="toogleInput"
             accept="image/png, image/jpeg"
           />
           <button type="button" @click="toogleUpdateImg" class="btn btn-primary text-white rounded">
@@ -162,7 +218,6 @@ export default {
     height: 80vh;
     display: flex;
     flex-direction: column;
-
     @media (max-width: 998.98px) {
       width: 60vw;
     }
@@ -176,7 +231,6 @@ export default {
     }
   }
 }
-
 .popModalContainer.active {
   pointer-events: auto;
   .popModalCover {
@@ -264,5 +318,30 @@ export default {
     color: var(--bs-primary);
     cursor: pointer;
   }
+}
+.myCropper {
+  width: 320px;
+  height: 320px;
+  position: relative;
+  background-color: var(--bs-gray-light);
+  &__cover {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 336px;
+    z-index: 10;
+    opacity: 0.85;
+    border-radius: 8px;
+  }
+  &__cropper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+.background {
+  background: white;
 }
 </style>
