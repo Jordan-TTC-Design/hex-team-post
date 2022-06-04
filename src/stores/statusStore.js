@@ -12,7 +12,7 @@ const statusStore = defineStore({
     imgCropperModel: {
       open: false,
       url: 'https://i.imgur.com/ZWHoRPi.png',
-      newUrl: '',
+      file: null,
     },
     askModel: {
       open: false,

@@ -1,104 +1,65 @@
 <script>
-import { ref, computed } from 'vue';
-import Cropper from 'cropperjs';
-import statusStore from '@/stores/statusStore';
+import { ref } from 'vue';
 import postsStore from '@/stores/postsStore';
+import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
+import { Cropper } from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
 
 export default {
-  props: ['imgName'],
-  emits: ['send-img-data'],
+  components: {
+    Cropper,
+  },
   setup() {
-    const postsData = postsStore();
     const userData = userStore();
+    const postsData = postsStore();
     const statusData = statusStore();
-    const isImg = ref(false);
     const imgUploadGetter = ref(null);
-    const tempImg = ref(null);
-    const targetImage = ref(null);
-    let cropper = {};
-    let imgData = {};
-    const cropperImage = ref(null);
-    const destination = ref({});
-    const targetItem = computed(() => statusData.imgCropperModel.url);
-
-    function putImage(data) {
-      const reader = new FileReader();
-      if (data) {
-        isImg.value = true;
-        reader.readAsDataURL(data);
-        reader.onload = () => {
-          const dataURL = reader.result;
-          imgData = cropperImage.value;
-          imgData.src = dataURL;
-          cropper = new Cropper(imgData, {
-            aspectRatio: 1 / 1,
-            viewMode: 0,
-            dragMode: 'move',
-            minContainerWidth: 480,
-            minContainerHeight: 360,
-            zoomable: true,
-            scalable: true,
-            crop: () => {
-              const canvas = cropper.getCroppedCanvas({
-                maxWidth: 960,
-                maxHeight: 720,
-              });
-              destination.value = canvas.toDataURL('image/jpeg');
-            },
-          });
-        };
-      }
-    }
-    const imgHistory = ref('');
     const editPhoto = ref(false);
-    function processToCropImg(data) {
-      Object.keys(cropper).forEach((k) => delete cropper[k]);
-      setTimeout(() => {
-        putImage(data);
-      }, 100);
+    const imgData = ref(null);
+    const imgHistory = ref('');
+    function closeModel() {
+      imgHistory.value = '';
+      editPhoto.value = false;
+      // postsData.closePostModel();
+      statusData.imgCropperModel.open = false;
+      statusData.imgCropperModel.url = '';
+      statusData.imgCropperModel.newUrl = '';
     }
-    function getImgBlob(dataUrl) {
-      fetch(dataUrl)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const objectURL = URL.createObjectURL(blob);
-          const myImage = new Image();
-          myImage.src = objectURL;
-          console.log(blob);
-          processToCropImg(blob);
-        });
+    const imgCropper = ref(null);
+    const updateImg = ref(null);
+    function change({ coordinates, canvas }) {
+      console.log(coordinates, canvas);
     }
-    getImgBlob(targetItem.value);
+    function getImg() {
+      // eslint-disable-next-line object-curly-newline
+      const { image, canvas } = imgCropper.value.getResult();
+      console.log(image, canvas);
+      statusData.imgCropperModel.url = canvas.toDataURL();
+      updateImg.value = statusData.imgCropperModel.url;
+    }
+    function defaultSize({ imageSize, visibleArea }) {
+      return {
+        width: (visibleArea || imageSize).width,
+        height: (visibleArea || imageSize).height,
+      };
+    }
+    // const watchUrl = computed(() => statusData.imgCropperModel.url);
+    // watch(watchUrl, (newV) => {
+    //   // console.log(newV);
+    // });
     function toogleInput() {
       const [file] = imgUploadGetter.value.files;
-      targetImage.value = file;
-      console.log(targetImage.value);
+      imgData.value = file;
+      // console.log(imgData.value);
       imgHistory.value = statusData.imgCropperModel.url;
       const imgShowData = window.URL || window.webkitURL;
-      statusData.imgCropperModel.url = imgShowData.createObjectURL(targetImage.value);
+      statusData.imgCropperModel.url = imgShowData.createObjectURL(imgData.value);
       editPhoto.value = true;
-      console.log(statusData.imgCropperModel.url);
-      // getImgBlob(targetItem.value);
-      processToCropImg(file);
+      // console.log(statusData.imgCropperModel.url, statusData.imgCropperModel.url.length);
     }
-    // watch(targetItem.value, (newValue) => {
-    //   console.log(newValue);
-    //   if (Object.keys(newValue).length !== 0 && statusData.imgCropperModel.url.file !== null) {
-    //     processToCropImg(statusData.imgCropperModel.url.file);
-    //   }
-    // });
-    function closeModal() {
-      // statusData..closeImgToCrop();
-      cropper.destroy();
-      Object.keys(cropper).forEach((k) => delete cropper[k]);
-    }
-    function convertCanvasToImage(canvas) {
-      const image = new Image();
-      image.src = canvas.toDataURL('image/jpeg');
-      return image;
-    }
-    function dataURLtoFile(dataurl, filename) {
+    // 將base64轉換為blob
+    function dataURLtoBlob(dataurl) {
       const arr = dataurl.split(',');
       const mime = arr[0].match(/:(.*?);/)[1];
       const bstr = atob(arr[1]);
@@ -108,43 +69,60 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-      return new File([u8arr], filename, { type: mime });
+      return new Blob([u8arr], { type: mime });
     }
-    async function uploadmgToDB(image) {
-      const file = dataURLtoFile(image.src, 'file-to-upload.jpeg');
-      console.log(file);
+    // 將blob轉換為file
+    function blobToFile(theBlob, fileName) {
+      // eslint-disable-next-line no-param-reassign
+      theBlob.lastModifiedDate = new Date();
+      // eslint-disable-next-line no-param-reassign
+      theBlob.name = fileName;
+      return theBlob;
+    }
+
+    // 呼叫
+    async function toogleUpdateImg() {
+      getImg();
+      console.log(statusData.imgCropperModel.url);
+      // 呼叫
+      const blob = dataURLtoBlob(updateImg.value);
+      const file = blobToFile(blob, '123');
+
+      // const files = statusData.imgCropperModel.url.toDataURL('image/jpeg');
+      console.log(statusData.imgCropperModel.url, file);
       const result = await postsData.upLoadImage(file, userData.user.token);
       console.log(result);
-    }
-    function croppingImg() {
-      console.log(cropper);
+      // if (editPhoto.value === true) {
+      //   try {
+      //     const result = await postsData.upLoadImage(file, userData.user.token);
+      //     console.log(result);
+      //     if (result.status === 'success') {
+      //       statusData.imgCropperModel.url = result.data.imgUrl;
+      //     }
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      // } else {
 
-      const canvas = cropper.getCroppedCanvas({
-        maxWidth: 4096,
-        maxHeight: 4096,
-        fillColor: '#fff',
-        imageSmoothingEnabled: false,
-        imageSmoothingQuality: 'high',
-      });
-      imgData = convertCanvasToImage(canvas);
-      console.log(imgData);
-      uploadmgToDB(imgData);
+      // }
     }
 
     return {
       imgUploadGetter,
-      tempImg,
+      postsData,
       statusData,
-      cropperImage,
-      destination,
-      closeModal,
-      croppingImg,
-      uploadmgToDB,
+      imgCropper,
+      getImg,
       toogleInput,
+      toogleUpdateImg,
+      closeModel,
+      change,
+      defaultSize,
     };
   },
 };
 </script>
+
 <template>
   <div
     class="popModalContainer position-fixed top-0 left-0 z-popModal"
@@ -163,28 +141,27 @@ export default {
       </div>
       <div class="d-flex flex-column gap-2 p-4 h-75 flex-grow-1">
         <div class="d-flex justify-content-center align-items-center">
-          <div class="row w-100">
-            <div class="col-8">
-              <div class="cropperImageBox rounded overflow-hidden">
-                <img
-                  class="d-none"
-                  ref="tempImg"
-                  :src="statusData.imgCropperModel.url"
-                  alt="原圖"
-                />
-                <img class="cropperImage" ref="cropperImage" src="" alt="原圖" />
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="preViewImgBox bg-gray-100 rounded p-5">
-                <div class="w-100 d-flex flex-column align-items-center mb-4">
-                  <p class="mb-1">預覽圖</p>
-                  <div class="bg-white rounded">
-                    <img class="preViewImgBox__img" :src="destination" alt="圖片預覽圖" />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="myCropper">
+            <Cropper
+              ref="imgCropper"
+              class="myCropper__cropper"
+              :src="statusData.imgCropperModel.url"
+              :stencil-size="{
+                width: 320,
+                height: 320,
+              }"
+              :stencil-props="{
+                handlers: {},
+                width: 320,
+                height: 320,
+                movable: false,
+                resizable: false,
+                aspectRatio: 1,
+              }"
+              @change="getImg"
+              :default-size="defaultSize"
+            ></Cropper>
+            <img class="myCropper__cover" src="https://i.imgur.com/x8Q1LT7.png" alt="" />
           </div>
         </div>
         <div class="d-flex flex-column gap-3">
@@ -199,7 +176,7 @@ export default {
             @change="toogleInput"
             accept="image/png, image/jpeg"
           />
-          <button type="button" @click="croppingImg" class="btn btn-primary text-white rounded">
+          <button type="button" @click="toogleUpdateImg" class="btn btn-primary text-white rounded">
             確定
           </button>
         </div>
@@ -366,48 +343,5 @@ export default {
 }
 .background {
   background: white;
-}
-.imgCropperPopModal {
-  transform: translateY(-5%);
-}
-.cropperImageBox {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-height: 60vh;
-  background: color #f7f7f7;
-  .cropperImage {
-    max-height: 100%;
-  }
-}
-.cropper-container {
-  min-height: 360px;
-  min-width: 480px;
-  img {
-    display: block;
-    height: 100%;
-    image-orientation: 0deg;
-    max-height: none;
-    max-width: none;
-    min-height: 0;
-    min-width: 0;
-    width: 100%;
-  }
-}
-.preViewImgBox {
-  width: 100%;
-  min-height: 100%;
-  &__img {
-    object-fit: contain;
-    border-radius: 0.25rem;
-    width: 160px;
-    height: 90px;
-  }
-  &__img--circle {
-    object-fit: contain;
-    border-radius: 50%;
-    width: 132px;
-    height: 132px;
-  }
 }
 </style>
