@@ -1,10 +1,11 @@
 <script>
-// import { ref } from 'vue';
+// import { toRefs } from 'vue';
 
 export default {
   props: {
     tabType: String,
-    userId: String,
+    user: Object,
+    isSelf: Boolean,
   },
   setup(props, { emit }) {
     // 自己 (貼文 私密日記 追蹤中 喜歡的貼文 設定)
@@ -17,11 +18,10 @@ export default {
       WALLET: 'WALLET',
       SETTING: 'SETTING',
     };
+
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
-
-    console.log('inner', props.userId);
 
     return {
       TabTypeEnum,
@@ -41,9 +41,17 @@ export default {
         class="user-picture"
       />
       <div class="d-flex flex-column justify-content-center">
-        <span class="userProfileCard-title">用戶名稱</span>
-        <span class="userProfileCard-subtitle">200 人追蹤</span>
-        <span class="userProfileCard-subtitle">200 人追蹤</span>
+        <template v-if="props.user?.user?.name">
+          <span class="userProfileCard-title">{{
+            props.user?.user?.name
+          }}</span>
+          <span class="userProfileCard-subtitle"
+            >{{ props.user?.name }} 人追蹤</span
+          >
+          <span class="userProfileCard-subtitle"
+            >{{ props.user?.user?.memo }}</span
+          >
+        </template>
       </div>
       <div class="userProfileCard-more">
         <button class="btn btn-sm btn-outline text-primary">追蹤</button>
@@ -52,7 +60,7 @@ export default {
         </button>
       </div>
     </div>
-    <div class="userProfileCard-footer" v-if="!props.userId">
+    <div class="userProfileCard-footer" v-if="props.isSelf">
       <div
         class="userProfileCard-footer-item"
         :class="[props.tabType === TabTypeEnum.POST ? 'active' : '']"

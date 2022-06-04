@@ -1,81 +1,95 @@
 <script>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+// import { watch } from 'vue';
 import { useRoute } from 'vue-router';
+
+import PostSection from '@/components/front/PostSection.vue';
+import DiarySection from '@/components/front/DiarySection.vue';
+import FollowSection from '@/components/front/FollowSection.vue';
+import LikeSection from '@/components/front/LikeSection.vue';
+import WalletSection from '@/components/front/WalletSection.vue';
+import SettingSection from '@/components/front/SettingSection.vue';
+
+import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
+
+import SponsorCard from '@/components/front/cards/SponsorCard.vue';
+import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
 
 import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 
-import PostFilter from '@/components/front/PostFilter.vue';
-import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
-
-import PostCard from '@/components/front/cards/PostCard.vue';
-import SponsorCard from '@/components/front/cards/SponsorCard.vue';
-import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
-import PersonalCard from '@/components/front/cards/PersonalCard.vue';
-import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
-import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
-import FormRadioButton from '@/components/helper/FormRadioButton.vue';
-
 export default {
   components: {
-    PostFilter,
+    PostSection,
+    DiarySection,
+    FollowSection,
+    LikeSection,
+    WalletSection,
+    SettingSection,
     UserProfileCard,
-    PostCard,
     SponsorCard,
     PopularPostCard,
-    PersonalCard,
-    PersonalEditCard,
-    DiamondPurchaseRecordCard,
-    FormRadioButton,
   },
   setup() {
+    console.log(123);
     const postsData = postsStore();
     const userData = userStore();
 
+    // 頁籤分頁
     const tabType = ref('POST');
-    const isShowPersonalEditCard = ref(false);
 
     const route = useRoute();
     const userId = route.params.id;
+
+    const user = ref({});
+    // post list
     const postsList = ref([]);
+    const isSelf = computed(() => userData.user.id === userId);
+
     const handleChangeTab = (newTab) => {
       tabType.value = newTab;
     };
-    const ShowEditPersonal = () => {
-      isShowPersonalEditCard.value = true;
-    };
-    const HideEditPersonal = () => {
-      isShowPersonalEditCard.value = false;
-    };
     async function init() {
-      const checkLocalTokeResult = await userData.getLocalToken();
-      if (checkLocalTokeResult && userData.user.id === userId) {
+      if (userData.user.id === userId) {
         const pageUser = await userData.getMyUser(userData.user.token);
-        postsList.value = [...pageUser.user.posts];
+        user.value = { ...pageUser };
+        console.log(pageUser);
       } else {
-        const pageUser = await userData.getProfileUser('628e4bbfad29e4c054c9f380');
-        // eslint-disable-next-line no-underscore-dangle
-        console.log(pageUser, pageUser.user._id);
-        // eslint-disable-next-line no-underscore-dangle
-        postsList.value = await postsData.getOtherUserPost(pageUser.user._id);
+        const pageUser = await userData.getProfileUser(userId);
+        user.value = { ...pageUser };
+        console.log(pageUser);
       }
-      console.log(postsList.value.length, postsList.value[0]);
     }
-    init();
     const resetPasswordData = ref({
       password: '',
       confirmPassword: '',
     });
+    onMounted(async () => {
+      await init();
+    });
+
+    // watch(tabType, (newValue) => {
+    //   switch (newValue) {
+    //     case 'POST':
+    //       // 取得 post
+    //       console.log(newValue);
+    //       break;
+    //     case 'DIARY':
+    //       // 取得 私密日記
+    //       break;
+    //     default:
+    //       console.log(newValue);
+    //   }
+    // });
     return {
+      isSelf,
+      user,
       userId,
       postsData,
       tabType,
-      isShowPersonalEditCard,
       postsList,
       resetPasswordData,
       handleChangeTab,
-      ShowEditPersonal,
-      HideEditPersonal,
     };
   },
 };
@@ -84,158 +98,27 @@ export default {
 <template>
   <div class="container d-flex">
     <div class="content">
-      <UserProfileCard :tabType="tabType" @change-tab="handleChangeTab" :userId="userId" />
-      <div v-if="tabType === 'POST'">
-        <div class="d-flex flex-column gap-4">
-          <PostFilter />
-          <template v-for="postItem in postsData.posts" :key="postItem.id">
-            <PostCard :post-item="postItem" />
-          </template>
-        </div>
-      </div>
-      <div v-if="tabType === 'DIARY'" class="d-flex flex-column gap-4">
-        <div class="d-flex">
-          <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
-          <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
-          <PostFilter class="flex-grow-1" />
-        </div>
-        <template v-for="postItem in postsData.posts" :key="postItem.id">
-          <PostCard :post-item="postItem" />
-        </template>
-      </div>
-      <div v-if="tabType === 'FOLLOW'">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center mb-3 py-2">
-              <div class="user-picture"></div>
-              <div class="user-info">
-                <span class="user-info-title">用戶名稱</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="tabType === 'LIKE'">
-        <PostFilter class="mb-3" />
-        <template v-for="postItem in postsData.posts" :key="postItem.id">
-          <PostCard :post-item="postItem" />
-        </template>
-      </div>
-      <div v-if="tabType === 'WALLET'">
-        <div class="d-flex">
-          <div class="subSide fix">
-            <div class="side-menu-item mb-3">日記購買紀錄</div>
-            <div class="side-menu-item mb-3">日記銷售紀錄</div>
-            <div class="side-menu-item mb-3 active">鑽石購買紀錄</div>
-          </div>
-          <div class="subContent">
-            <DiamondPurchaseRecordCard />
-            <DiamondPurchaseRecordCard />
-            <DiamondPurchaseRecordCard />
-            <DiamondPurchaseRecordCard />
-          </div>
-        </div>
-      </div>
-      <div v-if="tabType === 'SETTING'">
-        <div class="d-flex">
-          <div class="subSide fix">
-            <div class="side-menu-item mb-3 active">個人資料</div>
-            <div class="side-menu-item mb-3">變更密碼</div>
-            <div class="side-menu-item mb-3">帳戶資料</div>
-          </div>
-          <div class="subContent">
-            <PersonalCard class="mb-3" @show-edit="ShowEditPersonal" />
-            <PersonalEditCard v-if="isShowPersonalEditCard" @hide-edit="HideEditPersonal" />
-          </div>
-        </div>
+      <UserProfileCard
+        :tabType="tabType"
+        :user="user"
+        :isSelf="isSelf"
+        @change-tab="handleChangeTab"
+      />
+      <div v-if="isSelf">
+        <PostSection v-if="tabType === 'POST'" />
+        <DiarySection v-if="tabType === 'DIARY'" />
+        <FollowSection v-if="tabType === 'FOLLOW'" />
+        <LikeSection v-if="tabType === 'LIKE'" />
+        <WalletSection v-if="tabType === 'WALLET'" />
+        <SettingSection
+          v-if="tabType === 'SETTING'"
+          :user="user"
+        ></SettingSection>
       </div>
       <div v-else>
-        <div v-if="tabType === 'POST'">
-          <PostFilter class="mb-3" />
-          <PostCard />
-          <PostCard />
-        </div>
-        <div v-if="tabType === 'DIARY'">
-          <div class="d-flex mb-3">
-            <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
-            <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
-            <PostFilter class="flex-grow-1" />
-          </div>
-          <PostCard :post-item="post" />
-          <PostCard :post-item="post" />
-        </div>
-        <div v-if="tabType === 'FOLLOW'">
-          <div class="card mb-3">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-              <div class="d-flex align-items-center mb-3 py-2">
-                <div class="user-picture"></div>
-                <div class="user-info">
-                  <span class="user-info-title">用戶名稱</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <PostSection :userId="userId" v-if="tabType === 'POST'" />
+        <DiarySection v-if="tabType === 'DIARY'" />
+        <FollowSection :userId="userId" v-if="tabType === 'FOLLOW'" />
       </div>
     </div>
     <div class="side fix">
@@ -244,19 +127,3 @@ export default {
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.side-menu-item {
-  padding: 10px 0;
-  text-align: center;
-  font-size: 16px;
-  columns: #1d1d1d;
-  background: #fff;
-  border-radius: 12px;
-
-  &.active {
-    background: var(--bs-secondary);
-    color: var(--bs-primary);
-  }
-}
-</style>
