@@ -22,13 +22,22 @@ export default {
       needHide: false,
       isShowAll: 2,
     });
+    const targetItem = computed(() => props.postItem);
     watch(postCardTextContent, (newValue) => {
       if (newValue.clientHeight > 96) {
         textContentShowData.value.needHide = true;
         textContentShowData.value.isShowAll = false;
       }
     });
-    const targetItem = computed(() => props.postItem);
+    function checkComment() {
+      if (props.postItem && props.postItem.comments.length > 1) {
+        commentsShowData.value.needHide = true;
+      }
+    }
+    watch(targetItem.value.comments, () => {
+      checkComment();
+    });
+    checkComment();
     async function addComment() {
       const localUser = JSON.parse(localStorage.getItem('sd-user'));
       console.log(targetItem.value.id, newComment.value);
@@ -36,7 +45,7 @@ export default {
         newComment.value,
         targetItem.value.id,
         // eslint-disable-next-line comma-dangle
-        localUser.token
+        localUser.token,
       );
       if (result.status === 'success') {
         newComment.value = '';
@@ -49,12 +58,6 @@ export default {
         postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
       }
     }
-    function checkComment() {
-      if (props.postItem && props.postItem.comments.length > 1) {
-        commentsShowData.value.needHide = true;
-        console.log(commentsShowData.value);
-      }
-    }
     async function deletePost() {
       const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
       console.log(result);
@@ -63,41 +66,58 @@ export default {
       }
     }
     async function editPost() {
-      postsData.openPostModel();
       postsData.newPostModel.action = 'edit';
       postsData.newPostModel.id = targetItem.value._id;
       postsData.targetPost.content = targetItem.value.content;
       postsData.targetPost.image = targetItem.value.image;
       postsData.targetPost.contentType = targetItem.value.contentType;
-      postsData.targetPost.tag = targetItem.value.tag;
+      postsData.targetPost.tag = targetItem.value.tag || [];
+      postsData.openPostModel('group');
     }
-    async function followUser() {
-      const result = await followData.addFollow(targetItem.value.user._id, userData.user.token);
-      console.log(result);
+    const isFollowed = computed(() => {
+      const result = followData.myFollowUser.findIndex(
+        (item) => item._id === targetItem.value.user._id,
+      );
+      return result;
+    });
+    async function toggleFollow() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      if (localUser) {
+        if (isFollowed.value + 1 > 0) {
+          console.log('刪除');
+          followData.deleteFollow(targetItem.value.user._id, userData.user.token);
+        } else {
+          console.log('新增');
+          followData.addFollow(targetItem.value.user._id, userData.user.token);
+        }
+      }
     }
-    const moreFunctionList = ref([
-      {
-        name: '編輯',
-        func: editPost,
-      },
-      {
-        name: '刪除',
-        func: deletePost,
-      },
-    ]);
-    checkComment();
+    async function toogleLike() {
+      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      if (localUser) {
+        const isLiked = targetItem.value.likes.findIndex((item) => item._id === localUser.id);
+        if (isLiked + 1 > 0) {
+          postsData.deleteLike(targetItem.value._id, localUser.token);
+        } else {
+          postsData.addLike(targetItem.value._id, localUser.token);
+        }
+      }
+    }
     return {
       userData,
       postsData,
-      followUser,
+      isFollowed,
       textContentShowData,
       commentsShowData,
       newComment,
       targetItem,
       postCardTextContent,
-      moreFunctionList,
       addComment,
       deleteComment,
+      toogleLike,
+      editPost,
+      deletePost,
+      toggleFollow,
     };
   },
 };
@@ -107,24 +127,41 @@ export default {
   <div class="card" v-if="targetItem !== undefined">
     <div class="card-body border-bottom border-gray-middle">
       <div class="d-flex align-items-center">
-        <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
+        <img
+          :src="targetItem.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+          alt="user-picture"
+          class="user-picture"
+        />
         <div class="user-info">
           <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title mb-1">
             {{ targetItem.user.name }}
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              @click="followUser"
+              v-if="targetItem.user.id !== userData.user.id"
+              @click="toggleFollow"
               type="button"
               class="followBtn"
-              v-if="targetItem.user.id !== userData.user.id"
+              :class="{ followed: isFollowed >= 0 }"
             >
-              追蹤
+              {{ isFollowed >= 0 ? '已追蹤' : '追蹤' }}
             </button>
             <p class="user-info-subtitle">{{ targetItem.createdAt }}</p>
           </div>
         </div>
-        <MoreModel :item-id="targetItem._id" :function-list="moreFunctionList" />
+        <MoreModel
+          :item-id="targetItem._id"
+          :function-list="[
+            {
+              name: '編輯貼文',
+              func: editPost,
+            },
+            {
+              name: '刪除貼文',
+              func: deletePost,
+            },
+          ]"
+        />
       </div>
     </div>
     <div class="card-body pb-0">
@@ -155,7 +192,7 @@ export default {
     </div>
     <div class="card-body">
       <div class="d-flex align-items-center">
-        <p class="d-flex align-items-center gap-1 2 3 me-4">
+        <p @click="toogleLike" class="d-flex align-items-center gap-1 2 3 me-4">
           <i class="webIcon bi bi-heart-fill"></i>
           {{ targetItem.likes.length }}
         </p>
@@ -188,7 +225,9 @@ export default {
           </li>
         </template>
         <li
-          v-if="commentsShowData.needHide && commentsShowData.isShowAll < 2"
+          v-if="
+            commentsShowData.needHide && commentsShowData.isShowAll !== targetItem.comments.length
+          "
           @click="commentsShowData.isShowAll = targetItem.comments.length"
           class="text-gray-dark handPointer"
         >
@@ -281,6 +320,11 @@ export default {
   cursor: pointer;
   &:hover {
     background-color: var(--bs-secondary);
+  }
+  &.followed {
+    border: 1px solid var(--bs-gray-light);
+    background-color: var(--bs-gray-light);
+    color: var(--bs-gray-dark);
   }
 }
 </style>

@@ -5,14 +5,21 @@ const postsStore = defineStore({
   id: 'postsStore',
   state: () => ({
     posts: [],
+    getPostsData: {
+      page: 1,
+      total: 1,
+      sort: 'asc',
+      query: '',
+    },
     userPosts: [],
     targetPost: {
-      action: 'new',
       id: '',
       contentType: 'article',
       content: '',
       image: '',
       tag: [],
+      pay: 0,
+      type: 'group',
     },
     newPostModel: {
       open: false,
@@ -35,20 +42,38 @@ const postsStore = defineStore({
       }
     },
     async addPost(data, userToken) {
-      try {
-        const res = await axios({
-          method: 'POST',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
-          data,
-          headers: {
-            authorization: `${userToken}`,
-          },
-        });
-        console.log(res.data);
-        return res.data;
-      } catch (err) {
-        console.dir(err);
-        return err;
+      if (data.type === 'group') {
+        try {
+          const res = await axios({
+            method: 'POST',
+            url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/',
+            data,
+            headers: {
+              authorization: `${userToken}`,
+            },
+          });
+          console.log(res.data);
+          return res.data;
+        } catch (err) {
+          console.dir(err);
+          return err;
+        }
+      } else {
+        try {
+          const res = await axios({
+            method: 'POST',
+            url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/private',
+            data,
+            headers: {
+              authorization: `${userToken}`,
+            },
+          });
+          console.log(res.data);
+          return res.data;
+        } catch (err) {
+          console.dir(err);
+          return err;
+        }
       }
     },
     async updatePost(data, postId, userToken) {
@@ -61,7 +86,12 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
+        if (res.data.status === 'success') {
+          const replaceIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
+          const tempUser = this.posts[replaceIndex].user;
+          this.posts.splice(replaceIndex, 1, res.data.data);
+          this.posts[replaceIndex].user = tempUser;
+        }
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -128,6 +158,11 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
+        if (res.data.status === 'success') {
+          const postIndex = this.posts.findIndex((item) => item._id === res.data.data.post);
+          console.log(this.posts[postIndex]);
+          this.posts[postIndex].comments.push(res.data.data);
+        }
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -145,6 +180,48 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async addLike(postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'POST',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/like/${postId}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data);
+        if (res.data.status === 'success') {
+          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
+          console.log(this.posts[postIndex]);
+          this.posts[postIndex].likes = res.data.data.likes;
+        }
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
+    },
+    async deleteLike(postId, userToken) {
+      try {
+        const res = await axios({
+          method: 'DELETE',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/like/${postId}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res);
+        if (res.data.status === 'success') {
+          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
+          console.log(this.posts[postIndex]);
+          this.posts[postIndex].likes = res.data.data.likes;
+        }
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -177,12 +254,12 @@ const postsStore = defineStore({
       this.targetPost.content = '';
       this.targetPost.image = '';
       this.targetPost.tag = [];
-      console.log(this.targetPost);
       this.newPostModel.open = false;
       this.newPostModel.action = 'new';
       this.newPostModel.id = '';
     },
-    openPostModel() {
+    openPostModel(postType) {
+      this.targetPost.type = postType;
       this.newPostModel.open = true;
     },
     closePostModel() {

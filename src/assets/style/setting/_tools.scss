@@ -109,7 +109,7 @@
 .webIcon--sm {
   font-size: 1rem;
 }
-.handPointer{
+.handPointer {
   cursor: pointer;
 }
 .subNav--row {
@@ -316,4 +316,24 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.formRadio {
+  &__input {
+    display: none;
+  }
+  &__label {
+    border: 1px solid var(--bs-gray-middle);
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    &.active {
+      background-color: var(--bs-secondary);
+      border: 1px solid var(--bs-primary);
+      color: var(--bs-primary);
+    }
+    &:hover {
+      border: 1px solid var(--bs-primary);
+      color: var(--bs-primary);
+    }
+  }
 }

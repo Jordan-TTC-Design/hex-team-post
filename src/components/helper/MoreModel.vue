@@ -5,8 +5,13 @@ export default {
   props: ['itemId', 'functionList'],
   setup() {
     const modalOpen = ref(false);
+    function toogleFunc(targetFunc) {
+      targetFunc();
+      modalOpen.value = false;
+    }
     return {
       modalOpen,
+      toogleFunc,
     };
   },
 };
@@ -19,21 +24,17 @@ export default {
     </button>
     <ul v-show="modalOpen === true" class="moreMenu__box border border-secondary rounded bg-white">
       <template v-for="func in functionList" :key="func.name">
-        <li class="moreMenu__item" @click="func.func">{{ func.name }}</li>
+        <li class="moreMenu__item" @click="toogleFunc(func.func)">{{ func.name }}</li>
       </template>
     </ul>
   </div>
-  <div
-    v-show="modalOpen === true"
-    class="fixed top-0 bottom-0 left-0 right-0 z-50"
-    @click="modalOpen = false"
-  ></div>
+  <div v-show="modalOpen === true" class="dropdownBg" @click="modalOpen = false"></div>
 </template>
 
 <style lang="scss" scoped>
 .moreMenu {
   position: relative;
-  z-index: 99;
+  z-index: 201;
   &__box {
     position: absolute;
     bottom: -0.25rem;
@@ -65,5 +66,13 @@ export default {
   &:last-child {
     border-bottom: 0;
   }
+}
+.dropdownBg {
+  z-index: 200;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

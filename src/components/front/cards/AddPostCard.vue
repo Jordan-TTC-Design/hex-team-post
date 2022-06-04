@@ -19,14 +19,18 @@ export default {
   <div class="card" :class="props.class">
     <div class="card-body d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-2">
-        <img :src="userData.user.photo" alt="用戶圖片" class="user-picture" />
+        <img
+          :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+          alt="用戶圖片"
+          class="user-picture me-0"
+        />
         <p>{{ userData.user.name }}</p>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel('group')" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 新增貼文
         </button>
-        <button @click="postsData.openPostModel()" type="button" class="btn btn-default">
+        <button @click="postsData.openPostModel('person')" type="button" class="btn btn-default">
           <i class="webIcon--sm bi bi-plus-lg"></i> 私密日記
         </button>
       </div>
