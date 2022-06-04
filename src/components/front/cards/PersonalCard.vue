@@ -2,7 +2,12 @@
 // import { ref } from 'vue';
 
 export default {
+  props: {
+    user: Object,
+  },
   setup(props, { emit }) {
+    console.log(props.user);
+
     const showEdit = () => {
       emit('show-edit');
     };
@@ -29,19 +34,17 @@ export default {
       </div>
       <div class="tmp">
         <p class="a">暱稱</p>
-        <p class="b">用戶名稱</p>
+        <p class="b">{{ props.user?.user?.name }}</p>
       </div>
       <div class="tmp">
         <p class="a">性別</p>
-        <p class="b">男性</p>
+        <p class="b">
+          {{ props.user?.user?.gender === 'male' ? '男性' : '女性' }}
+        </p>
       </div>
       <div class="tmp">
         <p class="a">Email</p>
-        <p class="b">Jordan.ttc.design@gmail.com</p>
-      </div>
-      <div class="tmp">
-        <p class="a">聯絡電話</p>
-        <p class="b">0987654321</p>
+        <p class="b">{{ props.user?.user?.email }}</p>
       </div>
     </div>
   </div>
