@@ -153,6 +153,7 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
+        console.log(res);
         return res.data;
       } catch (err) {
         console.dir(err);

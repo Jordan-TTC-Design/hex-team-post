@@ -107,8 +107,8 @@ const userStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data.data);
-        if (res.data === 'success') {
+        console.log(res.data);
+        if (res.data.status === 'success') {
           this.myWallet = res.data.data;
         }
         return res.data;

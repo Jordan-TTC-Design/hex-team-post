@@ -36,33 +36,31 @@ const paymentStore = defineStore({
             authorization: `${userToken}`,
           },
         });
+        console.log(res);
+
         return res.data;
       } catch (err) {
         console.dir(err);
         return err;
       }
     },
-    async viewFile(url, authorization) {
-      // Change this to use your HTTP client
-      fetch(url, {
+    async goToPaymentPage(orderId, userToken) {
+      console.log(orderId, userToken);
+      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/payment/?orderId=${orderId}`;
+      fetch(apiUrl, {
         headers: {
-          authorization,
+          authorization: userToken,
         },
       })
         .then((response) => response.blob())
         .then((blob) => {
-          // const pageUrl = window.URL.createObjectURL(blob);
+          const pageUrl = window.URL.createObjectURL(blob);
           console.log(blob);
-          // window.open(pageUrl, 'newebpay_payment', 'location=0').focus();
+          window.open(pageUrl, 'newebpay_payment', 'location=0').focus();
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    async goToPaymentPage(orderId, userToken) {
-      console.log(orderId, userToken);
-      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/payment/?orderId=${orderId}`;
-      this.viewFile(apiUrl, userToken);
       // axios({
       //   method: 'GET',
       //   url: apiUrl,
