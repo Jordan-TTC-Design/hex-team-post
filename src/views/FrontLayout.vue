@@ -10,6 +10,7 @@ import NewPostModel from '@/components/helper/NewPostModel.vue';
 import ForgetPasswordModel from '@/components/front/models/ForgetPasswordModel.vue';
 import Loader from '@/components/helper/Loader.vue';
 import PageLoader from '@/components/helper/PageLoader.vue';
+import ImageSquareCropperModal from '@/components/helper/ImageSquareCropperModal.vue';
 
 export default {
   components: {
@@ -23,6 +24,7 @@ export default {
     ForgetPasswordModel,
     Loader,
     PageLoader,
+    ImageSquareCropperModal,
   },
   setup() {
     const statusData = statusStore();
@@ -48,6 +50,7 @@ export default {
     <NewPostModel />
     <ForgetPasswordModel />
     <Loader v-show="statusData.isLoading.length > 0" />
+    <ImageSquareCropperModal />
   </div>
 </template>
 
