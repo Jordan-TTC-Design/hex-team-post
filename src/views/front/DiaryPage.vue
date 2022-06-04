@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
+import statusStore from '@/stores/statusStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import DiaryCard from '@/components/front/cards/DiaryCard.vue';
 import DiaryPurchaseRecordCard from '@/components/front/DiaryPurchaseRecordCard.vue';
@@ -15,6 +16,8 @@ export default {
   setup() {
     const userData = userStore();
     const postsData = postsStore();
+    const statusData = statusStore();
+    statusData.openPageLoader();
     const diariesList = ref([]);
     async function getdiariesData() {
       const result = await postsData.getUserDiary('6298f3663b84eb47c3e1a7ea');

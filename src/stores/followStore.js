@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import statusStore from '@/stores/statusStore';
+
+const statusData = statusStore();
 
 const followData = defineStore({
   id: 'followData',
@@ -10,6 +13,7 @@ const followData = defineStore({
   getters: {},
   actions: {
     async getMyFollow(userToken) {
+      statusData.addLoading();
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/follow',
@@ -19,6 +23,7 @@ const followData = defineStore({
       })
         .then((res) => {
           console.log(res.data);
+          statusData.shiftLoading();
           this.myFollowUser = res.data.data[0].following;
           this.myFollower = res.data.data[0].followers;
           return res.data;
@@ -29,6 +34,7 @@ const followData = defineStore({
         });
     },
     async addFollow(data, userToken) {
+      statusData.addLoading();
       const targetFollow = {
         followuser: data,
       };
@@ -42,6 +48,7 @@ const followData = defineStore({
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           this.getMyFollow(userToken);
           return res;
         })
@@ -51,6 +58,7 @@ const followData = defineStore({
         });
     },
     async deleteFollow(followuserId, userToken) {
+      statusData.addLoading();
       return axios({
         method: 'DELETE',
         url: `https://hex-post-team-api-server.herokuapp.com/api/follow/${followuserId}`,
@@ -60,11 +68,13 @@ const followData = defineStore({
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           this.getMyFollow(userToken);
           return res;
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },

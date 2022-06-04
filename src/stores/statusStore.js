@@ -3,7 +3,8 @@ import { defineStore } from 'pinia';
 const statusStore = defineStore({
   id: 'statusStore',
   state: () => ({
-    isLoading: false,
+    isLoading: [],
+    pageLoading: false,
     signUpModel: false,
     logInModel: false,
     diamondModel: false,
@@ -62,6 +63,20 @@ const statusStore = defineStore({
       this.askModel.title = '';
       this.askModel.text = '';
       this.askModel.action = null;
+    },
+    openPageLoader() {
+      this.pageLoading = true;
+      setTimeout(() => {
+        this.pageLoading = false;
+        console.log(this.pageLoading);
+      }, 2000);
+      console.log(this.pageLoading);
+    },
+    addLoading() {
+      this.isLoading.push('loading');
+    },
+    shiftLoading() {
+      this.isLoading.shift();
     },
   },
 });

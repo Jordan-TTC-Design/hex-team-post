@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
+import statusStore from '@/stores/statusStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import AddPostCard from '@/components/front/cards/AddPostCard.vue';
 import PostCard from '@/components/front/cards/PostCard.vue';
@@ -17,6 +18,8 @@ export default {
   setup() {
     const userData = userStore();
     const postsData = postsStore();
+    const statusData = statusStore();
+    statusData.openPageLoader();
     const postSort = ref('asc');
     const postQuery = ref('');
     postsData.getPosts();
