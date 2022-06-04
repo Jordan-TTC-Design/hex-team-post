@@ -1,5 +1,4 @@
 <script>
-import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import PostFilter from '@/components/front/PostFilter.vue';
@@ -17,18 +16,24 @@ export default {
   setup() {
     const userData = userStore();
     const postsData = postsStore();
-    const postSort = ref('asc');
-    const postQuery = ref('');
-    postsData.getPosts(1, 'asc', '');
-    function sortPostsData() {
-      postsData.getPosts(1, postSort.value, postQuery.value);
+    function handleScroll() {
+      if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
+        postsData.getPosts(
+          postsData.getPostsData.page + 1,
+          postsData.getPostsData.sort,
+          postsData.getPostsData.query,
+        );
+      }
     }
+    window.addEventListener('scroll', handleScroll);
+    postsData.getPosts(
+      postsData.getPostsData.page,
+      postsData.getPostsData.sort,
+      postsData.getPostsData.query,
+    );
     return {
       userData,
       postsData,
-      postSort,
-      postQuery,
-      sortPostsData,
     };
   },
 };
@@ -40,7 +45,7 @@ export default {
       <div class="col-8 d-flex flex-column gap-4">
         <PostFilter />
         <AddPostCard v-if="userData.user.token" />
-        <template v-for="(postItem,index) in postsData.posts" :key="postItem.id">
+        <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" :post-index="index" />
         </template>
       </div>
@@ -53,7 +58,7 @@ export default {
 
 <style lang="scss" scoped>
 .side-sticky-top {
-  position:sticky;
-  top:5rem;
+  position: sticky;
+  top: 5rem;
 }
 </style>

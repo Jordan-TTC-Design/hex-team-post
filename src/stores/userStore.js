@@ -8,8 +8,9 @@ const userStore = defineStore({
       name: '',
       id: '',
       token: '',
-      photo: '',
+      photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
+    myWallet: 0,
   }),
   getters: {},
   actions: {
@@ -19,6 +20,7 @@ const userStore = defineStore({
       if (localUser && localUser.token.trim().length > 0) {
         this.user = localUser;
         checkResult = true;
+        this.getMyWallet(this.user.token);
       } else {
         localStorage.setItem('sd-user', JSON.stringify(this.user));
       }
@@ -48,7 +50,6 @@ const userStore = defineStore({
           return err;
         });
     },
-
     async checkLogIn(userToken) {
       return axios({
         method: 'GET',
@@ -96,6 +97,25 @@ const userStore = defineStore({
           console.log(err);
           return err;
         });
+    },
+    async getMyWallet(userToken) {
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/wallet/',
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res.data.data);
+        if (res.data === 'success') {
+          this.myWallet = res.data.data;
+        }
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      }
     },
     async resetPassword(forgetData) {
       console.log(forgetData);

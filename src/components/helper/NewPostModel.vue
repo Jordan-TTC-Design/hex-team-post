@@ -117,8 +117,12 @@ export default {
         </button>
       </div>
       <div class="d-flex flex-column gap-2 p-4 h-75 flex-grow-1">
-        <div class="d-flex d-flex align-items-center gap-2 py-2">
-          <img class="userPhoto" :src="userData.user.photo" :alt="userData.user.name" />
+        <div class="d-flex align-items-center gap-2">
+          <img
+            class="userPhoto"
+            :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+            :alt="userData.user.name"
+          />
           <p>{{ userData.user.name }}</p>
         </div>
         <div class="newPostContentBox">
@@ -277,13 +281,12 @@ export default {
   }
 }
 .userPhoto {
-  width: 44px;
-  height: 44px;
-  border: 2px solid #000400;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--bs-gray-middle);
   border-radius: 100%;
   object-fit: cover;
   object-position: center;
-  background: #e2edfa;
 }
 .newPostContentBox {
   flex-shrink: 1;

@@ -13,10 +13,9 @@ export default {
     const statusData = statusStore();
     const postsData = postsStore();
     const followData = followStore();
-    const dropDownMenuStatus = ref(false);
+    const modalOpen = ref(false);
     async function checkLogin() {
       const checkLocalResult = await userData.getLocalToken();
-      console.log(checkLocalResult);
       if (checkLocalResult) {
         const checkResult = await userData.checkLogIn(userData.user.token);
         if (checkResult.status) {
@@ -28,7 +27,7 @@ export default {
       }
     }
     function openDropModel() {
-      dropDownMenuStatus.value = !dropDownMenuStatus.value;
+      modalOpen.value = !modalOpen.value;
     }
     checkLogin();
     return {
@@ -36,7 +35,7 @@ export default {
       statusData,
       postsData,
       route,
-      dropDownMenuStatus,
+      modalOpen,
       openDropModel,
     };
   },
@@ -71,28 +70,30 @@ export default {
         <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel()">
           <i class="bi bi-plus-lg"></i>
         </button>
-        <div class="border d-flex align-items-center gap-2 rounded-pill" @click="openDropModel">
+        <div class="border d-flex align-items-center gap-2 rounded-pill ps-2">
           <img
-            src="@/assets/image/user-picture.png"
-            alt="user-picture"
-            class="user-picture m-0 border-0"
+            :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+            :alt="userData.user.name"
+            class="userPhoto"
           />
           <span>{{ userData.user.name || '用戶名稱' }}</span>
           <div class="dropDownMenu">
-            <button class="btn btn-white px-3 rounded-pill">
+            <button class="btn btn-white px-3 rounded-pill" @click="openDropModel">
               <i
                 :class="{
-                  'bi-chevron-up': dropDownMenuStatus === true,
-                  'bi-chevron-down': dropDownMenuStatus === false,
+                  'bi-chevron-up': modalOpen === true,
+                  'bi-chevron-down': modalOpen === false,
                 }"
                 class="bi"
               ></i>
             </button>
-            <div class="dropDownMenu__dropdown" v-show="dropDownMenuStatus">
+            <div class="dropDownMenu__dropdown" v-show="modalOpen === true">
               <ul class="list-group">
                 <li class="list-group-header d-flex" @click="statusData.diamondModel = true">
                   <p class="text-primary">錢包</p>
-                  <span class="ms-auto text-primary">200 <i class="bi bi-gem"></i> </span>
+                  <span class="ms-auto text-primary"
+                    >{{ userData.myWallet }} SD <i class="bi bi-gem"></i>
+                  </span>
                 </li>
                 <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
                   >查看個人檔案</RouterLink
@@ -105,6 +106,7 @@ export default {
               </ul>
             </div>
           </div>
+          <div v-show="modalOpen === true" class="dropdownBg" @click="openDropModel"></div>
         </div>
       </div>
     </div>
@@ -114,6 +116,7 @@ export default {
 <style lang="scss" scoped>
 .dropDownMenu {
   cursor: pointer;
+  z-index: 201;
   &__dropdown {
     width: 180px;
     position: absolute;
@@ -180,5 +183,21 @@ export default {
 
     display: flex;
   }
+}
+.userPhoto {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+  object-fit: cover;
+  object-position: center;
+  background: var(--bs-gray-light);
+}
+.dropdownBg {
+  z-index: 200;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

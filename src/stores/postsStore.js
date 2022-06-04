@@ -5,6 +5,12 @@ const postsStore = defineStore({
   id: 'postsStore',
   state: () => ({
     posts: [],
+    getPostsData: {
+      page: 1,
+      total: 1,
+      sort: 'asc',
+      query: '',
+    },
     userPosts: [],
     targetPost: {
       id: '',

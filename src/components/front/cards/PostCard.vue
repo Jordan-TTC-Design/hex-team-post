@@ -127,7 +127,11 @@ export default {
   <div class="card" v-if="targetItem !== undefined">
     <div class="card-body border-bottom border-gray-middle">
       <div class="d-flex align-items-center">
-        <img src="@/assets/image/user-picture.png" alt="user-picture" class="user-picture" />
+        <img
+          :src="targetItem.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+          alt="user-picture"
+          class="user-picture"
+        />
         <div class="user-info">
           <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title mb-1">
             {{ targetItem.user.name }}
