@@ -66,7 +66,11 @@ export default {
       </div>
       <div class="d-flex flex-column p-4 gap-4 flex-grow-1 diamondContainer">
         <div class="diamondContainer__user gap-4">
-          <img class="userPhoto" :src="userData.user.photo" :alt="userData.user.name" />
+          <img
+            class="userPhoto"
+            :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+            :alt="userData.user.name"
+          />
           <div>
             <p class="fs-5 text-dark mb-1">{{ userData.user.name }}</p>
             <div class="d-flex gap-2">
@@ -79,7 +83,7 @@ export default {
               alt="logoMark"
             />
             <p class="position-absolute top-3 end-3 text-primary">
-              秘密鑽石<span class="ms-2 fs-4 fw-bold text-primary">250 SD</span>
+              秘密鑽石<span class="ms-2 fs-4 fw-bold text-primary">{{ userData.myWallet }} SD</span>
             </p>
           </div>
         </div>
