@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import statusStore from '@/stores/statusStore';
+
+const statusData = statusStore();
 
 const userStore = defineStore({
   id: 'userStore',
@@ -15,6 +18,7 @@ const userStore = defineStore({
   getters: {},
   actions: {
     async getLocalToken() {
+      statusData.addLoading();
       let checkResult = false;
       const localUser = await JSON.parse(localStorage.getItem('sd-user'));
       if (localUser && localUser.token.trim().length > 0) {
@@ -24,9 +28,11 @@ const userStore = defineStore({
       } else {
         localStorage.setItem('sd-user', JSON.stringify(this.user));
       }
+      statusData.shiftLoading();
       return checkResult;
     },
     async signUp(data) {
+      statusData.addLoading();
       return axios
         .post('https://hex-post-team-api-server.herokuapp.com/api/user', data)
         .then((res) => {
@@ -39,18 +45,22 @@ const userStore = defineStore({
         });
     },
     async logIn(data) {
+      statusData.addLoading();
       return axios
         .post('https://hex-post-team-api-server.herokuapp.com/api/user/sign-in', data)
         .then((res) => {
           console.log(res.data);
+          statusData.shiftLoading();
           return res.data;
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },
     async checkLogIn(userToken) {
+      statusData.addLoading();
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/check',
@@ -60,28 +70,34 @@ const userStore = defineStore({
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           return res;
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },
     async getProfileUser(id) {
+      statusData.addLoading();
       return axios({
         method: 'GET',
         url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           return res.data.data;
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },
     async getMyUser(userToken) {
+      statusData.addLoading();
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
@@ -91,14 +107,17 @@ const userStore = defineStore({
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           return res.data.data;
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },
     async getMyWallet(userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'GET',
@@ -111,13 +130,16 @@ const userStore = defineStore({
         if (res.data.status === 'success') {
           this.myWallet = res.data.data;
         }
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async resetPassword(forgetData) {
+      statusData.addLoading();
       console.log(forgetData);
       return axios({
         method: 'POST',
@@ -126,10 +148,12 @@ const userStore = defineStore({
       })
         .then((res) => {
           console.log(res);
+          statusData.shiftLoading();
           return res.data.data;
         })
         .catch((err) => {
           console.dir(err);
+          statusData.shiftLoading();
           return err;
         });
     },

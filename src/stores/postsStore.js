@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import statusStore from '@/stores/statusStore';
+
+const statusData = statusStore();
 
 const postsStore = defineStore({
   id: 'postsStore',
@@ -31,18 +34,22 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '') {
+      statusData.addLoading();
       const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&q=${query}&sort=${timeSort}`;
       try {
         const res = await axios.get(apiUrl);
         console.log(res);
         this.posts = res.data.data;
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
+        statusData.shiftLoading();
         console.dir(err);
         return err;
       }
     },
     async addPost(data, userToken) {
+      statusData.addLoading();
       if (data.type === 'group') {
         try {
           const res = await axios({
@@ -54,8 +61,10 @@ const postsStore = defineStore({
             },
           });
           console.log(res.data);
+          statusData.shiftLoading();
           return res.data;
         } catch (err) {
+          statusData.shiftLoading();
           console.dir(err);
           return err;
         }
@@ -70,14 +79,17 @@ const postsStore = defineStore({
             },
           });
           console.log(res.data);
+          statusData.shiftLoading();
           return res.data;
         } catch (err) {
           console.dir(err);
+          statusData.shiftLoading();
           return err;
         }
       }
     },
     async updatePost(data, postId, userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'PUT',
@@ -93,13 +105,16 @@ const postsStore = defineStore({
           this.posts.splice(replaceIndex, 1, res.data.data);
           this.posts[replaceIndex].user = tempUser;
         }
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async getUserPost(userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'GET',
@@ -109,13 +124,16 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async deletePost(postId, userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'DELETE',
@@ -125,25 +143,31 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async getUserDiary(userId) {
+      statusData.addLoading();
       const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}`;
       try {
         const res = await axios.get(apiUrl);
         console.log(res);
         this.diarys = res.data.data;
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
+        statusData.shiftLoading();
         console.dir(err);
         return err;
       }
     },
     async buyDiary(data, userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'POST',
@@ -154,30 +178,35 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async getOtherUserPost(userId) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}`,
         });
         console.log(res.data);
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async addComment(data, postId, userToken) {
+      statusData.addLoading();
       const commentData = {
         comment: data,
       };
-      console.log(commentData);
       try {
         const res = await axios({
           method: 'POST',
@@ -187,20 +216,21 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
         if (res.data.status === 'success') {
           const postIndex = this.posts.findIndex((item) => item._id === res.data.data.post);
           console.log(this.posts[postIndex]);
           this.posts[postIndex].comments.push(res.data.data);
         }
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async deleteComment(commentId, userToken) {
-      console.log(commentId, userToken);
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'DELETE',
@@ -210,13 +240,16 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async addLike(postId, userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'POST',
@@ -225,19 +258,21 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
         if (res.data.status === 'success') {
           const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
           console.log(this.posts[postIndex]);
           this.posts[postIndex].likes = res.data.data.likes;
         }
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async deleteLike(postId, userToken) {
+      statusData.addLoading();
       try {
         const res = await axios({
           method: 'DELETE',
@@ -252,13 +287,16 @@ const postsStore = defineStore({
           console.log(this.posts[postIndex]);
           this.posts[postIndex].likes = res.data.data.likes;
         }
+        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
+        statusData.shiftLoading();
         return err;
       }
     },
     async upLoadImage(data, userToken) {
+      statusData.addLoading();
       let resultData = null;
       const formdata = new FormData();
       formdata.append('image', data);
@@ -273,6 +311,7 @@ const postsStore = defineStore({
       try {
         const res = await axios(config);
         resultData = res.data;
+        statusData.shiftLoading();
       } catch (err) {
         console.dir(err);
         return err;
