@@ -21,7 +21,6 @@ const routes = [
         name: 'FollowPage',
         component: () => import('../views/front/FollowPage.vue'),
       },
-
       {
         path: 'diary',
         name: 'FrontDiaryPage',
@@ -30,6 +29,10 @@ const routes = [
       {
         path: 'profile/:id',
         component: () => import('../views/front/ProfilePage.vue'),
+      },
+      {
+        path: 'order-success',
+        component: () => import('../views/front/OrderSuccess.vue'),
       },
     ],
   },
