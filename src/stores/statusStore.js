@@ -9,6 +9,12 @@ const statusStore = defineStore({
     logInModel: false,
     diamondModel: false,
     forgetPasswordsModel: false,
+    imgCropperModel: {
+      open: false,
+      url: 'https://i.imgur.com/ZWHoRPi.png',
+      file: null,
+      name: '',
+    },
     askModel: {
       open: false,
       title: '提醒您',
@@ -77,6 +83,10 @@ const statusStore = defineStore({
     },
     shiftLoading() {
       this.isLoading.shift();
+    },
+    openUserImageCropper() {
+      this.imgCropperModel.open = true;
+      // this.imgCropperModel.url = this.;
     },
   },
 });

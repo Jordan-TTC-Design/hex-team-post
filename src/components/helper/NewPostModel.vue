@@ -40,6 +40,7 @@ export default {
       }
       if (editPhoto.value === true) {
         try {
+          console.log(imgData.value);
           const result = await postsData.upLoadImage(imgData.value, userData.user.token);
           console.log(result);
           if (result.status === 'success') {

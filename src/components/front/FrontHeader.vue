@@ -50,46 +50,24 @@ export default {
     <img src="@/assets/image/logo.svg" alt="logo" class="menu-logo" />
     <div class="menu-navbar">
       <div class="menu-navbar-item" :class="{ active: route.path === `/` }">
-        <RouterLink to="/">
-          <i class="bi bi-house-door"></i> 最新動態
-        </RouterLink>
+        <RouterLink to="/"> <i class="bi bi-house-door"></i> 最新動態 </RouterLink>
       </div>
-      <div
-        class="menu-navbar-item"
-        :class="{ active: route.path === `/follow` }"
-      >
-        <RouterLink to="/follow">
-          <i class="bi bi-bell-fill"></i> 追蹤動態
-        </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/follow` }">
+        <RouterLink to="/follow"> <i class="bi bi-bell-fill"></i> 追蹤動態 </RouterLink>
       </div>
-      <div
-        class="menu-navbar-item"
-        :class="{ active: route.path === `/recommend` }"
-      >
-        <RouterLink to="/recommend">
-          <i class="bi bi-chat-square-heart"></i> 熱賣推薦
-        </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/recommend` }">
+        <RouterLink to="/recommend"> <i class="bi bi-chat-square-heart"></i> 熱賣推薦 </RouterLink>
       </div>
-      <div
-        class="menu-navbar-item"
-        :class="{ active: route.path === `/diary` }"
-      >
-        <RouterLink to="/diary">
-          <i class="bi bi-envelope-heart"></i> 私密日記本
-        </RouterLink>
+      <div class="menu-navbar-item" :class="{ active: route.path === `/diary` }">
+        <RouterLink to="/diary"> <i class="bi bi-envelope-heart"></i> 私密日記本 </RouterLink>
       </div>
     </div>
     <div class="menu-function">
       <div class="btn-group" v-if="userData.user.token.length === 0">
-        <button
-          @click="statusData.logInModel = true"
-          class="btn btn-outline text-primary"
-        >
+        <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
           登入
         </button>
-        <button @click="statusData.signUpModel = true" class="btn btn-outline">
-          註冊
-        </button>
+        <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
       <div class="d-flex align-items-center gap-2" v-if="userData.user.token.length > 0">
         <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel()">
@@ -100,6 +78,7 @@ export default {
             :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
             :alt="userData.user.name"
             class="userPhoto"
+            @click="statusData.openUserImageCropper()"
           />
           <span>{{ userData.user.name || '用戶名稱' }}</span>
           <div class="dropDownMenu">
@@ -120,14 +99,10 @@ export default {
                     >{{ userData.myWallet }} SD <i class="bi bi-gem"></i>
                   </span>
                 </li>
-                <RouterLink
-                  :to="`/profile/${userData.user.id}`"
-                  class="list-group-item"
+                <RouterLink :to="`/profile/${userData.user.id}`" class="list-group-item"
                   >查看個人檔案</RouterLink
                 >
-                <RouterLink
-                  to="/profile/628e4bbfad29e4c054c9f380"
-                  class="list-group-item"
+                <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
                   >消費記錄</RouterLink
                 >
                 <li class="list-group-item">客服支援</li>

@@ -17,6 +17,7 @@ import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
 
 import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
+import statusStore from '@/stores/statusStore';
 
 export default {
   components: {
@@ -34,7 +35,8 @@ export default {
     console.log(123);
     const postsData = postsStore();
     const userData = userStore();
-
+    const statusData = statusStore();
+    statusData.openPageLoader();
     // 頁籤分頁
     const tabType = ref('POST');
 
