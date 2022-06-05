@@ -1,25 +1,28 @@
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
+import followStore from '@/stores/followStore';
 import statusStore from '@/stores/statusStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import AddPostCard from '@/components/front/cards/AddPostCard.vue';
 import PostCard from '@/components/front/cards/PostCard.vue';
-import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
+import FollowingCard from '@/components/front/cards/FollowingCard.vue';
 
 export default {
   components: {
     PostFilter,
     AddPostCard,
     PostCard,
-    RecommendFollowCard,
+    FollowingCard,
   },
   setup() {
     const userData = userStore();
     const postsData = postsStore();
     const statusData = statusStore();
+    const followData = followStore();
     statusData.openPageLoader();
+    const following = ref([]);
     const postSort = ref('asc');
     const postQuery = ref('');
     postsData.getPosts();
@@ -32,11 +35,16 @@ export default {
       userData.userToken = token;
     }
     checkLogin();
-
+    onMounted(async () => {
+      const res = await followData.getMyFollow(userData.user.token);
+      console.log(res.data[0].following);
+      following.value = [...res.data[0].following];
+    });
     return {
       postSort,
       postQuery,
       postsData,
+      following,
       sortPostsData,
       userData,
     };
@@ -55,7 +63,7 @@ export default {
         </template>
       </div>
       <div class="col-4 position-relative">
-        <RecommendFollowCard class="side-sticky-top" />
+        <FollowingCard class="side-sticky-top" :following="following"/>
       </div>
     </div>
   </div>
