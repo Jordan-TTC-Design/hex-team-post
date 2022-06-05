@@ -17,7 +17,7 @@ export default {
       statusData.logInModel = true;
     }
     async function sendForgetPassword() {
-      const result = await userData.resetPassword(forgetData.value);
+      const result = await userData.forgotPassword(forgetData.value);
       if (result.status === 'success') {
         statusData.openRemindModel(
           '傳送成功',
