@@ -170,7 +170,7 @@ export default {
                 class="mb-4"
                 v-model="newPassword.password"
                 input-id="password"
-                type="password"
+                input-type="password"
               >
                 <template v-slot:default>密碼</template>
               </FormInput>
@@ -178,7 +178,7 @@ export default {
                 class="mb-4"
                 v-model="newPassword.confirmPassword"
                 input-id="confirmPassword"
-                type="password"
+                input-type="password"
               >
                 <template v-slot:default>重複密碼</template>
               </FormInput>

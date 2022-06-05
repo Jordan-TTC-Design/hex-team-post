@@ -16,7 +16,7 @@ export default {
     const process = ref(1);
     const imgUploadGetter = ref(null);
     let cropper = {};
-    let imgData = {};
+    let imgData = { };
     const cropperImage = ref(null);
     const destination = ref({});
     // eslint-disable-next-line no-unused-vars
@@ -35,7 +35,6 @@ export default {
         reader.onload = () => {
           const dataURL = reader.result;
           imgData = cropperImage.value;
-          console.log(reader, cropperImage.value);
           imgData.src = dataURL;
           cropper = new Cropper(imgData, {
             aspectRatio: 1 / 1,
@@ -102,7 +101,9 @@ export default {
       console.log(result);
       if (result.status === 'success') {
         userData.user.photo = result.data.imgUrl;
-        userData.updateUser();
+        localStorage.setItem('sd-user', JSON.stringify(userData.user));
+        await userData.updateUser(userData.user.token);
+        userData.getLocalToken();
       }
     }
     function croppingImg() {

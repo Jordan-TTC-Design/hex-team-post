@@ -74,7 +74,7 @@ const userStore = defineStore({
           return res;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -91,7 +91,7 @@ const userStore = defineStore({
           return res.data.data;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -111,7 +111,7 @@ const userStore = defineStore({
           return res.data.data;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -157,22 +157,27 @@ const userStore = defineStore({
           return err;
         });
     },
-    async updateUser() {
+    async updateUser(userToken) {
       statusData.addLoading();
       return axios({
         method: 'PATCH',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/',
         data: this.user,
-      }).then((res) => {
-        console.log(res);
-        statusData.shiftLoading();
-        this.checkLogIn(this.user.token);
-        return res.data.data;
-      }).catch((err) => {
-        console.dir(err);
-        statusData.shiftLoading();
-        return err;
-      });
+        headers: {
+          authorization: `${userToken}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          statusData.shiftLoading();
+          this.checkLogIn(this.user.token);
+          return res.data.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          statusData.shiftLoading();
+          return err;
+        });
     },
 
     async resetPassword(forgetData) {
@@ -199,8 +204,10 @@ const userStore = defineStore({
         });
     },
     logOut() {
-      localStorage.removeItem('sd-user');
-      this.resetUser();
+      statusData.openAskModel('登出', '請問您確定要登出？', () => {
+        localStorage.removeItem('sd-user');
+        this.resetUser();
+      });
     },
     resetUser() {
       this.user.name = '';

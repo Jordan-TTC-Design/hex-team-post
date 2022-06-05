@@ -112,11 +112,11 @@ export default {
         />
         <div class="user-info">
           <RouterLink :to="`/profile/${targetItem.user}`" class="user-info-title mb-1">
-            {{ targetItem.user }}
+            {{ targetItem.user.name }}
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              v-if="targetItem.user !== userData.user.id"
+              v-if="targetItem.user.id !== userData.user.id && userData.user.token.length > 0"
               @click="toggleFollow"
               type="button"
               class="followBtn"
@@ -128,7 +128,7 @@ export default {
           </div>
         </div>
         <MoreModel
-          v-if="targetItem.user === userData.user.id"
+          v-if="targetItem.user.id === userData.user.id && userData.user.token.length > 0"
           :item-id="targetItem._id"
           :function-list="[
             {
@@ -163,7 +163,7 @@ export default {
       <div class="postCard__imgBox postCard__imgBox--diary">
         <img
           v-if="targetItem.image.length > 0"
-          src="https://i.imgur.com/w4Eeknw.jpeg"
+          :src="targetItem.image"
           :alt="`${targetItem.id}圖片`"
           class="postCard__imgBox__img"
         />
@@ -205,6 +205,7 @@ export default {
     &__img {
       width: 100%;
       border-radius: 0.25rem;
+      min-height: 240px;
     }
   }
   &__txtContent {
@@ -229,7 +230,6 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 2rem;
     cursor: pointer;
     transition: all 0.3s;
     .coverLock {

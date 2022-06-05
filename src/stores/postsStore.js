@@ -12,7 +12,7 @@ const postsStore = defineStore({
     getPostsData: {
       page: 1,
       total: 1,
-      sort: 'asc',
+      sort: 'desc',
       query: '',
     },
     userPosts: [],

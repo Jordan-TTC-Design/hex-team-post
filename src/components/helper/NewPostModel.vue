@@ -124,7 +124,20 @@ export default {
             :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
             :alt="userData.user.name"
           />
-          <p>{{ userData.user.name }}</p>
+          <div class="d-flex flex-column gap-1">
+            <p>{{ userData.user.name }}</p>
+            <div class="formSelecterBox">
+              <select v-model="postsData.targetPost.type" class="form-select formSelecter--sm">
+                <option :selected="postsData.targetPost.type === 'group'" value="group">
+                  一般貼文
+                </option>
+                <option :selected="postsData.targetPost.type === 'person'" value="person">
+                  秘密日記
+                </option>
+              </select>
+              <i class="formSelecterControler webIcon-sm bi bi-arrow-down-up"></i>
+            </div>
+          </div>
         </div>
         <div class="newPostContentBox">
           <FormArticle
@@ -282,8 +295,8 @@ export default {
   }
 }
 .userPhoto {
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  height: 3rem;
   border: 1px solid var(--bs-gray-middle);
   border-radius: 100%;
   object-fit: cover;
@@ -354,6 +367,42 @@ export default {
     background-color: var(--bs-secondary);
     color: var(--bs-primary);
     cursor: pointer;
+  }
+}
+.formSelecterBox {
+  position: relative;
+  cursor: pointer;
+  .formSelecter--sm {
+    font-size: 0.75rem;
+    padding: 0.125rem 1.5rem 0.125rem 0.25rem;
+    border: 2px solid var(--bs-gray-middle);
+    border-radius: 0.25rem;
+    color: var(--bs-dark);
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.3s;
+    &::-ms-expand {
+      display: none;
+    }
+    &:focus {
+      outline: 0;
+    }
+  }
+  .formSelecterControler {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.5rem;
+    pointer-events: none;
+    font-size: 0.5rem;
+    transition: all 0.3s;
+  }
+  &:hover {
+    .formSelecter--sm {
+      color: var(--bs-primary);
+    }
+    .formSelecterControler {
+      color: var(--bs-primary);
+    }
   }
 }
 </style>

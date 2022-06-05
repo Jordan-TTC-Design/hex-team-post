@@ -138,7 +138,7 @@ export default {
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              v-if="targetItem.user.id !== userData.user.id"
+              v-if="targetItem.user.id !== userData.user.id && userData.user.token.length > 0"
               @click="toggleFollow"
               type="button"
               class="followBtn"
@@ -150,6 +150,7 @@ export default {
           </div>
         </div>
         <MoreModel
+          v-if="targetItem.user.id === userData.user.id && userData.user.token.length > 0"
           :item-id="targetItem._id"
           :function-list="[
             {
@@ -236,7 +237,7 @@ export default {
         </li>
       </ul>
     </div>
-    <div class="card-body border-top postCard-response">
+    <div class="card-body border-top postCard-response" v-if="userData.user.token.length > 0">
       <input type="text" v-model="newComment" class="form-control" placeholder="回覆..." />
       <button class="btn btn-default" @click="addComment">
         <i class="webIcon bi bi-play-fill"></i>

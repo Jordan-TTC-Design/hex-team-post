@@ -66,14 +66,14 @@ export default {
         <div class="d-flex flex-column justify-content-between gap-2 w-75 p-4 overflow-auto">
           <div class="d-flex flex-column gap-4">
             <p class="text--subTxt">請完整填寫資訊，以便後續資料驗證</p>
-            <FormInput v-model="newUser.name" input-id="userName" type="text">
+            <FormInput v-model="newUser.name" input-id="signUserName" type="text">
               <template v-slot:default>暱稱</template>
             </FormInput>
-            <FormInput v-model="newUser.email" input-id="userEmail" type="text">
+            <FormInput v-model="newUser.email" input-id="signUserEmail" type="text">
               <template v-slot:default>電子郵件</template>
             </FormInput>
             <div class="d-flex gap-3">
-              <FormInput v-model="newUser.password" input-id="userPassword" type="text">
+              <FormInput v-model="newUser.password" input-id="signUserPassword" type="password">
                 <template v-slot:default>密碼</template>
               </FormInput>
               <FormInput

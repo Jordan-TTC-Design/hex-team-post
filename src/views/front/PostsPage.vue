@@ -37,11 +37,9 @@ export default {
     onMounted(async () => {
       window.addEventListener('scroll', handleScroll);
     });
-
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
     });
-
     const search = (data) => {
       console.log(data, data.type, data.type === 'like');
       postsData.getPosts(
@@ -51,7 +49,6 @@ export default {
         data.type === 'like' ? userData?.user?.id ?? '' : '',
       );
     };
-
     return {
       userData,
       postsData,

@@ -60,7 +60,7 @@ export default {
         <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
       </div>
       <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
-        <FormInput v-model="forgetData.email" input-id="userEmail" type="text">
+        <FormInput v-model="forgetData.email" input-id="forgetUserEmail" type="text">
           <template v-slot:default>電子郵件</template>
         </FormInput>
         <button

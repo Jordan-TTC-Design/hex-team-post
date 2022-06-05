@@ -30,6 +30,7 @@ const statusStore = defineStore({
       open: true,
       title: '',
     },
+    emailModel: false,
   }),
   getters: {},
   actions: {
@@ -38,14 +39,6 @@ const statusStore = defineStore({
       this.askModel.title = title;
       this.askModel.text = text;
       this.askModel.action = action;
-      // 用法：需要的地方加上
-      // statusData.openPopInfoBox(
-      //           '刪除全部',
-      //           `請問你要刪除購物車中全部商品？`,
-      //           function () {
-      //             cartData.deleteCartAll();
-      //           }
-      //         )
     },
     openPopInfoModel(title) {
       this.popInfoModel.open = true;

@@ -53,13 +53,31 @@ export default {
         <RouterLink to="/"> <i class="bi bi-house-door"></i> 最新動態 </RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/follow` }">
-        <RouterLink to="/follow"> <i class="bi bi-bell-fill"></i> 追蹤動態 </RouterLink>
+        <div
+          class="handPointer"
+          v-if="userData.user.token.length === 0"
+          @click="statusData.logInModel = true"
+        >
+          <i class="bi bi-bell-fill"></i> 追蹤動態
+        </div>
+        <RouterLink to="/follow" v-if="userData.user.token.length > 0">
+          <i class="bi bi-bell-fill"></i> 追蹤動態
+        </RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/recommend` }">
-        <RouterLink to="/recommend"> <i class="bi bi-chat-square-heart"></i> 熱賣推薦 </RouterLink>
+        <RouterLink to="/recommend"><i class="bi bi-chat-square-heart"></i> 熱賣推薦</RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/diary` }">
-        <RouterLink to="/diary"> <i class="bi bi-envelope-heart"></i> 私密日記本 </RouterLink>
+        <div
+          class="handPointer"
+          v-if="userData.user.token.length === 0"
+          @click="statusData.logInModel = true"
+        >
+          <i class="bi bi-chat-square-heart"></i> 熱賣推薦
+        </div>
+        <RouterLink to="/diary" v-if="userData.user.token.length > 0">
+          <i class="bi bi-envelope-heart"></i> 私密日記本
+        </RouterLink>
       </div>
     </div>
     <div class="menu-function">
@@ -70,7 +88,7 @@ export default {
         <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
       </div>
       <div class="d-flex align-items-center gap-2" v-if="userData.user.token.length > 0">
-        <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel()">
+        <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel('group')">
           <i class="bi bi-plus-lg"></i>
         </button>
         <div class="border d-flex align-items-center gap-2 rounded-pill ps-2">
@@ -105,7 +123,7 @@ export default {
                 <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
                   >消費記錄</RouterLink
                 >
-                <li class="list-group-item">客服支援</li>
+                <li @click="statusData.emailModel = true" class="list-group-item">客服支援</li>
                 <li @click="userData.logOut" class="list-group-item">登出</li>
               </ul>
             </div>
