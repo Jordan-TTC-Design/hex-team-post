@@ -170,6 +170,7 @@ const userStore = defineStore({
         .then((res) => {
           console.log(res);
           statusData.shiftLoading();
+          this.checkLogIn(this.user.token);
           return res.data.data;
         })
         .catch((err) => {

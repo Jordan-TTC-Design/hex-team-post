@@ -71,11 +71,12 @@ export default {
         processToCropImg(newValue.file);
       }
     });
-    function closeModal() {
+    function closeModel() {
       // adminData.closeImgToCrop();
       if (Object.keys(cropper).length > 0) {
         cropper.destroy();
       }
+      statusData.imgCropperModel.open = false;
     }
     function convertCanvasToImage(canvas) {
       const image = new Image();
@@ -114,18 +115,19 @@ export default {
       });
       const tempImage = convertCanvasToImage(canvas);
       uploadmgToDB(tempImage);
-      closeModal();
+      closeModel();
     }
 
     return {
+      statusData,
       process,
       imgUploadGetter,
       ogPhoto,
-      statusData,
       cropperImage,
       destination,
       croppingImg,
       toogleCropper,
+      closeModel,
     };
   },
 };
