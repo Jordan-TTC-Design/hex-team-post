@@ -138,7 +138,7 @@ const userStore = defineStore({
         return err;
       }
     },
-    async resetPassword(forgetData) {
+    async forgotPassword(forgetData) {
       statusData.addLoading();
       console.log(forgetData);
       return axios({
@@ -163,6 +163,25 @@ const userStore = defineStore({
         method: 'PATCH',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/',
         data: this.user,
+      }).then((res) => {
+        console.log(res);
+        statusData.shiftLoading();
+        this.checkLogIn(this.user.token);
+        return res.data.data;
+      }).catch((err) => {
+        console.dir(err);
+        statusData.shiftLoading();
+        return err;
+      });
+    },
+
+    async resetPassword(forgetData) {
+      statusData.addLoading();
+      console.log(forgetData);
+      return axios({
+        method: 'POST',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/reset_password',
+        data: forgetData,
         headers: {
           authorization: `${this.user.token}`,
         },

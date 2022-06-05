@@ -1,7 +1,7 @@
 <script>
 import { reactive, onMounted } from 'vue';
-import axios from 'axios';
 import userStore from '@/stores/userStore';
+import followStore from '@/stores/followStore';
 
 export default {
   components: {},
@@ -10,29 +10,24 @@ export default {
   },
   setup(props) {
     const followings = reactive([]);
-    onMounted(async () => {
-      const userData = userStore();
-      const header = {
-        headers: {
-          Authorization: `${userData.user.token}`,
-        },
-      };
+    const userData = userStore();
+    const followData = followStore();
 
+    onMounted(async () => {
+      console.log(props.userId);
       if (props.userId) {
         try {
-          const url = `https://hex-post-team-api-server.herokuapp.com/api/follow/${props.userId}`;
-          const res = await axios.get(url, header);
-          followings.push(...res.data.data[0].following);
+          const res = await followData.getUserFollow(props.userId);
+          followings.push(...res);
         } catch (err) {
-          console.err(err);
+          console.error(err);
         }
       } else {
         try {
-          const url = 'https://hex-post-team-api-server.herokuapp.com/api/follow/';
-          const res = await axios.get(url, header);
-          followings.push(...res.data.data[0].following);
+          const res = await followData.getMyFollow(userData.user.token);
+          followings.push(...res.data[0].following);
         } catch (err) {
-          console.err(err);
+          console.error(err);
         }
       }
     });

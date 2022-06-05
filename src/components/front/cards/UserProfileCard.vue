@@ -1,30 +1,69 @@
 <script>
-// import { toRefs } from 'vue';
+import { ref, watch } from 'vue';
+
+// 本人 tab
+const myTabs = [
+  {
+    text: '貼文',
+    type: 'POST',
+  },
+  {
+    text: '私密日記',
+    type: 'DIARY',
+  },
+  {
+    text: '追蹤中',
+    type: 'FOLLOW',
+  },
+  {
+    text: '喜歡的貼文',
+    type: 'LIKE',
+  },
+  {
+    text: '錢包',
+    type: 'WALLET',
+  },
+  {
+    text: '設定',
+    type: 'SETTING',
+  },
+];
+
+// 他人 tab
+const userTabs = [
+  {
+    text: '貼文',
+    type: 'POST',
+  },
+  {
+    text: '私密日記',
+    type: 'DIARY',
+  },
+  {
+    text: '追蹤',
+    type: 'FOLLOW',
+  },
+];
 
 export default {
   props: {
     tabType: String,
     user: Object,
     isSelf: Boolean,
+    isFollowing: Boolean,
   },
   setup(props, { emit }) {
-    // 自己 (貼文 私密日記 追蹤中 喜歡的貼文 設定)
-    // 別人 (貼文 私密日記 追蹤)
-    const TabTypeEnum = {
-      POST: 'POST',
-      DIARY: 'DIARY',
-      FOLLOW: 'FOLLOW',
-      LIKE: 'LIKE',
-      WALLET: 'WALLET',
-      SETTING: 'SETTING',
-    };
-
+    const currentTabs = ref(props.isSelf ? myTabs : userTabs);
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
+    console.log(props.isFollowing);
+    watch(() => props.isSelf, (newIsSelf) => {
+      currentTabs.value = newIsSelf ? myTabs : userTabs;
+    });
 
     return {
-      TabTypeEnum,
+      currentTabs,
       props,
       handleChangeTab,
     };
@@ -33,102 +72,61 @@ export default {
 </script>
 
 <template>
-  <div class="card userProfileCard mb-3">
-    <div class="card-body userProfileCard-body">
+  <div class="card userProfileCard   mb-3">
+    <div class="p-6 d-flex">
       <img
-        src="@/assets/image/user-picture.png"
+        :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
         alt="user-picture"
-        class="user-picture"
+        class="user-picture user-picture-lg"
       />
-      <div class="d-flex flex-column justify-content-center">
-        <template v-if="props.user?.user?.name">
-          <span class="userProfileCard-title">{{
-            props.user?.user?.name
-          }}</span>
-          <span class="userProfileCard-subtitle"
-            >{{ props.user?.name }} 人追蹤</span
-          >
-          <span class="userProfileCard-subtitle"
-            >{{ props.user?.user?.memo }}</span
-          >
-        </template>
-      </div>
-      <div class="userProfileCard-more">
-        <button class="btn btn-sm btn-outline text-primary">追蹤</button>
-        <button class="btn btn-sm text-primary">
-          <i class="bi bi-three-dots"></i>
-        </button>
-      </div>
-    </div>
-    <div class="userProfileCard-footer" v-if="props.isSelf">
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.POST ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.POST)"
-      >
-        貼文
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.DIARY ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.DIARY)"
-      >
-        私密日記
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.FOLLOW ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.FOLLOW)"
-      >
-        追蹤中
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.LIKE ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.LIKE)"
-      >
-        喜歡的貼文
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.WALLET ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.WALLET)"
-      >
-        錢包
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.SETTING ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.SETTING)"
-      >
-        設定
+      <div class="flex-grow-1 d-flex flex-column position-relative" v-if="props.user?.user?.name">
+        <span class="userProfileCard-title">{{
+          props.user?.user?.name
+        }}</span>
+        <div class="d-flex mt-3">
+          <p><span class="bold me-1">{{ props.user?.postCounts }}</span> 貼文</p>
+          <p class="ms-3"><span class="bold me-1">{{ props.user?.privateposts }}</span> 秘密日記</p>
+          <p class="ms-3"><span class="bold me-1">{{ props.user?.follows }}</span> 位追蹤者</p>
+          <p class="ms-3"><span class="bold me-1">
+            {{ props.user?.following?.length ?? 0 }}
+          </span> 追蹤中</p>
+        </div>
+        <span class="mt-2"
+          >{{ props.user?.user?.memo }}</span
+        >
+        <div class="position-absolute top-0 end-0" v-if="!props.isSelf">
+          <button class="btn btn-sm btn-outline text-primary"
+              v-if="!props.isFollowing">追蹤</button>
+          <button class="btn btn-sm btn-outline text-primary"
+              v-else>取消追蹤</button>
+        </div>
       </div>
     </div>
-    <div class="userProfileCard-footer" v-else>
+    <div class="userProfileCard-footer">
       <div
+        v-for="t in currentTabs"
+        :key="t.type"
         class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.POST ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.POST)"
+        :class="[props.tabType === t.type ? 'active' : '']"
+        @click="handleChangeTab(t.type)"
       >
-        貼文
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.DIARY ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.DIARY)"
-      >
-        私密日記
-      </div>
-      <div
-        class="userProfileCard-footer-item"
-        :class="[props.tabType === TabTypeEnum.FOLLOW ? 'active' : '']"
-        @click="handleChangeTab(TabTypeEnum.FOLLOW)"
-      >
-        追蹤
+        {{ t.text }}
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+
+.user-picture.user-picture-lg {
+  width: 120px;
+  height: 120px;
+  border-radius: 60px;
+  margin-right: 16px;
+}
+.bold {
+  font-size: 16px;
+  color: #1d1d1d;
+  margin-right: 4px;
+}
 </style>

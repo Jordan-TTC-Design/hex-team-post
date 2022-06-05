@@ -6,6 +6,8 @@ import axios from 'axios';
 import userStore from '@/stores/userStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 
+import statusStore from '@/stores/statusStore';
+
 export default {
   components: {
     PostFilter,
@@ -16,8 +18,11 @@ export default {
   },
   setup(props) {
     const posts = reactive([]);
+    const userData = userStore();
+    const statusData = statusStore();
+
     onMounted(async () => {
-      const userData = userStore();
+      statusData.addLoading();
       const header = {
         headers: {
           Authorization: `${userData.user.token}`,
@@ -41,6 +46,7 @@ export default {
           console.err(err);
         }
       }
+      statusData.shiftLoading();
     });
 
     return {

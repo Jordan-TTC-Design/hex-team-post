@@ -33,6 +33,24 @@ const followData = defineStore({
           return err;
         });
     },
+    async getUserFollow(userId) {
+      statusData.addLoading();
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/follow/${userId}`,
+          headers: {
+            // authorization: `${userToken}`,
+          },
+        });
+        return res.data.data[0].following;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        statusData.shiftLoading();
+      }
+    },
     async addFollow(data, userToken) {
       statusData.addLoading();
       const targetFollow = {

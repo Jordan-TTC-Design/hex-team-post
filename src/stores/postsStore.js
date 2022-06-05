@@ -33,9 +33,16 @@ const postsStore = defineStore({
   }),
   getters: {},
   actions: {
-    async getPosts(page = 1, timeSort = 'asc', query = '') {
+    async getPosts(page = 1, timeSort = 'asc', query = '', like = '') {
+      console.log('like', like);
       statusData.addLoading();
-      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&q=${query}&sort=${timeSort}`;
+      let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&sort=${timeSort}`;
+      if (query) {
+        apiUrl += `&q=${query}`;
+      }
+      if (like) {
+        apiUrl += `&like=${like}`;
+      }
       try {
         const res = await axios.get(apiUrl);
         console.log(res);

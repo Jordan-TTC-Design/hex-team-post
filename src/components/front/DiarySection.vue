@@ -2,23 +2,24 @@
 import { reactive, onMounted } from 'vue';
 import axios from 'axios';
 import userStore from '@/stores/userStore';
+import statusStore from '@/stores/statusStore';
 
 import PostFilter from '@/components/front/PostFilter.vue';
-import PostCard from '@/components/front/cards/PostCard.vue';
-import FormRadioButton from '@/components/helper/FormRadioButton.vue';
+import DiaryCard from '@/components/front/cards/DiaryCard.vue';
 
 export default {
   components: {
     PostFilter,
-    PostCard,
-    FormRadioButton,
+    DiaryCard,
   },
   props: {
     userId: String,
   },
   setup(props) {
+    const statusData = statusStore();
     const privates = reactive([]);
     onMounted(async () => {
+      statusData.addLoading();
       const userData = userStore();
       const header = {
         headers: {
@@ -45,6 +46,7 @@ export default {
           console.err(err);
         }
       }
+      statusData.shiftLoading();
     });
 
     return {
@@ -56,12 +58,8 @@ export default {
 </script>
 
 <template>
-  <div class="d-flex mb-3">
-    <FormRadioButton class="me-3" name="type">全部</FormRadioButton>
-    <FormRadioButton class="me-3" name="type">永恆日記</FormRadioButton>
-    <PostFilter class="flex-grow-1" />
-  </div>
-  <PostCard v-for="p in privates" :key="p._id"  :post-item="p"/>
+  <PostFilter class="mb-3" />
+  <DiaryCard v-for="p in privates" :key="p._id"  :post-item="p"/>
 </template>
 
 <style lang="scss" scoped>

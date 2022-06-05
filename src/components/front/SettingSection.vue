@@ -4,6 +4,19 @@ import PersonalCard from '@/components/front/cards/PersonalCard.vue';
 import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
 import ChangePasswordCard from '@/components/front/ChangePasswordCard.vue';
 
+import userStore from '@/stores/userStore';
+
+const tabs = [
+  {
+    text: '個人資料',
+    type: 'PERSONAL',
+  },
+  {
+    text: '變更密碼',
+    type: 'CHANGE_PASSWORD',
+  },
+];
+
 export default {
   components: {
     PersonalCard,
@@ -14,20 +27,7 @@ export default {
     user: Object,
   },
   setup(props) {
-    const tabs = [
-      {
-        text: '個人資料',
-        type: 'PERSONAL',
-      },
-      {
-        text: '變更密碼',
-        type: 'CHANGE_PASSWORD',
-      },
-      {
-        text: '帳戶資料',
-        type: 'ACCOUNT',
-      },
-    ];
+    const userData = userStore();
     const currentTab = ref(tabs[0].type);
 
     const isShowPersonalEditCard = ref(false);
@@ -38,9 +38,18 @@ export default {
       isShowPersonalEditCard.value = false;
     };
 
-    const changePassword = (password) => {
+    const changePassword = async (password) => {
       // call api
       console.log(password);
+      try {
+        const res = await userData.resetPassword({
+          password: password.password,
+          confirmPassword: password.confirmPassword,
+        });
+        console.log(res);
+      } catch (e) {
+        console.dir(e.response.data.message);
+      }
     };
 
     return {
@@ -72,6 +81,7 @@ export default {
     <div class="subContent" v-if="currentTab === tabs[0].type">
       <PersonalCard
         class="mb-3"
+        v-if="!isShowPersonalEditCard"
         @show-edit="ShowEditPersonal"
         :user="props.user"
       />
