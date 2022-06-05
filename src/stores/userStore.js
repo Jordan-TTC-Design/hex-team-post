@@ -157,12 +157,15 @@ const userStore = defineStore({
           return err;
         });
     },
-    async updateUser() {
+    async updateUser(userToken) {
       statusData.addLoading();
       return axios({
         method: 'PATCH',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/',
         data: this.user,
+        headers: {
+          authorization: `${userToken}`,
+        },
       })
         .then((res) => {
           console.log(res);
