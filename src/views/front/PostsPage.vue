@@ -1,4 +1,5 @@
 <script>
+import { onMounted, onUnmounted } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
@@ -28,12 +29,19 @@ export default {
         );
       }
     }
-    window.addEventListener('scroll', handleScroll);
     postsData.getPosts(
       postsData.getPostsData.page,
       postsData.getPostsData.sort,
       postsData.getPostsData.query,
     );
+    onMounted(async () => {
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+    });
+
     return {
       userData,
       postsData,
