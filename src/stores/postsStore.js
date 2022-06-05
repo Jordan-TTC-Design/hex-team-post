@@ -34,7 +34,7 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '', like = '') {
-      console.log('like', like);
+      console.log(page, timeSort, query, like);
       statusData.addLoading();
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&sort=${timeSort}`;
       if (query) {

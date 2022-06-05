@@ -1,12 +1,11 @@
 <script>
-import MoreModel from '@/components/helper/MoreModel.vue';
+// import MoreModel from '@/components/helper/MoreModel.vue';
 
 export default {
   props: {
     products: Array,
   },
   components: {
-    MoreModel,
   },
   setup(props) {
     return {
@@ -27,7 +26,6 @@ export default {
       </div>
     </div>
   </div>
-  <MoreModel />
 </template>
 
 <style lang="scss" scoped>

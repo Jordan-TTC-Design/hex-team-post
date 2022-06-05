@@ -42,9 +42,20 @@ export default {
       window.removeEventListener('scroll', handleScroll);
     });
 
+    const search = (data) => {
+      console.log(data, data.type, data.type === 'like');
+      postsData.getPosts(
+        postsData.getPostsData.page,
+        data.type === 'like' ? 'asc' : data.type,
+        data.query,
+        data.type === 'like' ? userData?.user?.id ?? '' : '',
+      );
+    };
+
     return {
       userData,
       postsData,
+      search,
     };
   },
 };
@@ -54,7 +65,20 @@ export default {
   <div class="container position-relative">
     <div class="row">
       <div class="col-8 d-flex flex-column gap-4">
-        <PostFilter />
+        <PostFilter @search="search" header="排序" :items="[
+          {
+            name: '由新到舊',
+            type: 'asc',
+          },
+          {
+            name: '由舊到新',
+            type: 'desc',
+          },
+          {
+            name: '按讚的貼文',
+            type: 'like',
+          },
+        ]"/>
         <AddPostCard v-if="userData.user.token" />
         <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" :post-index="index" />

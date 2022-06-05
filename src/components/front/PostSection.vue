@@ -21,6 +21,10 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
 
+    const search = () => {
+
+    };
+
     onMounted(async () => {
       statusData.addLoading();
       const header = {
@@ -52,13 +56,19 @@ export default {
     return {
       props,
       posts,
+      search,
     };
   },
 };
 </script>
 
 <template>
-  <PostFilter class="mb-3" />
+  <PostFilter class="mb-3" @search="search" header="排序" :items="[
+    {
+      name: '由新到舊',
+      type: 'asc',
+    },
+  ]"/>
   <div>
     <PostCard v-for="p in posts" :key="p.id"  :post-item="p"/>
   </div>

@@ -38,7 +38,13 @@ export default {
   <div class="container">
     <div class="row">
       <div class="col-8 d-flex flex-column gap-4">
-        <PostFilter class="flex-grow-1" />
+        <PostFilter class="flex-grow-1"  header="排序" :items="[
+          {
+            name: '最新日記',
+            type: 'asc',
+          },
+        ]"/>
+
         <template v-for="(diaryItem, index) in diariesList" :key="diaryItem.id">
           <DiaryCard :post-item="diaryItem" :post-index="index" />
         </template>

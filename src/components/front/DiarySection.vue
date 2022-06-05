@@ -58,7 +58,13 @@ export default {
 </script>
 
 <template>
-  <PostFilter class="mb-3" />
+  <PostFilter class="mb-3"  header="排序" :items="[
+    {
+      name: '最新日記',
+      type: 'asc',
+    },
+  ]"/>
+
   <DiaryCard v-for="p in privates" :key="p._id"  :post-item="p"/>
 </template>
 
