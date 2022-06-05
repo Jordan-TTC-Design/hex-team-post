@@ -13,6 +13,7 @@ const statusStore = defineStore({
       open: false,
       url: 'https://i.imgur.com/ZWHoRPi.png',
       file: null,
+      name: '',
     },
     askModel: {
       open: false,

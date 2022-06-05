@@ -58,8 +58,7 @@ export default {
       editPhoto.value = true;
       // console.log(statusData.imgCropperModel.url, statusData.imgCropperModel.url.length);
     }
-    // 將base64轉換為blob
-    function dataURLtoBlob(dataurl) {
+    function dataURLtoFile(dataurl, filename) {
       const arr = dataurl.split(',');
       const mime = arr[0].match(/:(.*?);/)[1];
       const bstr = atob(arr[1]);
@@ -69,15 +68,7 @@ export default {
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
       }
-      return new Blob([u8arr], { type: mime });
-    }
-    // 將blob轉換為file
-    function blobToFile(theBlob, fileName) {
-      // eslint-disable-next-line no-param-reassign
-      theBlob.lastModifiedDate = new Date();
-      // eslint-disable-next-line no-param-reassign
-      theBlob.name = fileName;
-      return theBlob;
+      return new File([u8arr], filename, { type: mime });
     }
 
     // 呼叫
@@ -85,8 +76,7 @@ export default {
       getImg();
       console.log(statusData.imgCropperModel.url);
       // 呼叫
-      const blob = dataURLtoBlob(updateImg.value);
-      const file = blobToFile(blob, '123');
+      const file = dataURLtoFile(updateImg.value, 'file-to-upload.jpeg');
 
       // const files = statusData.imgCropperModel.url.toDataURL('image/jpeg');
       console.log(statusData.imgCropperModel.url, file);

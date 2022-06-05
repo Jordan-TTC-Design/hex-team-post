@@ -157,6 +157,27 @@ const userStore = defineStore({
           return err;
         });
     },
+    async updateUser() {
+      statusData.addLoading();
+      return axios({
+        method: 'PATCH',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/',
+        data: this.user,
+        headers: {
+          authorization: `${this.user.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          statusData.shiftLoading();
+          return res.data.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          statusData.shiftLoading();
+          return err;
+        });
+    },
     logOut() {
       localStorage.removeItem('sd-user');
       this.resetUser();
