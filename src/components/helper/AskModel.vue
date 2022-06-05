@@ -6,8 +6,9 @@ export default {
   setup() {
     const statusData = statusStore();
     function toogleStatusFunction() {
-      statusData.popInfoBox.action();
-      statusData.closePopInfoBox();
+      console.log(statusData.askModel.action);
+      statusData.askModel.action();
+      statusData.closeAskModel();
     }
     return {
       statusData,

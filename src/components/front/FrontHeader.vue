@@ -123,7 +123,7 @@ export default {
                 <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
                   >消費記錄</RouterLink
                 >
-                <li class="list-group-item">客服支援</li>
+                <li @click="statusData.emailModel = true" class="list-group-item">客服支援</li>
                 <li @click="userData.logOut" class="list-group-item">登出</li>
               </ul>
             </div>

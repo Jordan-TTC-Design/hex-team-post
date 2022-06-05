@@ -13,7 +13,7 @@ export default {
     const statusData = statusStore();
     const paymentData = paymentStore();
     const payContent = ref('');
-    paymentData.getDiamonProduct();
+    paymentData.getDiamonProduct('coin');
     async function buyDiamond(productId) {
       const result = await paymentData.payDiamonProduct(productId, userData.user.token);
       if (result.status === 'success') {

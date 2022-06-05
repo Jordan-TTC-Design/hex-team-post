@@ -11,12 +11,12 @@ const paymentStore = defineStore({
   }),
   getters: {},
   actions: {
-    async getDiamonProduct() {
+    async getDiamonProduct(productType) {
       statusData.addLoading();
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/products/',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/products?type=${productType}`,
         });
         if (res.data.status === 'success') {
           this.diamondProduct = res.data.data;

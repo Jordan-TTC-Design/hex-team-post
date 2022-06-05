@@ -29,15 +29,10 @@ export default {
     function sortPostsData() {
       postsData.getPosts(postSort.value, postQuery.value);
     }
-    function checkLogin() {
-      const token = localStorage.getItem('sd-token') || '123';
-      console.log(token);
-      userData.userToken = token;
-    }
-    checkLogin();
     onMounted(async () => {
-      const res = await followData.getMyFollow(userData.user.token);
-      console.log(res.data[0].following);
+      const localUser = await JSON.parse(localStorage.getItem('sd-user'));
+      const res = await followData.getMyFollow(localUser.token);
+      console.log(res);
       following.value = [...res.data[0].following];
     });
     return {

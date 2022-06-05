@@ -1,6 +1,5 @@
 <script>
 import { reactive, onMounted } from 'vue';
-import userStore from '@/stores/userStore';
 import followStore from '@/stores/followStore';
 
 export default {
@@ -10,7 +9,6 @@ export default {
   },
   setup(props) {
     const followings = reactive([]);
-    const userData = userStore();
     const followData = followStore();
 
     onMounted(async () => {
@@ -23,8 +21,9 @@ export default {
           console.error(err);
         }
       } else {
+        const localUser = await JSON.parse(localStorage.getItem('sd-user'));
         try {
-          const res = await followData.getMyFollow(userData.user.token);
+          const res = await followData.getMyFollow(localUser.token);
           followings.push(...res.data[0].following);
         } catch (err) {
           console.error(err);
@@ -43,16 +42,10 @@ export default {
 <template>
   <div class="card mb-3" v-if="followings.length > 0">
     <div class="card-body">
-      <div
-        class="d-flex align-items-center mb-3 py-2"
-        v-for="f in followings"
-        :key="f.id"
-      >
+      <div class="d-flex align-items-center mb-3 py-2" v-for="f in followings" :key="f.id">
         <div class="user-picture"></div>
         <div class="user-info">
-          <RouterLink :to="`/profile/${f.id}`" class="user-info-title">{{
-            f.name
-          }}</RouterLink>
+          <RouterLink :to="`/profile/${f.id}`" class="user-info-title">{{ f.name }}</RouterLink>
         </div>
       </div>
     </div>
