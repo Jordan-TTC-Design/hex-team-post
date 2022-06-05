@@ -69,11 +69,15 @@ export default {
         <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
       </div>
       <div class="d-flex flex-column justify-content-between gap-4 p-4 overflow-auto">
-        <FormInput v-model="loginData.email" input-id="userEmail" type="text">
+        <FormInput v-model="loginData.email" input-id="loginUserEmail" input-type="email">
           <template v-slot:default>電子郵件</template>
         </FormInput>
         <div>
-          <FormInput v-model="loginData.password" input-id="userPassword" type="text">
+          <FormInput
+            v-model="loginData.password"
+            input-id="loginUserPassword"
+            input-type="password"
+          >
             <template v-slot:default>密碼</template> </FormInput
           ><button
             type="button"

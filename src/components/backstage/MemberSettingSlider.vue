@@ -82,17 +82,22 @@ export default {
             accept="image/png, image/jpeg"
           />
         </div>
-        <FormInput class="mb-4" v-model="editMember.name" input-id="name" type="text">
+        <FormInput class="mb-4" v-model="editMember.name" input-id="name" input-type="text">
           <template v-slot:default>暱稱</template>
         </FormInput>
-        <FormInput class="mb-4" v-model="editMember.email" input-id="email" type="email">
+        <FormInput class="mb-4" v-model="editMember.email" input-id="email" input-type="email">
           <template v-slot:default>email</template>
         </FormInput>
-        <FormInput class="mb-4" v-model="editMember.phone" input-id="phone" type="phone">
+        <FormInput class="mb-4" v-model="editMember.phone" input-id="phone" input-type="phone">
           <template v-slot:default>手機號碼</template>
         </FormInput>
         <div class="d-flex gap-4">
-          <FormInput class="mb-4" v-model="editMember.password" input-id="password" type="password">
+          <FormInput
+            class="mb-4"
+            v-model="editMember.password"
+            input-id="password"
+            input-type="password"
+          >
             <template v-slot:default>密碼</template>
           </FormInput>
           <FormInput

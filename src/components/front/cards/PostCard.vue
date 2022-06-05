@@ -138,7 +138,7 @@ export default {
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              v-if="targetItem.user !== userData.user.id && userData.user.token.length > 0"
+              v-if="targetItem.user.id !== userData.user.id && userData.user.token.length > 0"
               @click="toggleFollow"
               type="button"
               class="followBtn"
@@ -150,7 +150,7 @@ export default {
           </div>
         </div>
         <MoreModel
-          v-if="targetItem.user === userData.user.id && userData.user.token.length > 0"
+          v-if="targetItem.user.id === userData.user.id && userData.user.token.length > 0"
           :item-id="targetItem._id"
           :function-list="[
             {
