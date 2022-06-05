@@ -1,6 +1,8 @@
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
+
+import walletStore from '@/stores/walletStore';
 
 export default {
   components: {
@@ -10,6 +12,7 @@ export default {
     user: Object,
   },
   setup(props) {
+    const walletData = walletStore();
     const tabs = [
       {
         text: '日記購買紀錄',
@@ -26,8 +29,14 @@ export default {
     ];
     const currentTab = ref(tabs[0].type);
 
+    onMounted(async () => {
+      const diam = await walletData.getDiamond();
+      console.log(diam.data);
+    });
+
     return {
       props,
+      walletData,
       currentTab,
       tabs,
     };
