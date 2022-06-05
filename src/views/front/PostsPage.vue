@@ -37,11 +37,9 @@ export default {
     onMounted(async () => {
       window.addEventListener('scroll', handleScroll);
     });
-
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
     });
-
     return {
       userData,
       postsData,

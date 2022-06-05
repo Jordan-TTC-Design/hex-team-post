@@ -112,11 +112,11 @@ export default {
         />
         <div class="user-info">
           <RouterLink :to="`/profile/${targetItem.user}`" class="user-info-title mb-1">
-            {{ targetItem.user }}
+            {{ targetItem.user.name }}
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              v-if="targetItem.user !== userData.user.id"
+              v-if="targetItem.user !== userData.user.id && userData.user.token.length > 0"
               @click="toggleFollow"
               type="button"
               class="followBtn"
@@ -128,7 +128,7 @@ export default {
           </div>
         </div>
         <MoreModel
-          v-if="targetItem.user === userData.user.id"
+          v-if="targetItem.user === userData.user.id && userData.user.token.length > 0"
           :item-id="targetItem._id"
           :function-list="[
             {
