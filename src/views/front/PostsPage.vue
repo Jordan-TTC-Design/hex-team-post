@@ -60,16 +60,16 @@ export default {
 
 <template>
   <div class="container position-relative">
-    <div class="row">
-      <div class="col-8 d-flex flex-column gap-4">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter @search="search" header="排序" :items="[
           {
             name: '由新到舊',
-            type: 'asc',
+            type: 'desc',
           },
           {
             name: '由舊到新',
-            type: 'desc',
+            type: 'asc',
           },
           {
             name: '按讚的貼文',
@@ -81,16 +81,12 @@ export default {
           <PostCard :post-item="postItem" :post-index="index" />
         </template>
       </div>
-      <div class="col-4 position-relative">
-        <RecommendFollowCard class="side-sticky-top" />
+      <div class="col-lg-4 col-5 position-relative">
+        <RecommendFollowCard />
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.side-sticky-top {
-  position: sticky;
-  top: 5rem;
-}
 </style>

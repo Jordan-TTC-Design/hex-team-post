@@ -1,45 +1,56 @@
 <script>
+import { ref } from 'vue';
+
 export default {
   setup() {
-    return {};
+    const listShow = ref(false);
+    return { listShow };
   },
 };
 </script>
 
 <template>
-  <div class="card mb-3">
-    <div class="card-body border-bottom">
-      <div class="card-title">您所購買過的創作者</div>
+  <div class="sideBox gap-3">
+    <div class="sideBox__card card gap-3" :class="{ active: listShow }">
+      <div class="p-3 border-bottom d-flex gap-2 align-items-center">
+        <button @click="listShow = !listShow" type="button" class="btn d-lg-none d-block">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="card-title">您所訂閱的創作者</div>
+      </div>
+      <div class="card-body">
+        <input type="text" class="form-control mb-4" placeholder="搜尋關鍵字" />
+        <div class="d-flex align-items-center mb-4">
+          <div class="user-picture"></div>
+          <div class="user-info">
+            <span class="user-info-title">用戶名稱</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-4">
+          <div class="user-picture"></div>
+          <div class="user-info">
+            <span class="user-info-title">用戶名稱</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-4">
+          <div class="user-picture"></div>
+          <div class="user-info">
+            <span class="user-info-title">用戶名稱</span>
+            <span class="user-info-subtitle">2 篇新貼文</span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center mb-4">
+          <div class="user-picture"></div>
+          <div class="user-info">
+            <span class="user-info-title">用戶名稱</span>
+            <span class="user-info-subtitle">2 篇新貼文 24 個新日記</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <input type="text" class="form-control mb-4" placeholder="搜尋關鍵字" />
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-          <span class="user-info-subtitle">2 篇新貼文</span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-          <span class="user-info-subtitle">2 篇新貼文 24 個新日記</span>
-        </div>
-      </div>
-    </div>
+    <button @click="listShow = !listShow" type="button" class="sideBtn d-lg-none d-block">
+      <i class="bi bi-person-heart"></i>
+    </button>
   </div>
 </template>
 
@@ -62,4 +73,5 @@ export default {
     color: #646464;
   }
 }
+
 </style>

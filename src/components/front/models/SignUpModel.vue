@@ -55,15 +55,15 @@ export default {
         type="button"
         class="btn position-absolute popModel__btn"
       >
-        <i class="bi bi-x-lg"></i>
+        <i class="webIcon bi bi-x-lg"></i>
       </button>
-      <div class="d-flex gap-2 h-75 flex-grow-1">
-        <div class="w-25 bg-secondary rounded-start p-6 position-relative overflow-hidden">
+      <div class="d-flex flex-xl-row flex-column gap-2 h-75 flex-grow-1">
+        <div class="signModel__imgBox bg-secondary flex-shrink-0">
           <img src="@/assets/image/logo-row.svg" alt="logo" class="mb-2" />
           <p class="text-primary">歡迎加入 Secret Diary 社群平台，分享您生活中的美好</p>
           <img src="@/assets/image/logo-mark.svg" alt="logo-mark" class="signUpModel__logoMark" />
         </div>
-        <div class="d-flex flex-column justify-content-between gap-2 w-75 p-4 overflow-auto">
+        <div class="signModel__contentBox">
           <div class="d-flex flex-column gap-4">
             <p class="text--subTxt">請完整填寫資訊，以便後續資料驗證</p>
             <FormInput v-model="newUser.name" input-id="signUserName" type="text">
@@ -72,7 +72,7 @@ export default {
             <FormInput v-model="newUser.email" input-id="signUserEmail" type="text">
               <template v-slot:default>電子郵件</template>
             </FormInput>
-            <div class="d-flex gap-3">
+            <div class="d-flex flex-md-row flex-column gap-3">
               <FormInput v-model="newUser.password" input-id="signUserPassword" type="password">
                 <template v-slot:default>密碼</template>
               </FormInput>
@@ -87,7 +87,7 @@ export default {
             <div class="d-flex flex-column gap-1">
               <label class="ms-3" for="userBirthday">生日</label>
               <input
-                class="form-control bg-white border-gray-middle"
+                class="form-control bg-white border border-gray-middle"
                 id="userBirthday"
                 v-model="newUser.birthday"
                 type="date"
@@ -125,20 +125,20 @@ export default {
               </div>
             </div>
           </div>
-          <div class="d-flex flex-column gap-4">
-            <button
-              type="button"
-              @click="signUp"
-              class="btn btn-primary w-100 text-white rounded py-2 px-3"
-            >
-              註冊
-            </button>
+          <div class="d-flex gap-4 mt-2">
             <button
               type="button"
               @click="goToLogin"
               class="btn btn-outline w-100 rounded py-2 px-3"
             >
               登入
+            </button>
+            <button
+              type="button"
+              @click="signUp"
+              class="btn btn-primary w-100 text-white rounded py-2 px-3"
+            >
+              註冊
             </button>
           </div>
         </div>
@@ -148,6 +148,26 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.signModel__imgBox {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: 0.75rem 0rem 0rem 0.75rem;
+  width: 25%;
+  @media (max-width: 1199.98px) {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem 0.75rem 0rem 0rem;
+  }
+}
+.signModel__contentBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  flex-grow: 1;
+  overflow: auto;
+}
 .z-popModal {
   z-index: 2400;
 }
@@ -180,17 +200,18 @@ export default {
     height: 80vh;
     display: flex;
     flex-direction: column;
-
+    @media (max-width: 1199.98px) {
+      height: 90vh;
+    }
     @media (max-width: 998.98px) {
       width: 60vw;
+      height: 90vh;
     }
     @media (max-width: 767.98px) {
       width: 75vw;
     }
     @media (max-width: 575.98px) {
       width: 100vw;
-      height: 100vh;
-      border-radius: 0;
     }
   }
 }
@@ -214,11 +235,15 @@ export default {
       bottom: 0;
       transform: translate(-24%, 36%);
       opacity: 0.3;
+      @media (max-width: 1199.98px) {
+        transform: translate(180%, 60%);
+      }
     }
   }
   .popModel__btn {
     top: 0.75rem;
     right: 0.75rem;
+    z-index: 1;
   }
 }
 .formRadio {

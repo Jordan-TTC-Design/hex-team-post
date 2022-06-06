@@ -83,19 +83,19 @@ export default {
 
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-8 d-flex flex-column gap-4">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
           @search="search"
           header="排序"
           :items="[
             {
               name: '最新購買',
-              type: 'asc',
+              type: 'desc',
             },
             {
               name: '最初購買',
-              type: 'desc',
+              type: 'asc',
             },
           ]"
         />
@@ -103,8 +103,8 @@ export default {
           <DiaryCard :post-item="diaryItem" :post-index="index" />
         </template>
       </div>
-      <div class="col-4">
-        <DiaryPurchaseRecordCard class="side-sticky-top" />
+      <div class="col-lg-4 col-5 position-relative">
+        <DiaryPurchaseRecordCard />
       </div>
     </div>
   </div>

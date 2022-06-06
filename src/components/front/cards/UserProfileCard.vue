@@ -12,11 +12,11 @@ const myTabs = [
     type: 'DIARY',
   },
   {
-    text: '追蹤中',
+    text: '追蹤',
     type: 'FOLLOW',
   },
   {
-    text: '喜歡的貼文',
+    text: '喜歡',
     type: 'LIKE',
   },
   {
@@ -58,9 +58,12 @@ export default {
       emit('change-tab', newTab);
     };
     console.log(props.isFollowing);
-    watch(() => props.isSelf, (newIsSelf) => {
-      currentTabs.value = newIsSelf ? myTabs : userTabs;
-    });
+    watch(
+      () => props.isSelf,
+      (newIsSelf) => {
+        currentTabs.value = newIsSelf ? myTabs : userTabs;
+      },
+    );
 
     return {
       currentTabs,
@@ -72,33 +75,38 @@ export default {
 </script>
 
 <template>
-  <div class="card userProfileCard   mb-3">
-    <div class="p-6 d-flex">
+  <div class="card userProfileCard">
+    <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-center">
       <img
         :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
         alt="user-picture"
-        class="user-picture user-picture-lg"
+        class="user-picture user-picture-lg m-0"
       />
-      <div class="flex-grow-1 d-flex flex-column position-relative" v-if="props.user?.user?.name">
-        <span class="userProfileCard-title">{{
-          props.user?.user?.name
-        }}</span>
-        <div class="d-flex mt-3">
-          <p><span class="bold me-1">{{ props.user?.postCounts }}</span> 貼文</p>
-          <p class="ms-3"><span class="bold me-1">{{ props.user?.privateposts }}</span> 秘密日記</p>
-          <p class="ms-3"><span class="bold me-1">{{ props.user?.follows }}</span> 位追蹤者</p>
-          <p class="ms-3"><span class="bold me-1">
-            {{ props.user?.following?.length ?? 0 }}
-          </span> 追蹤中</p>
+      <div class="userContentBox" v-if="props.user?.user?.name">
+        <span class="userProfileCard-title">{{ props.user?.user?.name }}</span>
+        <div class="userContentBox__info">
+          <p class="userContentBox__info__item">
+            <span class="bold">{{ props.user?.postCounts }}</span
+            >貼文
+          </p>
+          <p class="userContentBox__info__item">
+            <span class="bold">{{ props.user?.privateposts }}</span
+            >秘密日記
+          </p>
+          <p class="userContentBox__info__item">
+            <span class="bold">{{ props.user?.follows }}</span
+            >位追蹤者
+          </p>
+          <p class="userContentBox__info__item">
+            <span class="bold"> {{ props.user?.following?.length ?? 0 }} </span>追蹤中
+          </p>
         </div>
-        <span class="mt-2"
-          >{{ props.user?.user?.memo }}</span
-        >
+        <span v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</span>
         <div class="position-absolute top-0 end-0" v-if="!props.isSelf">
-          <button class="btn btn-sm btn-outline text-primary"
-              v-if="!props.isFollowing">追蹤</button>
-          <button class="btn btn-sm btn-outline text-primary"
-              v-else>取消追蹤</button>
+          <button class="btn btn-sm btn-outline text-primary" v-if="!props.isFollowing">
+            追蹤
+          </button>
+          <button class="btn btn-sm btn-outline text-primary" v-else>取消追蹤</button>
         </div>
       </div>
     </div>
@@ -117,7 +125,37 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-
+.userContentBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-grow: 1;
+  gap: 1rem;
+  @media (max-width: 767.98px) {
+    align-items: center;
+    width: 100%;
+  }
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+    &__item {
+      display: flex;
+      flex-grow: 1;
+      gap: 0.25rem;
+      white-space: nowrap;
+      @media (max-width: 767.98px) {
+        justify-content: center;
+      }
+      @media (max-width: 575.98px) {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}
 .user-picture.user-picture-lg {
   width: 120px;
   height: 120px;

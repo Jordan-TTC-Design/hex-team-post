@@ -26,6 +26,12 @@ export default {
           const localUser = await JSON.parse(localStorage.getItem('sd-user'));
           await userData.getMyWallet(localUser.token);
           router.push('/');
+        } else {
+          pageTitle.value = '交易失敗';
+          pageTxt.value = '3秒後，即將返回首頁～';
+          setTimeout(() => {
+            router.push('/');
+          }, 3000);
         }
       }
     }

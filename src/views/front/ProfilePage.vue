@@ -1,9 +1,5 @@
 <script>
-import {
-  ref,
-  onMounted,
-  watch,
-} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import PostSection from '@/components/front/PostSection.vue';
@@ -15,9 +11,7 @@ import SettingSection from '@/components/front/SettingSection.vue';
 
 import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
 import ProductCard from '@/components/front/cards/ProductCard.vue';
-// import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
 
-// import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
 import productStore from '@/stores/productStore';
@@ -32,7 +26,6 @@ export default {
     SettingSection,
     UserProfileCard,
     ProductCard,
-    // PopularPostCard,
   },
   setup() {
     const userData = userStore();
@@ -58,31 +51,34 @@ export default {
     const tmp = userInfo.value.user?.followers?.some((m) => m === userData.user.id) ?? false;
     const isFolowing = ref(tmp);
 
-    watch(() => route.params.id, async (newUserId) => {
-      statusData.addLoading();
-      userId.value = newUserId;
-      isSelf.value = userData.user.id === newUserId;
+    watch(
+      () => route.params.id,
+      async (newUserId) => {
+        statusData.addLoading();
+        userId.value = newUserId;
+        isSelf.value = userData.user.id === newUserId;
 
-      currentTab.value = 'POST';
-      currentUserInfo.value = {};
-      if (isSelf.value) {
-        if (!myInfo.value.user?.id) {
-          const returnUser = await userData.getMyUser(userData.user.token);
-          myInfo.value = { ...returnUser };
+        currentTab.value = 'POST';
+        currentUserInfo.value = {};
+        if (isSelf.value) {
+          if (!myInfo.value.user?.id) {
+            const returnUser = await userData.getMyUser(userData.user.token);
+            myInfo.value = { ...returnUser };
+          }
+          isFolowing.value = false;
+          currentUserInfo.value = { ...myInfo.value };
+        } else {
+          if (!userInfo.value.user?.id || userInfo.value.user.id !== newUserId) {
+            const returnUser = await userData.getProfileUser(newUserId, userData.user.token);
+            userInfo.value = { ...returnUser };
+          }
+          const tmp2 = userInfo.value.user?.followers?.some((m) => m === newUserId) ?? false;
+          isFolowing.value = tmp2;
+          currentUserInfo.value = { ...userInfo.value };
         }
-        isFolowing.value = false;
-        currentUserInfo.value = { ...myInfo.value };
-      } else {
-        if (!userInfo.value.user?.id || userInfo.value.user.id !== newUserId) {
-          const returnUser = await userData.getProfileUser(newUserId, userData.user.token);
-          userInfo.value = { ...returnUser };
-        }
-        const tmp2 = userInfo.value.user?.followers?.some((m) => m === newUserId) ?? false;
-        isFolowing.value = tmp2;
-        currentUserInfo.value = { ...userInfo.value };
-      }
-      statusData.shiftLoading();
-    });
+        statusData.shiftLoading();
+      },
+    );
 
     onMounted(async () => {
       // 查詢使用者資訊
@@ -117,35 +113,33 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex">
-    <div class="content">
-      <UserProfileCard
-        :tabType="currentTab"
-        :user="currentUserInfo"
-        :isSelf="isSelf"
-        :isFolowing="isFolowing"
-        @change-tab="changeCurrentTab"
-      />
-      <div v-if="isSelf">
-        <PostSection v-if="currentTab === 'POST'" />
-        <DiarySection v-if="currentTab === 'DIARY'" />
-        <FollowSection v-if="currentTab === 'FOLLOW'" />
-        <LikeSection v-if="currentTab === 'LIKE'" />
-        <WalletSection v-if="currentTab === 'WALLET'" />
-        <SettingSection
-          v-if="currentTab === 'SETTING'"
-          :user="myInfo"
-        ></SettingSection>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
+        <UserProfileCard
+          :tabType="currentTab"
+          :user="currentUserInfo"
+          :isSelf="isSelf"
+          :isFolowing="isFolowing"
+          @change-tab="changeCurrentTab"
+        />
+        <div v-if="isSelf">
+          <PostSection v-if="currentTab === 'POST'" />
+          <DiarySection v-if="currentTab === 'DIARY'" />
+          <FollowSection v-if="currentTab === 'FOLLOW'" />
+          <LikeSection v-if="currentTab === 'LIKE'" />
+          <WalletSection v-if="currentTab === 'WALLET'" />
+          <SettingSection v-if="currentTab === 'SETTING'" :user="myInfo"></SettingSection>
+        </div>
+        <div v-else>
+          <PostSection :userId="userId" v-if="currentTab === 'POST'" />
+          <DiarySection v-if="currentTab === 'DIARY'" />
+          <FollowSection :userId="userId" v-if="currentTab === 'FOLLOW'" />
+        </div>
       </div>
-      <div v-else>
-        <PostSection :userId="userId" v-if="currentTab === 'POST'" />
-        <DiarySection v-if="currentTab === 'DIARY'" />
-        <FollowSection :userId="userId" v-if="currentTab === 'FOLLOW'" />
+      <div class="col-lg-4 col-5 position-relative">
+        <ProductCard :products="products" />
       </div>
-    </div>
-    <div class="side fix">
-      <ProductCard :products="products"/>
-      <!-- <PopularPostCard /> -->
     </div>
   </div>
 </template>
