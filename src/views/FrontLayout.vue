@@ -41,12 +41,11 @@ export default {
 </script>
 
 <template>
-  <div class="wrapper__content position-relative d-flex flex-column">
-    <FrontHeader class="sticky-top top-0" />
-    <main class="front-main">
+  <div class="position-relative d-flex flex-column flex-grow-1">
+    <FrontHeader class="sticky-top sticky-header" />
+    <main class="front-main wrapper__content flex-grow-1">
       <RouterView />
     </main>
-    <PageLoader v-show="statusData.pageLoading === true" />
     <SignUpModel />
     <DiamondModel />
     <LogInModel />
@@ -54,10 +53,15 @@ export default {
     <RemindModel />
     <NewPostModel v-if="postsData.newPostModel.open === true" />
     <ForgetPasswordModel />
-    <Loader v-show="statusData.isLoading.length > 0" />
+    <PageLoader class="zindex-fixed" v-show="statusData.pageLoading === true" />
+    <Loader class="zindex-fixed" v-show="statusData.isLoading.length > 0" />
     <ImageSquareCropperModal v-if="statusData.imgCropperModel.open === true" />
     <EmailModel />
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.sticky-header {
+  z-index: 1200;
+}
+</style>

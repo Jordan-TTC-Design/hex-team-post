@@ -84,7 +84,7 @@ export default {
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-xl-6 col-lg-8 col-md-7 col-12 d-flex flex-column gap-4">
+      <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
           @search="search"
           header="排序"
@@ -103,8 +103,8 @@ export default {
           <DiaryCard :post-item="diaryItem" :post-index="index" />
         </template>
       </div>
-      <div class="col-lg-4 col-5 d-md-block d-none position-relative">
-        <DiaryPurchaseRecordCard class="side-sticky-top" />
+      <div class="col-lg-4 col-5 position-relative">
+        <DiaryPurchaseRecordCard />
       </div>
     </div>
   </div>

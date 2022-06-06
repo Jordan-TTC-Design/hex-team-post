@@ -11,7 +11,6 @@ import SettingSection from '@/components/front/SettingSection.vue';
 
 import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
 import ProductCard from '@/components/front/cards/ProductCard.vue';
-// import PopularPostCard from '@/components/front/cards/PopularPostCard.vue';
 
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
@@ -27,7 +26,6 @@ export default {
     SettingSection,
     UserProfileCard,
     ProductCard,
-    // PopularPostCard,
   },
   setup() {
     const userData = userStore();
@@ -141,7 +139,6 @@ export default {
       </div>
       <div class="col-lg-4 col-5 position-relative">
         <ProductCard :products="products" />
-        <!-- <PopularPostCard /> -->
       </div>
     </div>
   </div>
