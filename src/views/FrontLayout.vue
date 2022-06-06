@@ -61,6 +61,9 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.wrapper__content {
+  padding-bottom: 6rem;
+}
 .sticky-header {
   z-index: 1200;
 }

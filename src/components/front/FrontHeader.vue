@@ -1,5 +1,6 @@
 <script>
-import { ref, onMounted } from 'vue';
+// eslint-disable-next-line object-curly-newline
+import { ref, watch, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
@@ -26,6 +27,12 @@ export default {
         }
       }
     }
+    const nowPath = computed(() => route.path);
+    watch(nowPath, (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        modalOpen.value = false;
+      }
+    });
     function openDropModel() {
       modalOpen.value = !modalOpen.value;
     }

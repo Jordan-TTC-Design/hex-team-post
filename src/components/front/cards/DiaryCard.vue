@@ -188,6 +188,10 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.user-info {
+  align-items: flex-start;
+  justify-content: center;
+}
 .showMoreBtn {
   cursor: pointer;
   color: var(--bs-primary);

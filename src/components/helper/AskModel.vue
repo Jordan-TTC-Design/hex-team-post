@@ -118,7 +118,6 @@ export default {
     @media (max-width: 575.98px) {
       width: 80vw;
       max-height: 100vh;
-      border-radius: 0;
     }
   }
 }

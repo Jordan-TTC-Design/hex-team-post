@@ -133,7 +133,7 @@ export default {
           class="user-picture"
         />
         <div class="user-info">
-          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title mb-1">
+          <RouterLink :to="`/profile/${targetItem.user.id}`" class="user-info-title">
             {{ targetItem.user.name }}
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
@@ -240,13 +240,17 @@ export default {
     <div class="card-body border-top postCard-response" v-if="userData.user.token.length > 0">
       <input type="text" v-model="newComment" class="form-control" placeholder="回覆..." />
       <button class="btn btn-default" @click="addComment">
-        <i class="webIcon bi bi-play-fill"></i>
+        <i class="webIcon bi bi-arrow-right-circle-fill"></i>
       </button>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.user-info{
+  align-items: flex-start;
+  justify-content: center;
+}
 .showMoreBtn {
   cursor: pointer;
   color: var(--bs-primary);

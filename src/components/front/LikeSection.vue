@@ -34,8 +34,9 @@ export default {
 </script>
 
 <template>
-  <PostCard v-for="p in posts" :key="p.key" :post-item="p"/>
+  <div class="d-flex flex-column gap-4">
+    <PostCard v-for="postItem in posts" :key="postItem.key" :post-item="postItem" />
+  </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

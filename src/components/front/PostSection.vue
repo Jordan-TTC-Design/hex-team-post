@@ -21,9 +21,7 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
 
-    const search = () => {
-
-    };
+    const search = () => {};
 
     onMounted(async () => {
       statusData.addLoading();
@@ -63,14 +61,21 @@ export default {
 </script>
 
 <template>
-  <PostFilter class="mb-3" @search="search" header="排序" :items="[
-    {
-      name: '由新到舊',
-      type: 'asc',
-    },
-  ]"/>
-  <div>
-    <PostCard v-for="p in posts" :key="p.id"  :post-item="p"/>
+  <PostFilter
+    class="mb-3"
+    @search="search"
+    header="排序"
+    :items="[
+      {
+        name: '由新到舊',
+        type: 'asc',
+      },
+    ]"
+  />
+  <div class="d-flex flex-column gap-4">
+    <template v-for="postItem in posts" :key="postItem.id">
+      <PostCard :post-item="postItem" />
+    </template>
   </div>
 </template>
 
