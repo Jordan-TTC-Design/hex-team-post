@@ -32,7 +32,6 @@ export default {
     onMounted(async () => {
       await checkLogin();
     });
-    // checkLogin();
     return {
       userData,
       statusData,
@@ -46,36 +45,48 @@ export default {
 </script>
 
 <template>
-  <div class="menu">
-    <img src="@/assets/image/logo.svg" alt="logo" class="menu-logo" />
+  <div class="header">
+    <img src="@/assets/image/logo.svg" alt="logo" class="header-logo" />
     <div class="menu-navbar">
       <div class="menu-navbar-item" :class="{ active: route.path === `/` }">
-        <RouterLink to="/"> <i class="bi bi-house-door"></i> 最新動態 </RouterLink>
+        <RouterLink class="menu-navbar-item__link" to="/">
+          <i class="bi bi-house-door"></i> 最新動態
+        </RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/follow` }">
         <div
-          class="handPointer"
+          class="menu-navbar-item__link"
           v-if="userData.user.token.length === 0"
           @click="statusData.logInModel = true"
         >
           <i class="bi bi-bell-fill"></i> 追蹤動態
         </div>
-        <RouterLink to="/follow" v-if="userData.user.token.length > 0">
+        <RouterLink
+          class="menu-navbar-item__link"
+          to="/follow"
+          v-if="userData.user.token.length > 0"
+        >
           <i class="bi bi-bell-fill"></i> 追蹤動態
         </RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/recommend` }">
-        <RouterLink to="/recommend"><i class="bi bi-chat-square-heart"></i> 熱賣推薦</RouterLink>
+        <RouterLink class="menu-navbar-item__link" to="/recommend"
+          ><i class="bi bi-chat-square-heart"></i> 熱賣推薦</RouterLink
+        >
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/diary` }">
         <div
-          class="handPointer"
+          class="menu-navbar-item__link"
           v-if="userData.user.token.length === 0"
           @click="statusData.logInModel = true"
         >
           <i class="bi bi-chat-square-heart"></i> 熱賣推薦
         </div>
-        <RouterLink to="/diary" v-if="userData.user.token.length > 0">
+        <RouterLink
+          class="menu-navbar-item__link"
+          to="/diary"
+          v-if="userData.user.token.length > 0"
+        >
           <i class="bi bi-envelope-heart"></i> 私密日記本
         </RouterLink>
       </div>
@@ -136,74 +147,128 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.dropDownMenu {
-  cursor: pointer;
-  z-index: 201;
-  &__dropdown {
-    width: 180px;
-    position: absolute;
-    top: 48px;
-    right: 0;
-  }
-}
-
-.menu {
+.header {
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
   box-shadow: 0px 1px 1px #00000029;
   padding: 0 24px;
-  .menu-logo {
+  @media (max-width: 1199.98px) {
+    justify-content: space-between;
+    padding: 0.5rem 0;
+  }
+  .header-logo {
     position: absolute;
     left: 24px;
-  }
-
-  .menu-navbar {
-    display: flex;
-    .menu-navbar-item {
-      width: 186px;
-      text-align: center;
-      padding-top: 22px;
-      padding-bottom: 18px;
+    @media (max-width: 1199.98px) {
       position: relative;
-      &.active {
-        &::after {
-          content: '';
-          width: 120px;
-          height: 1px;
-          border-top: 4px solid #892092;
-          border-top-left-radius: 12px;
-          border-top-right-radius: 12px;
-          position: absolute;
-          bottom: 0;
-          left: 33px;
-        }
-        & a {
-          color: #892092;
-        }
-      }
-      & a {
-        text-decoration: none;
-        font-size: 16px;
-        color: #1d1d1d;
-      }
-      & + .menu-navbar-item::before {
-        content: '';
-        height: 36px;
-        left: 0;
-        top: 14px;
-        border-left: 1px solid #d6d6d6;
-        position: absolute;
-      }
     }
   }
 
   .menu-function {
     position: absolute;
     right: 24px;
-
     display: flex;
+    @media (max-width: 1199.98px) {
+      position: relative;
+    }
+  }
+}
+.menu-navbar {
+  display: flex;
+
+  .menu-navbar-item {
+    text-align: center;
+    position: relative;
+    &__link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 3rem;
+      text-decoration: none;
+      font-size: 16px;
+      color: #1d1d1d;
+      position: relative;
+      &::after {
+        content: '';
+        width: 64%;
+        height: 0;
+        background-color: var(--bs-primary);
+        border-radius: 0.25rem 0.25rem 0 0;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all 0.3s;
+      }
+    }
+    &:not(:first-child)::before {
+      content: '';
+      height: 48%;
+      left: 0;
+      top: 50%;
+      border-left: 1px solid #d6d6d6;
+      position: absolute;
+      transform: translateY(-50%);
+    }
+    &.active {
+      .menu-navbar-item__link {
+        color: #892092;
+      }
+      .menu-navbar-item__link::after {
+        height: 0.25rem;
+      }
+    }
+  }
+}
+@media (max-width: 1199.98px) {
+  .menu-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bs-white);
+    justify-content: center;
+    border-top: 1px solid var(--bs-gray-middle);
+  }
+}
+@media (max-width: 991.98px) {
+  .menu-navbar {
+    &-item {
+      flex: 1;
+    }
+  }
+}
+@media (max-width: 800px) {
+  .menu-navbar {
+    .menu-navbar-item {
+      .menu-navbar-item__link {
+        flex-direction: column;
+        padding: 0.5rem 0.25rem;
+        gap: 0;
+        font-size: 0.75rem;
+        &::after {
+          width: 80%;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 576.98px) {
+  .menu-navbar {
+    .menu-navbar-item {
+      .menu-navbar-item__link {
+        flex-direction: column;
+        padding: 0.25rem;
+        gap: 0.1255rem;
+        font-size: 0.75rem;
+        &::after {
+          width: 0%;
+        }
+      }
+    }
   }
 }
 .userPhoto {
@@ -221,5 +286,15 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+}
+.dropDownMenu {
+  cursor: pointer;
+  z-index: 201;
+  &__dropdown {
+    width: 180px;
+    position: absolute;
+    top: 48px;
+    right: 0;
+  }
 }
 </style>

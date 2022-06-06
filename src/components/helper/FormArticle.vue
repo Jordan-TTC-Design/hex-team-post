@@ -97,7 +97,7 @@ export default {
     font-size: 1.25rem;
     margin: 0;
     &::before {
-      color: #e2e2e2;
+      color: var(--bs-gray-middle);
     }
   }
   .ck-content h2 {
@@ -105,6 +105,15 @@ export default {
   }
   .ck-editor__top {
     display: none;
+  }
+  .ck.ck-editor__editable_inline {
+    padding: 0;
+  }
+  .ck-placeholder {
+    color: var(--bs-gray-middle);
+  }
+  .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+    border: none;
   }
 }
 </style>

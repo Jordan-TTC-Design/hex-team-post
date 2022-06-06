@@ -163,7 +163,11 @@ export default {
           :alt="`${targetItem.id}圖片`"
           class="postCard__imgBox__img"
         />
-        <div @click="buyDiary" class="postCard__imgBox--diary__cover">
+        <div
+          v-if="targetItem.image === 'https://i.imgur.com/EOH3rls.jpeg'"
+          @click="buyDiary"
+          class="postCard__imgBox--diary__cover"
+        >
           <i class="coverLock bi bi-file-lock2"></i>
           <div class="w-75 p-4 rounded bg-gray-light">
             <p class="text-center">已有 20 人購買</p>
