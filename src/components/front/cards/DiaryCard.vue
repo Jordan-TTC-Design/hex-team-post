@@ -76,11 +76,7 @@ export default {
     }
     async function buyDiary() {
       console.log(targetItem.value._id);
-      const buyTargetData = {
-        postId: targetItem.value._id,
-      };
-      const result = await postsData.buyDiary(buyTargetData, userData.user.token);
-      console.log(result);
+      await postsData.buyDiary(targetItem.value._id, userData.user.token);
     }
     return {
       userData,
