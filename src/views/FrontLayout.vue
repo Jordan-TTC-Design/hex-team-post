@@ -41,12 +41,12 @@ export default {
 </script>
 
 <template>
-  <div class="position-relative">
-    <PageLoader v-show="statusData.pageLoading === true" />
+  <div class="wrapper__content position-relative d-flex flex-column">
     <FrontHeader class="sticky-top top-0" />
     <main class="front-main">
       <RouterView />
     </main>
+    <PageLoader v-show="statusData.pageLoading === true" />
     <SignUpModel />
     <DiamondModel />
     <LogInModel />

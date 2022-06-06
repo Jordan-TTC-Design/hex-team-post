@@ -1,9 +1,8 @@
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
-  components: {
-  },
+  components: {},
   props: {
     items: Array,
     header: String,
@@ -21,9 +20,9 @@ export default {
     const search = () => {
       const data = {
         query: query.value,
-        type: type.value,
+        type: type.value || 'asc',
       };
-      console.log('emit');
+      console.log(data);
       emit('search', data);
     };
 
@@ -33,7 +32,9 @@ export default {
       toggle();
       search();
     };
-
+    onMounted(async () => {
+      search();
+    });
     return {
       props,
       query,
@@ -59,17 +60,23 @@ export default {
     <div class="postFilter-dropdown">
       <div class="postFilter-dropdown-text" @click="toggle">
         {{ name }}
-        <i class="bi bi-chevron-down"
-          :class="[isDropdown ? 'bi-chevron-up' : 'bi-chevron-down']"></i>
+        <i
+          class="bi bi-chevron-down"
+          :class="[isDropdown ? 'bi-chevron-up' : 'bi-chevron-down']"
+        ></i>
       </div>
       <div class="tmp" v-if="isDropdown">
         <ul class="d">
           <li class="d-header" v-if="header">{{ header }}</li>
-          <li class="d-item"
-              :class="[type === i.type ? 'active' : '']"
-              v-for="i in props.items" :key="i.type"
-              @click="choose(i.name, i.type)"
-          >{{i.name}}</li>
+          <li
+            class="d-item"
+            :class="[type === i.type ? 'active' : '']"
+            v-for="i in props.items"
+            :key="i.type"
+            @click="choose(i.name, i.type)"
+          >
+            {{ i.name }}
+          </li>
         </ul>
       </div>
     </div>
@@ -156,7 +163,7 @@ export default {
 
 .d {
   border-radius: 12px;
-  border: 1px solid #F2E8FC;
+  border: 1px solid #f2e8fc;
   background-color: #fff;
   box-shadow: 0px 1px 2px #00000029;
   z-index: 300;
@@ -164,18 +171,18 @@ export default {
     padding: 10px 12px;
     color: #1d1d1d;
     background-color: #f2f2f2;
-    border-bottom: 1px solid #F2E8FC;
-
+    border-bottom: 1px solid #f2e8fc;
   }
   .d-item {
     padding: 10px 12px;
     cursor: pointer;
-    &:hover, &.active {
-       color: var(--bs-primary);
-       background-color: var(--bs-secondary);
+    &:hover,
+    &.active {
+      color: var(--bs-primary);
+      background-color: var(--bs-secondary);
     }
     & + .d-item {
-      border-top: 1px solid #F2E8FC;
+      border-top: 1px solid #f2e8fc;
     }
   }
 }

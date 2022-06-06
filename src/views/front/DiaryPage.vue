@@ -1,5 +1,5 @@
 <script>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
@@ -19,16 +19,63 @@ export default {
     const statusData = statusStore();
     statusData.openPageLoader();
     const diariesList = ref([]);
-    async function getdiariesData() {
-      const result = await postsData.getUserDiary('6298f3663b84eb47c3e1a7ea');
+    const pageInfo = ref(null);
+    const nowPage = ref(0);
+    const filterData = ref({
+      type: '',
+      query: '',
+    });
+    const localUser = ref(null);
+    async function search(data, page = 1) {
+      console.log(data);
+      diariesList.value = [];
+      localUser.value = await JSON.parse(localStorage.getItem('sd-user'));
+      const result = await postsData.getBuyDiary(
+        page,
+        data.type === 'like' ? 'asc' : data.type,
+        data.query,
+        data.type === 'like' ? userData?.user?.id ?? '' : '',
+        localUser.value.token,
+      );
+      filterData.value.type = data.type;
+      filterData.value.query = data.query;
       console.log(result);
-      diariesList.value = [...result.data];
+      pageInfo.value = { ...result.data.paging };
+      if (pageInfo.value) {
+        diariesList.value = [...result.data.data];
+        postsData.diaries = diariesList.value;
+        nowPage.value += 1;
+      }
     }
-    getdiariesData();
+    async function getMoreDiary(page) {
+      const result = await postsData.getBuyDiary(
+        page,
+        filterData.value.type === 'like' ? 'asc' : filterData.value.type,
+        filterData.value.type,
+        filterData.value.type === 'like' ? userData?.user?.id ?? '' : '',
+        localUser.value.token,
+      );
+      diariesList.value = [...result.data.data];
+      postsData.diaries = diariesList.value;
+    }
+    function handleScroll() {
+      if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
+        if (nowPage.value < pageInfo.value.total_pages) {
+          getMoreDiary(nowPage.value + 1);
+        }
+      }
+    }
+    onMounted(async () => {
+      window.addEventListener('scroll', handleScroll);
+    });
+    onUnmounted(() => {
+      window.addEventListener('scroll', handleScroll);
+    });
     return {
       postsData,
       userData,
-      diariesList,
+      nowPage,
+      search,
     };
   },
 };
@@ -38,14 +85,21 @@ export default {
   <div class="container">
     <div class="row">
       <div class="col-8 d-flex flex-column gap-4">
-        <PostFilter class="flex-grow-1"  header="排序" :items="[
-          {
-            name: '最新日記',
-            type: 'asc',
-          },
-        ]"/>
-
-        <template v-for="(diaryItem, index) in diariesList" :key="diaryItem.id">
+        <PostFilter
+          @search="search"
+          header="排序"
+          :items="[
+            {
+              name: '最新購買',
+              type: 'asc',
+            },
+            {
+              name: '最初購買',
+              type: 'desc',
+            },
+          ]"
+        />
+        <template v-for="(diaryItem, index) in postsData.diaries" :key="diaryItem.id">
           <DiaryCard :post-item="diaryItem" :post-index="index" />
         </template>
       </div>

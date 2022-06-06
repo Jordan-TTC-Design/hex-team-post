@@ -65,28 +65,29 @@ const paymentStore = defineStore({
         .then((blob) => {
           statusData.shiftLoading();
           const pageUrl = window.URL.createObjectURL(blob);
-          console.log(blob);
-          window.open(pageUrl, 'newebpay_payment', 'location=0').focus();
+          window.open(pageUrl, '_self');
         })
         .catch((err) => {
           statusData.shiftLoading();
           console.log(err);
         });
-      // axios({
-      //   method: 'GET',
-      //   url: apiUrl,
-      //   headers: {
-      //     authorization: userToken,
-      //   },
-      // })
-      //   .then((response) => response.blob())
-      //   .then((blob) => {
-      //     const pageUrl = window.URL.createObjectURL(blob);
-      //     window.open(pageUrl, 'newebpay_payment', 'location=0').focus();
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+    },
+    async checkPayment(orderId, userToken) {
+      statusData.addLoading();
+      console.log(orderId, userToken);
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/order/status?orderId=${orderId}`,
+        });
+        statusData.shiftLoading();
+        console.log(res.data.data);
+        return res.data.data;
+      } catch (err) {
+        statusData.shiftLoading();
+        console.dir(err);
+        return err;
+      }
     },
   },
 });

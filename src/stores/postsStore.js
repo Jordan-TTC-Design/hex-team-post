@@ -158,6 +158,34 @@ const postsStore = defineStore({
         return err;
       }
     },
+    async getBuyDiary(page = 1, timeSort = 'asc', query = '', like = '', userToken) {
+      console.log(page, timeSort, query, like);
+      statusData.addLoading();
+      let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/diary?page=${page}&sort=${timeSort}`;
+      if (query) {
+        apiUrl += `&q=${query}`;
+      }
+      if (like) {
+        apiUrl += `&like=${like}`;
+      }
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: apiUrl,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res);
+        this.diarys = res.data.data;
+        statusData.shiftLoading();
+        return res.data;
+      } catch (err) {
+        statusData.shiftLoading();
+        console.dir(err);
+        return err;
+      }
+    },
     async getUserDiary(userId) {
       statusData.addLoading();
       const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}`;
@@ -173,19 +201,50 @@ const postsStore = defineStore({
         return err;
       }
     },
-    async buyDiary(data, userToken) {
+    async buyDiary(postId, userToken) {
+      const buyTargetData = {
+        postId,
+      };
       statusData.addLoading();
       try {
         const res = await axios({
           method: 'POST',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/order/pay/private',
-          data,
+          data: buyTargetData,
           headers: {
             authorization: `${userToken}`,
           },
         });
         console.log(res);
         statusData.shiftLoading();
+        if (res.data.status === 'success') {
+          this.getPostWithToken(postId, userToken);
+        }
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        statusData.shiftLoading();
+        return err;
+      }
+    },
+    async getPostWithToken(postId, userToken) {
+      statusData.addLoading();
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/getOne/${postId}/verified`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res);
+        statusData.shiftLoading();
+        if (res.data.status === 'success') {
+          console.log(res.data.data._id, this.diaries);
+          const resultIndex = this.diaries.findIndex((item) => item._id === res.data.data._id);
+          console.log(resultIndex);
+          this.diaries.splice(resultIndex, 1, res.data.data);
+        }
         return res.data;
       } catch (err) {
         console.dir(err);
