@@ -65,29 +65,34 @@
   }
 
   .userProfileCard-footer {
-    border-top: 1px solid #e2e2e2;
+    border-top: 1px solid var(--bs-gray-middle);
     display: flex;
+    overflow-x: auto;
 
     & > .userProfileCard-footer-item {
-      width: 120px;
       text-align: center;
-      padding: 10px 0;
+      padding: 0.75rem 0.5rem;
+      flex-grow: 1;
       position: relative;
-      color: #1d1d1d;
+      color: var(--bs-dark);
       cursor: pointer;
-      user-select: none;
-
+      white-space:nowrap;
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: var(--bs-primary);
+        border-radius: 0.25rem 0.25rem 0 0;
+        width: 2rem;
+        height: 0rem;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        transition: all 0.3s;
+      }
       &.active {
         color: var(--bs-primary);
-
         &::after {
-          content: '';
-          border-radius: 12px 12px 0 0;
-          border-top: 4px solid var(--bs-primary);
-          width: 36px;
-          left: 42px;
-          bottom: 0;
-          position: absolute;
+          height: 0.25rem;
         }
       }
 
