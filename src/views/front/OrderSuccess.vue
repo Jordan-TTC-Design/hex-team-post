@@ -18,7 +18,7 @@ export default {
       if (route.query.orderId) {
         const { orderId } = route.query;
         sendOrderId.value = orderId;
-        const result = await paymentData.checkOrder(orderId);
+        const result = await paymentData.checkPayment(orderId);
         console.log(result);
         if (result.message === '授權成功') {
           pageTitle.value = '交易成功，感謝您的購買！';
