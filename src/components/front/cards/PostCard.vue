@@ -328,4 +328,5 @@ export default {
     color: var(--bs-gray-dark);
   }
 }
+
 </style>
