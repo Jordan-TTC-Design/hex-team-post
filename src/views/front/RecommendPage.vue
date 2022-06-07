@@ -16,9 +16,6 @@ export default {
     const postQuery = ref('');
     const createrList = ref([]);
     const usersList = ref([]);
-    // function sortPostsData() {
-    //   postsData.getPosts(postSort.value, postQuery.value);
-    // }
     async function init() {
       createrList.value = await followData.getHotCreater();
       console.log(createrList.value);

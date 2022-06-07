@@ -1,4 +1,6 @@
 <script>
+import { computed, watch } from 'vue';
+
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import FrontHeader from '@/components/front/FrontHeader.vue';
@@ -32,6 +34,16 @@ export default {
   setup() {
     const postsData = postsStore();
     const statusData = statusStore();
+    const statusCheck = computed(() => statusData.noScroll);
+
+    watch(statusCheck, (newValue) => {
+      console.log(newValue);
+      if (newValue === true) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
+    });
     return {
       postsData,
       statusData,

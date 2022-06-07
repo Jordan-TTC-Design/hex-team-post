@@ -1,11 +1,21 @@
 <script>
 import { ref } from 'vue';
+import statusStore from '@/stores/statusStore';
 
 export default {
   props: ['userList'],
   setup() {
+    const statusData = statusStore();
     const listShow = ref(false);
-    return { listShow };
+    function openModel() {
+      listShow.value = true;
+      statusData.noScroll = true;
+    }
+    function closeModel() {
+      listShow.value = false;
+      statusData.noScroll = false;
+    }
+    return { listShow, openModel, closeModel };
   },
 };
 </script>
@@ -14,7 +24,7 @@ export default {
   <div class="sideBox gap-3">
     <div class="sideBox__card card" :class="{ active: listShow }">
       <div class="p-3 border-bottom d-flex gap-2 align-items-center">
-        <button @click="listShow = !listShow" type="button" class="btn d-lg-none d-block">
+        <button @click="closeModel" type="button" class="btn d-lg-none d-block">
           <i class="bi bi-chevron-left"></i>
         </button>
         <div class="card-title">推薦追蹤</div>
@@ -36,7 +46,7 @@ export default {
         </template>
       </div>
     </div>
-    <button @click="listShow = !listShow" type="button" class="sideBtn d-lg-none d-block">
+    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
       <i class="bi bi-binoculars-fill"></i>
     </button>
   </div>

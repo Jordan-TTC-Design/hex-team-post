@@ -5,6 +5,7 @@ const statusStore = defineStore({
   state: () => ({
     isLoading: [],
     pageLoading: false,
+    noScroll: false,
     signUpModel: false,
     logInModel: false,
     diamondModel: false,

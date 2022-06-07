@@ -1,13 +1,25 @@
 <script>
 import { ref } from 'vue';
+import statusStore from '@/stores/statusStore';
 
 export default {
   props: ['following'],
   setup(props) {
+    const statusData = statusStore();
     const listShow = ref(false);
+    function openModel() {
+      listShow.value = true;
+      statusData.noScroll = true;
+    }
+    function closeModel() {
+      listShow.value = false;
+      statusData.noScroll = false;
+    }
     return {
       props,
       listShow,
+      openModel,
+      closeModel,
     };
   },
 };
@@ -16,23 +28,61 @@ export default {
   <div class="sideBox gap-3">
     <div class="sideBox__card card gap-3" :class="{ active: listShow }">
       <div class="p-3 border-bottom d-flex gap-2 align-items-center">
-        <button @click="listShow = !listShow" type="button" class="btn d-lg-none d-block">
+        <button @click="closeModel" type="button" class="btn d-lg-none d-block">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <div class="card-title">追蹤名單</div>
+        <div class="card-title">我的蹤名單</div>
       </div>
-      <div class="card-body">
-        <div class="d-flex align-items-center mb-3" v-for="f in props.following" :key="f.id">
-          <div class="user-picture"></div>
-          <div class="user-info">
-            <RouterLink :to="`/profile/${f.id}`" class="user-info-title">{{ f.name }}</RouterLink>
-          </div>
-        </div>
+      <div class="followUserList card-body d-flex flex-column gap-3">
+        <template v-for="userItem in props.following" :key="userItem._id">
+          <RouterLink :to="`/profile/${userItem._id}`" class="followUser">
+            <img
+              class="user-picture"
+              :src="userItem.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+              :alt="userItem.name"
+            />
+            <div class="user-info">
+              <span class="user-info-title">{{ userItem.name }}</span>
+            </div>
+            <div class="btn btn-sm"><i class="bi bi-arrow-right-circle"></i></div>
+          </RouterLink>
+        </template>
       </div>
     </div>
-    <button @click="listShow = !listShow" type="button" class="sideBtn d-lg-none d-block">
+    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
       <i class="bi bi-person-square"></i>
     </button>
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.followUserList {
+  max-height: 50vh;
+  overflow: auto;
+  @media (max-width: 767.98px) {
+    max-height: 100%;
+  }
+}
+.followUser {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .btn {
+    color: var(--bs-dark);
+    transition: all 0.3s;
+    &:hover {
+      color: var(--bs-primary);
+    }
+  }
+  .user-info-title {
+    transition: all 0.3s;
+  }
+  &:hover {
+    .btn {
+      color: var(--bs-primary);
+    }
+    .user-info-title {
+      color: var(--bs-primary);
+    }
+  }
+}
+</style>
