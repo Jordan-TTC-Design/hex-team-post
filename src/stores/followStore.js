@@ -96,6 +96,37 @@ const followData = defineStore({
           return err;
         });
     },
+    async getHotCreater() {
+      statusData.addLoading();
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/order/likes',
+        });
+        statusData.shiftLoading();
+        return res.data.data;
+      } catch (err) {
+        console.dir(err);
+        statusData.shiftLoading();
+        return err;
+      }
+    },
+    async getHotUser() {
+      statusData.addLoading();
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/follow/orders/followers',
+        });
+        console.log(res.data);
+        statusData.shiftLoading();
+        return res.data.data;
+      } catch (err) {
+        console.dir(err);
+        statusData.shiftLoading();
+        return err;
+      }
+    },
   },
 });
 export default followData;

@@ -87,7 +87,7 @@ export default {
           v-if="userData.user.token.length === 0"
           @click="statusData.logInModel = true"
         >
-          <i class="bi bi-chat-square-heart"></i> 熱賣推薦
+          <i class="bi bi-envelope-heart"></i> 私密日記本
         </div>
         <RouterLink
           class="menu-navbar-item__link"
