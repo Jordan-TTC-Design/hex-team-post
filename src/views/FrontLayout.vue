@@ -1,4 +1,6 @@
 <script>
+// eslint-disable-next-line object-curly-newline
+import { ref, computed, watch, onMounted } from 'vue';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import FrontHeader from '@/components/front/FrontHeader.vue';
@@ -32,6 +34,20 @@ export default {
   setup() {
     const postsData = postsStore();
     const statusData = statusStore();
+    const fullWidth = ref(window.innerWidth);
+    onMounted(() => {
+      window.onresize = () => {
+        fullWidth.value = window.innerWidth;
+      };
+    });
+    const statusCheck = computed(() => statusData.noScroll);
+    watch(statusCheck, (newValue) => {
+      if (newValue === true && fullWidth.value < 996) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
+    });
     return {
       postsData,
       statusData,

@@ -1,10 +1,20 @@
 <script>
 import { ref } from 'vue';
+import statusStore from '@/stores/statusStore';
 
 export default {
   setup() {
+    const statusData = statusStore();
     const listShow = ref(false);
-    return { listShow };
+    function openModel() {
+      listShow.value = true;
+      statusData.noScroll = true;
+    }
+    function closeModel() {
+      listShow.value = false;
+      statusData.noScroll = false;
+    }
+    return { listShow, openModel, closeModel };
   },
 };
 </script>
@@ -13,7 +23,7 @@ export default {
   <div class="sideBox gap-3">
     <div class="sideBox__card card gap-3" :class="{ active: listShow }">
       <div class="p-3 border-bottom d-flex gap-2 align-items-center">
-        <button @click="listShow = !listShow" type="button" class="btn d-lg-none d-block">
+        <button @click="closeModel" type="button" class="btn d-lg-none d-block">
           <i class="bi bi-chevron-left"></i>
         </button>
         <div class="card-title">您所訂閱的創作者</div>
@@ -48,7 +58,7 @@ export default {
         </div>
       </div>
     </div>
-    <button @click="listShow = !listShow" type="button" class="sideBtn d-lg-none d-block">
+    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
       <i class="bi bi-person-heart"></i>
     </button>
   </div>
@@ -73,5 +83,4 @@ export default {
     color: #646464;
   }
 }
-
 </style>

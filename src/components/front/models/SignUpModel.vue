@@ -30,12 +30,17 @@ export default {
         console.log('使用者帳密錯誤');
       }
     }
+    function closeModel() {
+      statusData.signUpModel = false;
+      statusData.noScroll = false;
+    }
     return {
       newUser,
       statusData,
       userData,
       signUp,
       goToLogin,
+      closeModel,
     };
   },
 };
@@ -47,14 +52,10 @@ export default {
     :class="{ active: statusData.signUpModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.signUpModel = false" />
+    <div class="popModalCover" @click="closeModel" />
     <!-- Modal-Window -->
     <div class="signUpModel popModal" :class="{ active: statusData.signUpModel === true }">
-      <button
-        @click="statusData.signUpModel = false"
-        type="button"
-        class="btn position-absolute popModel__btn"
-      >
+      <button @click="closeModel" type="button" class="btn position-absolute popModel__btn">
         <i class="webIcon bi bi-x-lg"></i>
       </button>
       <div class="d-flex flex-xl-row flex-column gap-2 h-75 flex-grow-1">
@@ -196,7 +197,7 @@ export default {
     top: 40%;
     transition: all 0.3s;
     background-color: #fff;
-    width: 600px;
+    width: 75vw;
     height: 80vh;
     display: flex;
     flex-direction: column;
@@ -211,7 +212,9 @@ export default {
       width: 75vw;
     }
     @media (max-width: 575.98px) {
+      height: 100vh;
       width: 100vw;
+      border-radius: 0;
     }
   }
 }
@@ -228,7 +231,6 @@ export default {
     transform: scaleY(1) translate(-50%, -50%);
   }
   .signUpModel {
-    width: 75%;
     &__logoMark {
       position: absolute;
       left: 0;

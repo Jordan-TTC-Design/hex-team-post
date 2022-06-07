@@ -36,6 +36,10 @@ export default {
     function openDropModel() {
       modalOpen.value = !modalOpen.value;
     }
+    function openTagertModel(target) {
+      statusData[target] = true;
+      statusData.noScroll = true;
+    }
     onMounted(async () => {
       await checkLogin();
     });
@@ -46,6 +50,7 @@ export default {
       route,
       modalOpen,
       openDropModel,
+      openTagertModel,
     };
   },
 };
@@ -87,7 +92,7 @@ export default {
           v-if="userData.user.token.length === 0"
           @click="statusData.logInModel = true"
         >
-          <i class="bi bi-chat-square-heart"></i> 熱賣推薦
+          <i class="bi bi-envelope-heart"></i> 私密日記本
         </div>
         <RouterLink
           class="menu-navbar-item__link"
@@ -103,7 +108,7 @@ export default {
         <button @click="statusData.logInModel = true" class="btn btn-outline text-primary">
           登入
         </button>
-        <button @click="statusData.signUpModel = true" class="btn btn-outline">註冊</button>
+        <button @click="openTagertModel('signUpModel')" class="btn btn-outline">註冊</button>
       </div>
       <div class="d-flex align-items-center gap-2" v-if="userData.user.token.length > 0">
         <button class="btn btn-secondary ms-2 px-3" @click="postsData.openPostModel('group')">
@@ -129,7 +134,7 @@ export default {
             </button>
             <div class="dropDownMenu__dropdown" v-show="modalOpen === true">
               <ul class="list-group">
-                <li class="list-group-header d-flex" @click="statusData.diamondModel = true">
+                <li class="list-group-header d-flex" @click="openTagertModel('diamondModel')">
                   <p class="text-primary">錢包</p>
                   <span class="ms-auto text-primary"
                     >{{ userData.myWallet }} SD <i class="bi bi-gem"></i>
@@ -141,7 +146,7 @@ export default {
                 <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
                   >消費記錄</RouterLink
                 >
-                <li @click="statusData.emailModel = true" class="list-group-item">客服支援</li>
+                <li @click="openTagertModel('emailModel')" class="list-group-item">客服支援</li>
                 <li @click="userData.logOut" class="list-group-item">登出</li>
               </ul>
             </div>

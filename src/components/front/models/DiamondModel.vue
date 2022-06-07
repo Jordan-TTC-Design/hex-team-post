@@ -23,6 +23,10 @@ export default {
         console.log(goToPay);
       }
     }
+    function closeDiamondModel() {
+      statusData.diamondModel = false;
+      statusData.noScroll = false;
+    }
     return {
       postsData,
       statusData,
@@ -30,6 +34,7 @@ export default {
       userData,
       payContent,
       buyDiamond,
+      closeDiamondModel,
     };
   },
 };
@@ -41,12 +46,12 @@ export default {
     :class="{ active: statusData.diamondModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.diamondModel = false" />
+    <div class="popModalCover" @click="closeDiamondModel" />
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.diamondModel === true }">
       <button
-        @click="statusData.diamondModel = false"
+        @click="closeDiamondModel"
         type="button"
         class="btn position-absolute top-2 end-2"
       >
@@ -58,22 +63,22 @@ export default {
         src="@/assets/image/logo-mark.svg"
         alt="視窗圖示"
       />
-      <div class="d-flex justify-content-center py-6">
+      <div class="d-flex justify-content-center py-md-6 pt-4">
         <div class="position-relative">
           <img src="@/assets/image/patch-fill.svg" alt="彈窗圖外框" />
           <i class="webIcon bi bi-gem text-primary absolute-middle"></i>
         </div>
       </div>
-      <div class="d-flex flex-column p-4 gap-4 flex-grow-1 diamondContainer">
-        <div class="diamondContainer__user gap-4">
+      <div class="d-flex flex-column p-4 gap-4 diamondContainer flex-shrink-0">
+        <div class="diamondContainer__user gap-md-4 gap-2">
           <img
             class="userPhoto"
             :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
             :alt="userData.user.name"
           />
-          <div>
-            <p class="fs-5 text-dark mb-1">{{ userData.user.name }}</p>
-            <div class="d-flex gap-2">
+          <div class="mb-md-0">
+            <p class="fs-5 text-dark mb-1 ps-md-0 ps-2">{{ userData.user.name }}</p>
+            <div class="d-flex gap-2 justify-content-md-start justify-content-end">
               <button type="button" class="btn btn-white">儲值紀錄</button>
               <button type="button" class="btn btn-white">消費紀錄</button>
             </div>
@@ -90,17 +95,17 @@ export default {
         <div class="row row-cols-2 g-3">
           <template v-for="product in paymentData.diamondProduct" :key="product._id">
             <div class="col">
-              <div class="buyDiamondBox gap-3">
+              <div class="buyDiamondBox gap-md-3 gap-1">
                 <div class="diamondImg">
                   <i class="webIcon bi bi-gem"></i>
                 </div>
-                <div class="d-flex flex-column flex-grow-1">
+                <div class="d-flex flex-column align-items-md-start align-items-center flex-grow-1">
                   <p class="mb-1">{{ product.coin }}顆{{ product.name }}</p>
-                  <p class="mb-3">NTD {{ product.price - product.discount }}</p>
+                  <p class="mb-md-3 mb-1">NTD {{ product.price - product.discount }}</p>
                   <button
                     @click="buyDiamond(product._id)"
                     type="button"
-                    class="btn btn-white align-self-end"
+                    class="btn btn-white align-self-md-end"
                   >
                     點擊購買
                   </button>
@@ -135,10 +140,30 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .webIcon {
       font-size: 4.75rem;
       color: var(--bs-primary);
+      transform: translateY(-2px);
     }
+    @media (max-width: 998.98px) {
+      width: 4rem;
+      height: 4rem;
+      .webIcon {
+        font-size: 3rem;
+      }
+    }
+    @media (max-width: 575.98px) {
+      width: 2.5rem;
+      height: 2.5rem;
+      .webIcon {
+        font-size: 1.75rem;
+      }
+    }
+  }
+  @media (max-width: 767.98px) {
+    flex-direction: column;
+    align-items: center;
   }
 }
 .z-popModal {
@@ -169,11 +194,14 @@ export default {
     top: 40%;
     transition: all 0.3s;
     background-color: #fff;
-    width: 45vw;
+    width: 50vw;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-
+    overflow-y: auto;
+    @media (max-width: 1999.98px) {
+      width: 60vw;
+    }
     @media (max-width: 998.98px) {
       width: 75vw;
     }
@@ -182,7 +210,8 @@ export default {
     }
     @media (max-width: 575.98px) {
       width: 100vw;
-      max-height: 100vh;
+      height: 100vh;
+      max-height: none;
       border-radius: 0;
     }
   }
@@ -210,7 +239,6 @@ export default {
   background: #e2edfa;
 }
 .diamondContainer {
-  flex-shrink: 1;
   flex-grow: 1;
   overflow-y: auto;
   &__user {
@@ -227,6 +255,12 @@ export default {
       bottom: 0;
       transform: translate(24%, 48%);
       opacity: 0.3;
+    }
+    @media (max-width: 575.98px) {
+      flex-direction: column;
+    }
+    .btn {
+      z-index: 100;
     }
   }
   .btn {

@@ -1,5 +1,5 @@
 <script>
-import { onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
@@ -7,6 +7,7 @@ import PostFilter from '@/components/front/PostFilter.vue';
 import AddPostCard from '@/components/front/cards/AddPostCard.vue';
 import PostCard from '@/components/front/cards/PostCard.vue';
 import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
+import followStore from '@/stores/followStore';
 
 export default {
   components: {
@@ -17,9 +18,10 @@ export default {
   },
   setup() {
     const userData = userStore();
+    const followData = followStore();
     const postsData = postsStore();
     const statusData = statusStore();
-    statusData.openPageLoader();
+    const usersList = ref([]);
     function handleScroll() {
       if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
         postsData.getPosts(
@@ -49,10 +51,18 @@ export default {
         data.type === 'like' ? userData?.user?.id ?? '' : '',
       );
     };
+    async function init() {
+      statusData.openPageLoader();
+      usersList.value = await followData.getHotUser();
+      console.log(usersList.value);
+    }
+    init();
+
     return {
       userData,
       postsData,
       search,
+      usersList,
     };
   },
 };
@@ -62,31 +72,34 @@ export default {
   <div class="container position-relative">
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
-        <PostFilter @search="search" header="排序" :items="[
-          {
-            name: '由新到舊',
-            type: 'desc',
-          },
-          {
-            name: '由舊到新',
-            type: 'asc',
-          },
-          {
-            name: '按讚的貼文',
-            type: 'like',
-          },
-        ]"/>
+        <PostFilter
+          @search="search"
+          header="排序"
+          :items="[
+            {
+              name: '由新到舊',
+              type: 'desc',
+            },
+            {
+              name: '由舊到新',
+              type: 'asc',
+            },
+            {
+              name: '按讚的貼文',
+              type: 'like',
+            },
+          ]"
+        />
         <AddPostCard v-if="userData.user.token" />
         <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" :post-index="index" />
         </template>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <RecommendFollowCard />
+        <RecommendFollowCard :user-list="usersList" />
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,7 +1,6 @@
 <script>
-// import { ref } from 'vue';
-
 export default {
+  props: ['userItem'],
   setup(props) {
     return { props };
   },
@@ -12,11 +11,11 @@ export default {
   <div class="card" :class="props.class">
     <div class="card-body">
       <div class="img-fluid border mb-3 rounded tmp"></div>
-      <div>用戶名稱</div>
+      <div>{{ userItem.user.name }}</div>
       <div>
         <div class="icon">
           <i class="bi bi-heart"></i>
-          <span>123</span>
+          <span>{{userItem.user.likeSize}}</span>
         </div>
       </div>
     </div>
