@@ -158,7 +158,7 @@ const postsStore = defineStore({
         return err;
       }
     },
-    async getBuyDiary(page = 1, timeSort = 'asc', query = '', like = '', userToken) {
+    async getBuyDiary(page = 1, timeSort = 'dasc', query = '', like = '', userToken) {
       console.log(page, timeSort, query, like);
       statusData.addLoading();
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/diary?page=${page}&sort=${timeSort}`;

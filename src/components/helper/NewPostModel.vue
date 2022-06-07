@@ -145,6 +145,7 @@ export default {
             input-name="postContent"
             text-holder="在想什麼呢？"
             v-model="postsData.targetPost.content"
+            class="pb-3"
           />
           <div v-show="postsData.targetPost.image.length > 0" class="newPost__imgBox">
             <img :src="postsData.targetPost.image" alt="貼文圖片" class="newPost__imgBox__img" />

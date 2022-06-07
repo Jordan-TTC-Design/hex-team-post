@@ -34,7 +34,7 @@ export default {
 <style lang="scss" scoped>
 .moreMenu {
   position: relative;
-  z-index: 1;
+  z-index: 220;
   &__box {
     position: absolute;
     bottom: -0.25rem;

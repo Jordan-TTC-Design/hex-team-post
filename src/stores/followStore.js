@@ -101,7 +101,7 @@ const followData = defineStore({
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/order/likes',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/order/users',
         });
         statusData.shiftLoading();
         return res.data.data;

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import statusStore from '@/stores/statusStore';
 
 export default {
+  props: ['likesList'],
   setup() {
     const statusData = statusStore();
     const listShow = ref(false);
@@ -26,37 +27,18 @@ export default {
         <button @click="closeModel" type="button" class="btn d-lg-none d-block">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <div class="card-title">您所訂閱的創作者</div>
+        <div class="card-title">喜愛的秘密日記</div>
       </div>
-      <div class="card-body">
-        <input type="text" class="form-control mb-4" placeholder="搜尋關鍵字" />
-        <div class="d-flex align-items-center mb-4">
-          <div class="user-picture"></div>
-          <div class="user-info">
-            <span class="user-info-title">用戶名稱</span>
+      <template v-for="likeItem in likesList" :key="likeItem._id">
+        <div class="card-body d-flex flex-column gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <img class="card__img" :src="likeItem.image" :alt="likeItem.name" />
+            <p class="fs-6">
+              創作者：<span class="user-info-title">{{likeItem.user.name}}</span>
+            </p>
           </div>
         </div>
-        <div class="d-flex align-items-center mb-4">
-          <div class="user-picture"></div>
-          <div class="user-info">
-            <span class="user-info-title">用戶名稱</span>
-          </div>
-        </div>
-        <div class="d-flex align-items-center mb-4">
-          <div class="user-picture"></div>
-          <div class="user-info">
-            <span class="user-info-title">用戶名稱</span>
-            <span class="user-info-subtitle">2 篇新貼文</span>
-          </div>
-        </div>
-        <div class="d-flex align-items-center mb-4">
-          <div class="user-picture"></div>
-          <div class="user-info">
-            <span class="user-info-title">用戶名稱</span>
-            <span class="user-info-subtitle">2 篇新貼文 24 個新日記</span>
-          </div>
-        </div>
-      </div>
+      </template>
     </div>
     <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
       <i class="bi bi-person-heart"></i>
@@ -82,5 +64,12 @@ export default {
     font-size: 14px;
     color: #646464;
   }
+}
+.card__img {
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 0.25rem;
+  border: 1px solid #e2e2e2;
 }
 </style>

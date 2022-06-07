@@ -48,31 +48,25 @@ export default {
       <div class="pageSection__title">熱門創作者</div>
       <div class="recommenedUser row row-cols-lg-4 row-cols-2 gy-6">
         <template v-for="(creater, index) in createrList" :key="creater._id">
-          <div v-if="index < 8" class="col h-100">
-            <RouterLink :to="`/profile/${creater.user._id}`" class="userCard card h-100">
+          <div v-if="index < 4" class="col h-100">
+            <RouterLink :to="`/profile/${creater._id._id}`" class="userCard card h-100">
               <div class="card-body d-flex flex-column justify-content-between gap-3 h-100">
                 <div class="userCard__imgBox">
                   <img
                     class="userCard__img"
-                    :src="creater.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
-                    :alt="creater.user.name"
+                    :src="creater._id.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+                    :alt="creater._id.name"
                   />
                 </div>
                 <div class="d-flex flex-column gap-2">
-                  <p class="userCard__title">{{ creater.user.name }}</p>
-                  <p class="d-flex gap-1 text-gray-dark">
-                    <i class="webIcon-sm bi bi-file-person"></i>
-                    {{ creater.user.followersSize || 0 }} 人
+                  <p class="userCard__title">{{ creater._id.name }}</p>
+                  <p class="d-flex gap-2 text-gray-dark">
+                    <i class="webIcon-sm bi bi-heart-fill"></i>
+                    {{ creater.totalsum || 0 }} 人
                   </p>
                 </div>
               </div>
             </RouterLink>
-            <div
-              class="rounded bg-white d-flex flex-column justify-content-center"
-              v-if="createrList.length > 0 && createrList.length < 8"
-            >
-              <p class="text-center text-gray-dark">即將誕生 ...</p>
-            </div>
           </div>
         </template>
       </div>
@@ -93,7 +87,7 @@ export default {
                 </div>
                 <div class="d-flex flex-column gap-2">
                   <p class="userCard__title">{{ userItem.name }}</p>
-                  <p class="d-flex gap-1 text-gray-dark">
+                  <p class="d-flex gap-2 text-gray-dark">
                     <i class="webIcon-sm bi bi-file-person"></i>
                     {{ userItem.followersSize }} 人
                   </p>
@@ -102,12 +96,6 @@ export default {
             </RouterLink>
           </div>
         </template>
-        <div
-          class="rounded bg-white d-flex flex-column justify-content-center"
-          v-if="usersList.length > 0 && usersList.length < 8"
-        >
-          <p class="text-center text-gray-dark">即將誕生 ...</p>
-        </div>
       </div>
     </div>
     <!-- <div class="">

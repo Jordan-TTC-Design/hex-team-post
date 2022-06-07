@@ -26,10 +26,10 @@ export default {
       query: '',
     });
     const localUser = ref(null);
+    const likesList = ref([]);
     async function search(data, page = 1) {
       console.log(data);
       diariesList.value = [];
-      localUser.value = await JSON.parse(localStorage.getItem('sd-user'));
       const result = await postsData.getBuyDiary(
         page,
         data.type === 'like' ? 'asc' : data.type,
@@ -71,10 +71,24 @@ export default {
     onUnmounted(() => {
       window.addEventListener('scroll', handleScroll);
     });
+    async function init() {
+      localUser.value = JSON.parse(localStorage.getItem('sd-user'));
+      const tempLikes = await postsData.getBuyDiary(
+        1,
+        '',
+        '',
+        localUser.value.id,
+        localUser.value.token,
+      );
+      likesList.value = tempLikes.data.data;
+      console.log(likesList.value);
+    }
+    init();
     return {
       postsData,
       userData,
       nowPage,
+      likesList,
       search,
     };
   },
@@ -104,7 +118,7 @@ export default {
         </template>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <DiaryPurchaseRecordCard />
+        <DiaryPurchaseRecordCard :likes-list="likesList" />
       </div>
     </div>
   </div>

@@ -82,12 +82,14 @@ export default {
   .ck-content.ck-editor__editable.ck-focused {
     box-shadow: none;
     border: none;
+    outline:none;
   }
   .ck-editor__editable_inline {
     overflow-y: auto;
   }
   .ck-content {
     border: none;
+    outline:none;
     padding: 0;
     p {
       margin: 0;
@@ -114,6 +116,7 @@ export default {
   }
   .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
     border: none;
+    outline:none;
   }
 }
 </style>

@@ -66,6 +66,7 @@ export default {
       }
     }
     async function editPost() {
+      console.log(targetItem.value);
       postsData.newPostModel.action = 'edit';
       postsData.newPostModel.id = targetItem.value._id;
       postsData.targetPost.content = targetItem.value.content;
@@ -169,7 +170,7 @@ export default {
       <div
         v-if="targetItem.content.length > 0"
         ref="postCardTextContent"
-        class="postCard__txtContent"
+        class="postCard__txtContent pb-3"
         :class="{
           showAll: textContentShowData.isShowAll === true,
         }"

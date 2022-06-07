@@ -143,7 +143,7 @@ export default {
       <div
         v-if="targetItem.content.length > 0"
         ref="postCardTextContent"
-        class="postCard__txtContent"
+        class="postCard__txtContent pb-3"
         :class="{
           showAll: textContentShowData.isShowAll === true,
         }"
