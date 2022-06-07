@@ -31,6 +31,7 @@ export default {
     watch(nowPath, (newValue, oldValue) => {
       if (newValue !== oldValue) {
         modalOpen.value = false;
+        statusData.noScroll = false;
       }
     });
     function openDropModel() {
