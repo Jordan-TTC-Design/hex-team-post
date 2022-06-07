@@ -27,6 +27,7 @@ export default {
       reportData.value.title = '';
       reportData.value.content = '';
       statusData.emailModel = false;
+      statusData.noScroll = false;
     }
     async function sendEmail() {
       statusData.addLoading();

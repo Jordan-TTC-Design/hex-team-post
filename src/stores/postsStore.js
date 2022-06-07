@@ -395,11 +395,13 @@ const postsStore = defineStore({
       this.newPostModel.id = '';
     },
     openPostModel(postType) {
+      statusData.noScroll = true;
       this.targetPost.type = postType;
       this.newPostModel.open = true;
     },
     closePostModel() {
       this.resetPosts();
+      statusData.noScroll = false;
     },
   },
 });
