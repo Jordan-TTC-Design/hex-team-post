@@ -20,7 +20,12 @@ export default {
 
 <template>
   <label class="form-checkbox" :class="props.class">
-    <input type="radio" :checked="props.name" :name="props.name" @change="onChange" />
+    <input
+      type="radio"
+      :checked="props.name === props.value"
+      :name="props.name"
+      @change="onChange"
+    />
     <span>
       <slot></slot>
     </span>
@@ -55,7 +60,7 @@ export default {
     text-align: center;
     white-space: nowrap;
     transition: all 0.3s;
-    &:hover{
+    &:hover {
       color: var(--bs-primary);
     }
   }

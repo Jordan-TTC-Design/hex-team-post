@@ -77,19 +77,14 @@ export default {
       <DiamondPurchaseRecordCard
         v-for="r in walletData.diamondPurchaseRecord"
         :key="r.id"
-        :record="r"/>
+        :record="r"
+      />
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[1].type">
-      <DiaryRetailRecordCard
-        v-for="r in walletData.diaryRetailRecord"
-        :key="r.id"
-        :record="r"/>
+      <DiaryRetailRecordCard v-for="r in walletData.diaryRetailRecord" :key="r.id" :record="r" />
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[2].type">
-      <DiaryBuyRecordCard
-        v-for="r in walletData.diaryPurchaseRecord"
-        :key="r.id"
-        :record="r"/>
+      <DiaryBuyRecordCard v-for="r in walletData.diaryPurchaseRecord" :key="r.id" :record="r" />
     </div>
   </div>
 </template>
@@ -104,10 +99,13 @@ export default {
     padding: 0.5rem 0.75rem;
     text-align: center;
     font-size: 1rem;
-    columns: var(--bs-dark);
+    color: var(--bs-dark);
     background: var(--bs-white);
     border-radius: 0.75rem;
     cursor: pointer;
+    &:hover {
+      color: var(--bs-primary);
+    }
     @media (max-width: 767.98px) {
       font-size: 0.875rem;
     }

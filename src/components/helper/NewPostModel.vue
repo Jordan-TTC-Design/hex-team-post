@@ -17,6 +17,7 @@ export default {
     const editPhoto = ref(false);
     const imgData = ref(null);
     const imgHistory = ref('');
+    const tagTextContent = ref('');
     function closeNewPostModel() {
       imgHistory.value = '';
       editPhoto.value = false;
@@ -40,32 +41,27 @@ export default {
       }
       if (editPhoto.value === true) {
         try {
-          console.log(imgData.value);
           const result = await postsData.upLoadImage(imgData.value, userData.user.token);
-          console.log(result);
           if (result.status === 'success') {
             postsData.targetPost.image = result.data.imgUrl;
           }
           if (postsData.newPostModel.action === 'new') {
-            console.log('新貼文');
             postsData.addPost(postsData.targetPost, userData.user.token);
           } else {
-            console.log('更新');
             postsData.updatePost(
               postsData.targetPost,
               postsData.newPostModel.id,
               userData.user.token,
             );
           }
-        } catch (e) {
-          console.log(e);
+        } catch (err) {
+          console.dir(err);
         }
         closeNewPostModel();
       } else {
         if (postsData.newPostModel.action === 'new') {
           postsData.addPost(postsData.targetPost, userData.user.token);
         } else {
-          console.log('更新');
           postsData.updatePost(
             postsData.targetPost,
             postsData.newPostModel.id,
@@ -75,7 +71,6 @@ export default {
         closeNewPostModel();
       }
     }
-    const tagTextContent = ref('');
     function addPostTag() {
       console.log(tagTextContent.value);
       postsData.targetPost.tag.push(tagTextContent.value);

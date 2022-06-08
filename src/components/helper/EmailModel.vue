@@ -42,18 +42,29 @@ export default {
             html: `${tempData.content}<br><br><p>用戶${tempData.userEamil}來信</p>`,
           },
         });
-        console.log(res.data);
-        statusData.shiftLoading();
+        console.log(res);
         if (res.data === '發信成功') {
-          closeModel();
           statusData.openPopInfoModel('傳送成功');
+          closeModel();
         }
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
-        statusData.openPopInfoModel('資料錯誤');
+        statusData.openPopInfoModel('資料填寫錯誤或少填');
         return err;
+      } finally {
+        statusData.shiftLoading();
+      }
+    }
+    function checkData() {
+      if (
+        (reportData.value.userEamil === '',
+        reportData.value.title === '',
+        reportData.value.content === '')
+      ) {
+        statusData.openPopInfoModel('資料填寫錯誤或少填');
+      } else {
+        sendEmail();
       }
     }
     return {
@@ -61,7 +72,7 @@ export default {
       statusData,
       userData,
       reportData,
-      sendEmail,
+      checkData,
       closeModel,
     };
   },
@@ -104,7 +115,7 @@ export default {
             />
           </div>
         </div>
-        <button type="button" @click="sendEmail" class="btn btn-primary text-white rounded">
+        <button type="button" @click="checkData" class="btn btn-primary text-white rounded">
           聯絡客服
         </button>
       </div>

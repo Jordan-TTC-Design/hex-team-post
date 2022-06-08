@@ -60,7 +60,18 @@ export default {
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
+    const userMemoTextContent = ref(null);
 
+    const textContentShowData = ref({
+      needHide: false,
+      isShowAll: true,
+    });
+    watch(userMemoTextContent, (newValue) => {
+      if (newValue.clientHeight > 48) {
+        textContentShowData.value.needHide = true;
+        textContentShowData.value.isShowAll = false;
+      }
+    });
     watch(
       () => props.isSelf,
       (newIsSelf) => {
@@ -68,7 +79,6 @@ export default {
       },
     );
 
-    console.log(props.user);
     function openEditImg() {
       if (props.isSelf) {
         statusData.openUserImageCropper();
@@ -77,6 +87,8 @@ export default {
     return {
       currentTabs,
       props,
+      textContentShowData,
+      userMemoTextContent,
       handleChangeTab,
       openEditImg,
     };
@@ -85,8 +97,8 @@ export default {
 </script>
 
 <template>
-  <div class="card userProfileCard">
-    <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-center">
+  <div class="card userProfileCard position-relative">
+    <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-md-start align-items-center">
       <div class="position-relative">
         <img
           :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
@@ -114,8 +126,25 @@ export default {
             追蹤中
           </p>
         </div>
-        <p v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</p>
-        <div class="position-absolute top-0 end-0" v-if="!props.isSelf">
+        <div>
+          <div
+            class="memoTxtBox"
+            ref="userMemoTextContent"
+            :class="{
+              showAll: textContentShowData.isShowAll === true,
+            }"
+          >
+            <p v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</p>
+          </div>
+          <p
+            v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
+            @click="textContentShowData.isShowAll = true"
+            class="showMoreBtn"
+          >
+            顯示完整簡介
+          </p>
+        </div>
+        <div class="followBox" v-if="!props.isSelf">
           <button class="btn btn-sm btn-outline text-primary" v-if="!props.isFollowing">
             追蹤
           </button>
@@ -138,6 +167,11 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.followBox {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
 .userContentBox {
   display: flex;
   flex-direction: column;
@@ -199,5 +233,20 @@ export default {
   &:hover {
     opacity: 1;
   }
+}
+.memoTxtBox {
+  max-height: 3rem;
+  overflow: hidden;
+  &.showAll {
+    max-height: none;
+  }
+}
+.showMoreBtn {
+  cursor: pointer;
+  color: var(--bs-gray-dark);
+  text-align: start;
+  background-color: #fff;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
 }
 </style>

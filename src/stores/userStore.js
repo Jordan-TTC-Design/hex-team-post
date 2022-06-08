@@ -13,6 +13,12 @@ const userStore = defineStore({
       token: '',
       photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
+    ProfileUser: {
+      name: '',
+      id: '',
+      token: '',
+      photo: 'https://i.imgur.com/ZWHoRPi.png',
+    },
     myWallet: 0,
   }),
   getters: {},
@@ -31,70 +37,82 @@ const userStore = defineStore({
       statusData.shiftLoading();
       return checkResult;
     },
+    updatedLocalUser() {
+      const tempUser = {
+        name: this.user.name,
+        id: this.user.id,
+        token: this.user.token,
+        photo: this.user.photo,
+      };
+      localStorage.setItem('sd-user', JSON.stringify(tempUser));
+    },
     async signUp(data) {
-      statusData.addLoading();
-      return axios
-        .post('https://hex-post-team-api-server.herokuapp.com/api/user', data)
-        .then((res) => {
-          console.log(res.data);
-          return res.data;
-        })
-        .catch((err) => {
-          console.dir(err);
-          return err;
+      try {
+        statusData.addLoading();
+        const res = await axios({
+          method: 'POST',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
+          data,
         });
+        console.log(res);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
     },
     async logIn(data) {
-      statusData.addLoading();
-      return axios
-        .post('https://hex-post-team-api-server.herokuapp.com/api/user/sign-in', data)
-        .then((res) => {
-          console.log(res.data);
-          statusData.shiftLoading();
-          return res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-          statusData.shiftLoading();
-          return err;
+      try {
+        statusData.addLoading();
+        const res = await axios({
+          method: 'POST',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/user/sign-in',
+          data,
         });
+        console.log(res);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
     },
     async checkLogIn(userToken) {
-      statusData.addLoading();
-      return axios({
-        method: 'GET',
-        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/check',
-        headers: {
-          authorization: `${userToken}`,
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          statusData.shiftLoading();
-          return res;
-        })
-        .catch((err) => {
-          console.dir(err);
-          statusData.shiftLoading();
-          return err;
+      try {
+        statusData.addLoading();
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/user/check',
+          headers: {
+            authorization: `${userToken}`,
+          },
         });
+        return res;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
     },
     async getProfileUser(id) {
-      statusData.addLoading();
-      return axios({
-        method: 'GET',
-        url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
-      })
-        .then((res) => {
-          console.log(res);
-          statusData.shiftLoading();
-          return res.data.data;
-        })
-        .catch((err) => {
-          console.dir(err);
-          statusData.shiftLoading();
-          return err;
+      try {
+        statusData.addLoading();
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
         });
+        console.log(res);
+        return res.data.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
     },
     async getMyUser(userToken) {
       statusData.addLoading();
@@ -169,7 +187,11 @@ const userStore = defineStore({
       })
         .then((res) => {
           console.log(res);
+          const tempToken = this.user.token;
+          this.user = res.data.data;
+          this.user.token = tempToken;
           statusData.shiftLoading();
+          this.updatedLocalUser();
           this.checkLogIn(this.user.token);
           return res.data.data;
         })

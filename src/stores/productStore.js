@@ -11,15 +11,12 @@ const paymentStore = defineStore({
   getters: {},
   actions: {
     async getProducts(type) {
-      // 取得鑽石
+      // 取得鑽石或是訂閱方式
       statusData.addLoading();
       try {
         const res = await axios({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/products?type=${type}`,
-          headers: {
-            // authorization: `${userData.user?.token}`,
-          },
         });
         if (res.data.status === 'success') {
           return res.data.data;

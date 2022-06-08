@@ -30,7 +30,9 @@ export default {
       statusData.noScroll = true;
     }
     onMounted(async () => {
+      await userData.getLocalToken();
       if (userData.user.token) {
+        await userData.checkLogIn(userData.user.token);
         followData.getMyFollow(userData.user.token);
       }
     });

@@ -15,7 +15,6 @@ const postsStore = defineStore({
       sort: 'desc',
       query: '',
     },
-    userPosts: [],
     targetPost: {
       id: '',
       contentType: 'article',
@@ -34,7 +33,6 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '', like = '') {
-      console.log(page, timeSort, query, like);
       statusData.addLoading();
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&sort=${timeSort}`;
       if (query) {
@@ -45,14 +43,13 @@ const postsStore = defineStore({
       }
       try {
         const res = await axios.get(apiUrl);
-        console.log(res);
         this.posts = res.data.data;
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
-        statusData.shiftLoading();
         console.dir(err);
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async addPost(data, userToken) {
@@ -67,13 +64,12 @@ const postsStore = defineStore({
               authorization: `${userToken}`,
             },
           });
-          console.log(res.data);
-          statusData.shiftLoading();
           return res.data;
         } catch (err) {
-          statusData.shiftLoading();
           console.dir(err);
           return err;
+        } finally {
+          statusData.shiftLoading();
         }
       } else {
         try {
@@ -96,6 +92,7 @@ const postsStore = defineStore({
       }
     },
     async updatePost(data, postId, userToken) {
+      console.log(data, postId, userToken);
       statusData.addLoading();
       try {
         const res = await axios({
@@ -107,17 +104,18 @@ const postsStore = defineStore({
           },
         });
         if (res.data.status === 'success') {
-          const replaceIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
+          const newPost = res.data.data[0];
+          const replaceIndex = this.posts.findIndex((item) => item._id === newPost._id);
           const tempUser = this.posts[replaceIndex].user;
-          this.posts.splice(replaceIndex, 1, res.data.data);
+          this.posts.splice(replaceIndex, 1, newPost);
           this.posts[replaceIndex].user = tempUser;
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async getUserPost(userToken) {
@@ -284,16 +282,16 @@ const postsStore = defineStore({
           },
         });
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data.post);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].comments.push(res.data.data);
+          const newPost = res.data.data[0];
+          const replaceIndex = this.posts.findIndex((item) => item._id === newPost._id);
+          this.posts.splice(replaceIndex, 1, newPost);
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async deleteComment(commentId, userToken) {
@@ -307,12 +305,12 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async addLike(postId, userToken) {
@@ -326,16 +324,21 @@ const postsStore = defineStore({
           },
         });
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].likes = res.data.data.likes;
+          const result = res.data.data;
+          if (result.type === 'group') {
+            const postIndex = this.posts.findIndex((item) => item._id === result._id);
+            this.posts[postIndex].likes = result.likes;
+          } else {
+            const postIndex = this.diaries.findIndex((item) => item._id === result._id);
+            this.diaries[postIndex].likes = result.likes;
+          }
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async deleteLike(postId, userToken) {
@@ -350,16 +353,21 @@ const postsStore = defineStore({
         });
         console.log(res);
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].likes = res.data.data.likes;
+          const result = res.data.data;
+          if (result.type === 'group') {
+            const postIndex = this.posts.findIndex((item) => item._id === result._id);
+            this.posts[postIndex].likes = result.likes;
+          } else {
+            const postIndex = this.diaries.findIndex((item) => item._id === result._id);
+            this.diaries[postIndex].likes = result.likes;
+          }
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async upLoadImage(data, userToken) {

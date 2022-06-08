@@ -32,6 +32,7 @@ export default {
   },
   setup() {
     const userData = userStore();
+    // const localUser = JSON.parse(localStorage.getItem('sd-user')) || {};
 
     const statusData = statusStore();
     // 頁籤分頁
@@ -55,11 +56,11 @@ export default {
     const isSelf = ref(userData.user.id === route.params.id);
     const tmp = userInfo.value.user?.followers?.some((m) => m === userData.user.id) ?? false;
     const isFolowing = ref(tmp);
-
     watch(
       () => route.params.id,
       async (newUserId) => {
         statusData.addLoading();
+        await userData.getLocalToken();
         userId.value = newUserId;
         isSelf.value = userData.user.id === newUserId;
 
@@ -88,6 +89,7 @@ export default {
     onMounted(async () => {
       // 查詢使用者資訊
       // statusData.openPageLoader();
+      await userData.getLocalToken();
       if (userData.user.id === userId.value) {
         const returnUser = await userData.getMyUser(userData.user.token);
         myInfo.value = { ...returnUser };

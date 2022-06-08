@@ -9,6 +9,7 @@ import LogInModel from '@/components/front/models/LogInModel.vue';
 import DiamondModel from '@/components/front/models/DiamondModel.vue';
 import AskModel from '@/components/helper/AskModel.vue';
 import RemindModel from '@/components/helper/RemindModel.vue';
+import PopInfoModel from '@/components/helper/PopInfoModel.vue';
 import NewPostModel from '@/components/helper/NewPostModel.vue';
 import ForgetPasswordModel from '@/components/front/models/ForgetPasswordModel.vue';
 import Loader from '@/components/helper/Loader.vue';
@@ -30,6 +31,7 @@ export default {
     PageLoader,
     ImageSquareCropperModal,
     EmailModel,
+    PopInfoModel,
   },
   setup() {
     const postsData = postsStore();
@@ -63,16 +65,17 @@ export default {
       <RouterView />
     </main>
     <SignUpModel />
+    <EmailModel />
     <DiamondModel />
     <LogInModel />
-    <AskModel />
-    <RemindModel />
     <NewPostModel />
     <ForgetPasswordModel />
     <PageLoader class="zindex-fixed" v-show="statusData.pageLoading === true" />
     <Loader class="zindex-fixed" v-show="statusData.isLoading.length > 0" />
     <ImageSquareCropperModal />
-    <EmailModel />
+    <AskModel />
+    <RemindModel />
+    <PopInfoModel />
   </div>
 </template>
 

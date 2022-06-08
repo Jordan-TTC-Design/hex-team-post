@@ -1,4 +1,5 @@
 <script>
+import { computed, watch } from 'vue';
 import statusStore from '@/stores/statusStore';
 
 export default {
@@ -9,6 +10,15 @@ export default {
       statusData.popInfoModel.open = false;
       statusData.popInfoModel.title = '';
     }
+    const title = computed(() => statusData.popInfoModel.title);
+    watch(title, (newValue, oldValue) => {
+      console.log(newValue, oldValue);
+      if (newValue !== oldValue) {
+        setTimeout(() => {
+          closeModel();
+        }, 1000);
+      }
+    });
     return {
       statusData,
       closeModel,
@@ -27,13 +37,6 @@ export default {
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.popInfoModel.open === true }">
-      <button
-        @click="statusData.popInfoModel.open = false"
-        type="button"
-        class="btn position-absolute top-2 end-2"
-      >
-        <i class="webIcon bi bi-x-lg"></i>
-      </button>
       <img
         style="width: 1.5rem"
         class="position-absolute start-4 top-4"
@@ -46,13 +49,10 @@ export default {
           <i class="webIcon bi bi-heart text-primary absolute-middle"></i>
         </div>
       </div>
-      <div class="pb-6">
-        <h4 class="text-2xl font-bold text-primary">
+      <div class="pb-8">
+        <h4 class="text-2xl font-bold text-primary text-center">
           {{ statusData.popInfoModel.title }}
         </h4>
-      </div>
-      <div class="d-flex flex-column gap-3 px-4 pb-4">
-        <button type="button" @click="closeModel" class="btn btn-outline rounded">知道了</button>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@ export default {
 
 <style lang="scss" scoped>
 .z-popModal {
-  z-index: 2400;
+  z-index: 5000;
 }
 .popModalContainer {
   height: 100vh;
@@ -78,7 +78,7 @@ export default {
   }
   .popModal {
     opacity: 1;
-    z-index: 100;
+    z-index: 50001;
     position: absolute;
     border-radius: 0.5rem;
     opacity: 0;
