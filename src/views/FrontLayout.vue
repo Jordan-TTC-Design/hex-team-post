@@ -1,8 +1,6 @@
 <script>
 // eslint-disable-next-line object-curly-newline
 import { ref, computed, watch, onMounted } from 'vue';
-
-import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import FrontHeader from '@/components/front/FrontHeader.vue';
@@ -34,28 +32,13 @@ export default {
     EmailModel,
   },
   setup() {
-    const userData = userStore();
     const postsData = postsStore();
     const statusData = statusStore();
-    const ready = ref(false);
-
     const fullWidth = ref(window.innerWidth);
-    onMounted(async () => {
+    onMounted(() => {
       window.onresize = () => {
         fullWidth.value = window.innerWidth;
       };
-
-      const checkLocalResult = await userData.getLocalToken();
-      if (checkLocalResult) {
-        const checkResult = await userData.checkLogIn(userData.user.token);
-        console.log(checkResult);
-        if (checkResult.status) {
-          localStorage.setItem('sd-user', JSON.stringify(userData.user));
-        } else {
-          userData.resetUser();
-        }
-      }
-      ready.value = true;
     });
     const statusCheck = computed(() => statusData.noScroll);
     watch(statusCheck, (newValue) => {
@@ -65,9 +48,7 @@ export default {
         document.body.classList.remove('overflow-hidden');
       }
     });
-
     return {
-      ready,
       postsData,
       statusData,
     };
@@ -77,24 +58,21 @@ export default {
 
 <template>
   <div class="position-relative d-flex flex-column flex-grow-1">
-    <PageLoader class="zindex-fixed" v-if="!ready || statusData.pageLoading" />
-    <template v-if="ready">
-      <FrontHeader class="sticky-top sticky-header" />
-      <main class="front-main wrapper__content flex-grow-1">
-        <RouterView />
-      </main>
-      <SignUpModel />
-      <DiamondModel />
-      <LogInModel />
-      <AskModel />
-      <RemindModel />
-      <NewPostModel v-if="postsData.newPostModel.open === true" />
-      <ForgetPasswordModel />
-      <PageLoader  v-show="statusData.pageLoading === true" />
-      <Loader class="zindex-fixed" v-show="statusData.isLoading.length > 0" />
-      <ImageSquareCropperModal v-if="statusData.imgCropperModel.open === true" />
-      <EmailModel />
-      </template>
+    <FrontHeader class="sticky-top sticky-header" />
+    <main class="front-main wrapper__content flex-grow-1">
+      <RouterView />
+    </main>
+    <SignUpModel />
+    <DiamondModel />
+    <LogInModel />
+    <AskModel />
+    <RemindModel />
+    <NewPostModel />
+    <ForgetPasswordModel />
+    <PageLoader class="zindex-fixed" v-show="statusData.pageLoading === true" />
+    <Loader class="zindex-fixed" v-show="statusData.isLoading.length > 0" />
+    <ImageSquareCropperModal />
+    <EmailModel />
   </div>
 </template>
 
