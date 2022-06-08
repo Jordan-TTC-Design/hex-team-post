@@ -282,16 +282,16 @@ const postsStore = defineStore({
           },
         });
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data.post);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].comments.push(res.data.data);
+          const newPost = res.data.data[0];
+          const replaceIndex = this.posts.findIndex((item) => item._id === newPost._id);
+          this.posts.splice(replaceIndex, 1, newPost);
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async deleteComment(commentId, userToken) {
@@ -305,12 +305,12 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async addLike(postId, userToken) {
