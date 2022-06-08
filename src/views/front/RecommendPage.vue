@@ -1,13 +1,13 @@
 <script>
 import { ref } from 'vue';
 
-// import ArticleCard from '@/components/front/cards/ArticleCard.vue';
+import ArticleCard from '@/components/front/cards/ArticleCard.vue';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
 
 export default {
   components: {
-    // ArticleCard,
+    ArticleCard,
   },
   setup() {
     const postsData = postsStore();
@@ -16,11 +16,16 @@ export default {
     const postQuery = ref('');
     const createrList = ref([]);
     const usersList = ref([]);
+    const hotPostList = ref([]);
     async function init() {
       createrList.value = await followData.getHotCreater();
-      console.log(createrList.value);
       usersList.value = await followData.getHotUser();
-      console.log(usersList.value);
+      const hotPostResult = await postsData.getHotPost();
+      if (hotPostResult.status === 'success') {
+        const tempArray = hotPostResult.data;
+        hotPostList.value = tempArray.filter((item) => item.image.length > 0);
+        console.log(hotPostList.value);
+      }
     }
     init();
     return {
@@ -29,21 +34,14 @@ export default {
       usersList,
       postQuery,
       postsData,
+      hotPostList,
     };
   },
 };
 </script>
 
 <template>
-  <div class="container">
-    <!-- <div class="pageSection">
-      <div class="pageSection__title">熱門關鍵字</div>
-      <ul>
-        <li class="btn btn-xs btn-white me-3 mb-3">標籤文字</li>
-        <li class="btn btn-xs btn-white me-3 mb-3">標籤文字</li>
-        <li class="btn btn-xs btn-white me-3 mb-3">標籤文字</li>
-      </ul>
-    </div> -->
+  <div class="container container--mb">
     <div class="pageSection" v-show="createrList.length > 0">
       <div class="pageSection__title">熱門創作者</div>
       <div class="recommenedUser row row-cols-lg-4 row-cols-2 gy-6">
@@ -98,21 +96,32 @@ export default {
         </template>
       </div>
     </div>
-    <!-- <div class="">
-      <div class="title mb-3">本週熱門文章</div>
-      <div class="row row-cols-2 gx-5">
-        <div class="col">
-          <ArticleCard />
-        </div>
-        <div class="col">
-          <ArticleCard />
+  </div>
+  <div class="bg-white container--py">
+    <div class="container">
+      <div class="pageSection" v-show="hotPostList.length > 0">
+        <div class="pageSection__title">本週熱門文章</div>
+        <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 gy-6">
+          <template v-for="(hotPost, index) in hotPostList" :key="hotPost._id">
+            <div v-if="hotPost.image.length > 0" class="col h-100">
+              <ArticleCard class="h-100" :post-item="hotPost" :post-index="index" />
+            </div>
+          </template>
+          <div class="toBeCome" v-if="hotPostList.length < 10">敬請期待</div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.container--mb {
+  margin-bottom: 72px;
+}
+.container--py {
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
 .pageSection {
   position: relative;
   &:not(:last-child) {
@@ -181,5 +190,15 @@ export default {
 .tmp {
   width: 300px;
   height: 300px;
+}
+.toBeCome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bs-gray-light);
+  border-radius: 0.75rem 0.75rem;
+  @media (max-width: 767.98px) {
+    display: none;
+  }
 }
 </style>
