@@ -30,7 +30,6 @@ export default {
       postsData.getPosts(postSort.value, postQuery.value);
     }
     const search = (data) => {
-      console.log(data, data.type, data.type === 'like');
       postsData.getPosts(
         postsData.getPostsData.page,
         data.type === 'like' ? 'asc' : data.type,

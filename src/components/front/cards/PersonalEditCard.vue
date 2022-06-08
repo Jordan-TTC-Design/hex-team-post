@@ -58,7 +58,7 @@ export default {
         <p class="a mb-1 ms-3">生日</p>
         <p class="b">
           <input
-            type="text"
+            type="date"
             class="form-control border bg-white"
             v-model="editUser.birthday"
           />

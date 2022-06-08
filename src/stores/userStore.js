@@ -13,6 +13,12 @@ const userStore = defineStore({
       token: '',
       photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
+    checkUser: {
+      name: '',
+      id: '',
+      token: '',
+      photo: 'https://i.imgur.com/ZWHoRPi.png',
+    },
     myWallet: 0,
   }),
   getters: {},
@@ -181,7 +187,11 @@ const userStore = defineStore({
       })
         .then((res) => {
           console.log(res);
+          const tempToken = this.user.token;
+          this.user = res.data.data;
+          this.user.token = tempToken;
           statusData.shiftLoading();
+          this.updatedLocalUser();
           this.checkLogIn(this.user.token);
           return res.data.data;
         })
