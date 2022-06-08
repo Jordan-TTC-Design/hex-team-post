@@ -55,7 +55,7 @@ export default {
         </p>
       </div>
       <div class="tmp">
-        <p class="a">備註</p>
+        <p class="a">個人簡介</p>
         <p class="b">{{ userData.user?.memo }}</p>
       </div>
     </div>

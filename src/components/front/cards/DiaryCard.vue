@@ -4,6 +4,7 @@ import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
 import MoreModel from '@/components/helper/MoreModel.vue';
+import moment from 'moment';
 
 export default {
   components: { MoreModel },
@@ -22,6 +23,7 @@ export default {
       needHide: false,
       isShowAll: 2,
     });
+    let localUser = JSON.parse(localStorage.getItem('sd-user')) || {};
     const targetItem = computed(() => props.postItem);
     watch(postCardTextContent, (newValue) => {
       if (newValue.clientHeight > 96) {
@@ -52,7 +54,7 @@ export default {
       return result;
     });
     async function toggleFollow() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         if (isFollowed.value + 1 > 0) {
           console.log('刪除');
@@ -64,7 +66,7 @@ export default {
       }
     }
     async function toogleLike() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         const isLiked = targetItem.value.likes.findIndex((item) => item._id === localUser.id);
         if (isLiked + 1 > 0) {
@@ -78,14 +80,19 @@ export default {
       console.log(targetItem.value._id);
       await postsData.buyDiary(targetItem.value._id, userData.user.token);
     }
+    // eslint-disable-next-line max-len
+    const isLiked = computed(() => targetItem.value.likes.findIndex((item) => item._id === localUser.id));
+    const targetTime = computed(() => moment(targetItem.value.createdAt).locale('zh-tw').format('YYYY/MM/DD h:mm:ss '));
     return {
       userData,
       postsData,
       isFollowed,
+      isLiked,
       textContentShowData,
       commentsShowData,
       newComment,
       targetItem,
+      targetTime,
       postCardTextContent,
       toogleLike,
       editPost,
@@ -120,7 +127,7 @@ export default {
             >
               {{ isFollowed >= 0 ? '已追蹤' : '追蹤' }}
             </button>
-            <p class="user-info-subtitle">{{ targetItem.createdAt }}</p>
+            <p class="user-info-subtitle">{{ targetTime }}</p>
           </div>
         </div>
         <MoreModel
@@ -178,8 +185,10 @@ export default {
     </div>
     <div class="card-body">
       <div class="d-flex align-items-center">
-        <p @click="toogleLike" class="d-flex align-items-center gap-1 2 3 me-4">
-          <i class="webIcon bi bi-heart-fill"></i>
+        <p @click="toogleLike"
+        class="d-flex align-items-center gap-1 me-4 handPointer"
+        :class="{ 'text-primary': isLiked >= 0 }">
+          <i class="webIcon bi bi-heart-fill" ></i>
           {{ targetItem.likes.length }}
         </p>
       </div>

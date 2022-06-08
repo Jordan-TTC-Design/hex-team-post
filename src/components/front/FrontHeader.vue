@@ -110,9 +110,8 @@ export default {
             :src="userData.user.photo || 'https://i.imgur.com/ZWHoRPi.png'"
             :alt="userData.user.name"
             class="userPhoto"
-            @click="statusData.openUserImageCropper()"
           />
-          <span>{{ userData.user.name || '用戶名稱' }}</span>
+          <p class="userName">{{ userData.user.name || '用戶名稱' }}</p>
           <div class="dropDownMenu">
             <button class="btn btn-white px-3 rounded-pill" @click="openDropModel">
               <i
@@ -299,5 +298,10 @@ export default {
     top: 48px;
     right: 0;
   }
+}
+.userName {
+  max-width: 6rem;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>

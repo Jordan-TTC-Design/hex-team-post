@@ -1,5 +1,6 @@
 <script>
 import { ref, watch } from 'vue';
+import statusStore from '@/stores/statusStore';
 
 // 本人 tab
 const myTabs = [
@@ -53,21 +54,31 @@ export default {
     isFollowing: Boolean,
   },
   setup(props, { emit }) {
+    const statusData = statusStore();
+
     const currentTabs = ref(props.isSelf ? myTabs : userTabs);
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
 
-    watch(() => props.isSelf, (newIsSelf) => {
-      currentTabs.value = newIsSelf ? myTabs : userTabs;
-    });
+    watch(
+      () => props.isSelf,
+      (newIsSelf) => {
+        currentTabs.value = newIsSelf ? myTabs : userTabs;
+      },
+    );
 
     console.log(props.user);
-
+    function openEditImg() {
+      if (props.isSelf) {
+        statusData.openUserImageCropper();
+      }
+    }
     return {
       currentTabs,
       props,
       handleChangeTab,
+      openEditImg,
     };
   },
 };
@@ -76,17 +87,18 @@ export default {
 <template>
   <div class="card userProfileCard">
     <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-center">
-      <img
-        :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
-        alt="user-picture"
-        class="user-picture user-picture-lg m-0"
-      />
+      <div class="position-relative">
+        <img
+          :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
+          alt="user-picture"
+          class="user-picture user-picture-lg m-0"
+        />
+        <p v-if="props.isSelf" class="user-picture_cover" @click="openEditImg">查看</p>
+      </div>
       <div class="userContentBox" v-if="props.user?.user?.name">
-        <span class="userProfileCard-title">{{
-          props.user?.user?.name
-        }}</span>
+        <span class="userProfileCard-title">{{ props.user?.user?.name }}</span>
         <div class="userContentBox__info">
-          <p  class="userContentBox__info__item">
+          <p class="userContentBox__info__item">
             <span class="bold">{{ props.user?.postCounts }}</span> 貼文
           </p>
           <p class="userContentBox__info__item">
@@ -95,11 +107,14 @@ export default {
           <p class="userContentBox__info__item">
             <span class="bold">{{ props.user?.follows }}</span> 位追蹤者
           </p>
-          <p class="userContentBox__info__item"><span class="bold">
-            {{ props.user?.user?.following?.length ?? 0 }}
-          </span> 追蹤中</p>
+          <p class="userContentBox__info__item">
+            <span class="bold">
+              {{ props.user?.user?.following?.length ?? 0 }}
+            </span>
+            追蹤中
+          </p>
         </div>
-        <span v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</span>
+        <p v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</p>
         <div class="position-absolute top-0 end-0" v-if="!props.isSelf">
           <button class="btn btn-sm btn-outline text-primary" v-if="!props.isFollowing">
             追蹤
@@ -164,5 +179,25 @@ export default {
   font-size: 16px;
   color: #1d1d1d;
   margin-right: 4px;
+}
+.user-picture_cover {
+  cursor: pointer;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.36);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  color: white;
+  opacity: 0;
+  transition: all 0.3s;
+  &:hover {
+    opacity: 1;
+  }
 }
 </style>

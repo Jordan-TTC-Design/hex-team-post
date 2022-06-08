@@ -54,7 +54,6 @@ export default {
     async function init() {
       statusData.openPageLoader();
       usersList.value = await followData.getHotUser();
-      console.log(usersList.value);
     }
     init();
 

@@ -4,6 +4,7 @@ import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
 import MoreModel from '@/components/helper/MoreModel.vue';
+import moment from 'moment';
 
 export default {
   components: { MoreModel },
@@ -14,6 +15,7 @@ export default {
     const followData = followStore();
     const newComment = ref('');
     const postCardTextContent = ref(null);
+    let localUser = JSON.parse(localStorage.getItem('sd-user')) || {};
     const textContentShowData = ref({
       needHide: false,
       isShowAll: true,
@@ -39,7 +41,7 @@ export default {
     });
     checkComment();
     async function addComment() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       console.log(targetItem.value.id, newComment.value);
       const result = await postsData.addComment(
         newComment.value,
@@ -52,7 +54,7 @@ export default {
       }
     }
     async function deleteComment(commentId, commentIndex) {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       const result = await postsData.deleteComment(commentId, localUser.token);
       if (result.status === 'success') {
         postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
@@ -82,7 +84,7 @@ export default {
       return result;
     });
     async function toggleFollow() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         if (isFollowed.value + 1 > 0) {
           console.log('刪除');
@@ -94,7 +96,7 @@ export default {
       }
     }
     async function toogleLike() {
-      const localUser = JSON.parse(localStorage.getItem('sd-user'));
+      localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         const isLiked = targetItem.value.likes.findIndex((item) => item._id === localUser.id);
         if (isLiked + 1 > 0) {
@@ -104,15 +106,20 @@ export default {
         }
       }
     }
+    // eslint-disable-next-line max-len
+    const isLiked = computed(() => targetItem.value.likes.findIndex((item) => item._id === localUser.id));
+    const targetTime = computed(() => moment(targetItem.value.createdAt).locale('zh-tw').format('YYYY/MM/DD h:mm:ss '));
     return {
       userData,
       postsData,
       isFollowed,
+      isLiked,
       textContentShowData,
       commentsShowData,
       newComment,
       targetItem,
       postCardTextContent,
+      targetTime,
       addComment,
       deleteComment,
       toogleLike,
@@ -147,7 +154,9 @@ export default {
             >
               {{ isFollowed >= 0 ? '已追蹤' : '追蹤' }}
             </button>
-            <p class="user-info-subtitle">{{ targetItem.createdAt }}</p>
+            <p class="user-info-subtitle">
+              {{ targetTime }}
+            </p>
           </div>
         </div>
         <MoreModel
@@ -194,11 +203,14 @@ export default {
     </div>
     <div class="card-body">
       <div class="d-flex align-items-center">
-        <p @click="toogleLike" class="d-flex align-items-center gap-1 2 3 me-4">
-          <i class="webIcon bi bi-heart-fill"></i>
+        <p @click="toogleLike"
+        class="d-flex align-items-center gap-1 me-4 handPointer"
+        :class="{ 'text-primary': isLiked >= 0 }">
+          <i class="webIcon bi bi-heart-fill" ></i>
           {{ targetItem.likes.length }}
         </p>
-        <p class="d-flex align-items-center gap-1 2 3">
+        <p class="d-flex align-items-center gap-1 handPointer"
+         @click="commentsShowData.isShowAll = targetItem.comments.length">
           <i class="webIcon bi bi-chat-fill"></i>
           {{ targetItem.comments.length }}
         </p>
@@ -248,7 +260,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.user-info{
+.user-info {
   align-items: flex-start;
   justify-content: center;
 }
@@ -333,5 +345,4 @@ export default {
     color: var(--bs-gray-dark);
   }
 }
-
 </style>

@@ -33,7 +33,6 @@ const statusStore = defineStore({
     },
     emailModel: false,
   }),
-  getters: {},
   actions: {
     openAskModel(title, text, action) {
       this.askModel.open = true;

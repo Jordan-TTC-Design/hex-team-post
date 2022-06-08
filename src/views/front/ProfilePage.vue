@@ -11,10 +11,12 @@ import SettingSection from '@/components/front/SettingSection.vue';
 
 import UserProfileCard from '@/components/front/cards/UserProfileCard.vue';
 import ProductCard from '@/components/front/cards/ProductCard.vue';
+import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vue';
 
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
 import productStore from '@/stores/productStore';
+import followStore from '@/stores/followStore';
 
 export default {
   components: {
@@ -26,6 +28,7 @@ export default {
     SettingSection,
     UserProfileCard,
     ProductCard,
+    RecommendFollowCard,
   },
   setup() {
     const userData = userStore();
@@ -33,6 +36,7 @@ export default {
     const statusData = statusStore();
     // 頁籤分頁
     const productData = productStore();
+    const followData = followStore();
 
     const currentTab = ref('POST');
     const changeCurrentTab = (newTab) => {
@@ -40,6 +44,7 @@ export default {
     };
 
     const products = ref([]);
+    const usersList = ref([]);
 
     const myInfo = ref({});
     const userInfo = ref({});
@@ -92,6 +97,7 @@ export default {
         userData.user.birthday = returnUser.user.birthday;
         userData.user.gender = returnUser.user.gender;
         userData.user.memo = returnUser.user.memo;
+        usersList.value = await followData.getHotUser();
       } else {
         const returnUser = await userData.getProfileUser(userId.value, userData.user.token);
         userInfo.value = { ...returnUser };
@@ -109,8 +115,10 @@ export default {
       isFolowing,
       products,
       userId,
+      userData,
       myInfo,
       currentTab,
+      usersList,
       changeCurrentTab,
       currentUserInfo,
     };
@@ -144,7 +152,8 @@ export default {
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <ProductCard :products="products" />
+        <ProductCard v-if="userData.user.id !== userId" :products="products" />
+        <RecommendFollowCard v-if="userData.user.id === userId" :user-list="usersList" />
       </div>
     </div>
   </div>

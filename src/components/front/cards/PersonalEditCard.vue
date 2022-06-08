@@ -65,7 +65,7 @@ export default {
         </p>
       </div>
       <div class="tmp">
-        <p class="a mb-1 ms-3">備註</p>
+        <p class="a mb-1 ms-3">個人簡介</p>
         <p class="b">
           <textarea
             v-model="editUser.memo"
