@@ -97,9 +97,9 @@ export default {
       </div>
     </div>
   </div>
-  <div class="bg-white container--py">
+  <div class="bg-white container--py" v-show="hotPostList.length > 0">
     <div class="container">
-      <div class="pageSection" v-show="hotPostList.length > 0">
+      <div class="pageSection">
         <div class="pageSection__title">本週熱門文章</div>
         <div class="row row-cols-xl-3 row-cols-md-2 row-cols-1 gy-6">
           <template v-for="(hotPost, index) in hotPostList" :key="hotPost._id">

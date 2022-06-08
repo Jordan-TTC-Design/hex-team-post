@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
@@ -22,45 +22,53 @@ export default {
     const postsData = postsStore();
     const statusData = statusStore();
     const usersList = ref([]);
-    function handleScroll() {
-      if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
-        postsData.getPosts(
-          postsData.getPostsData.page + 1,
-          postsData.getPostsData.sort,
-          postsData.getPostsData.query,
-        );
-      }
+    const morePostBtn = ref(true);
+    const searchFilter = ref({
+      page: 1,
+      sort: 'desc',
+      query: '',
+    });
+    function resetFilter(sort = 'desc', query = '') {
+      postsData.getPostsData.page = 1;
+      searchFilter.value = {
+        page: 1,
+        sort,
+        query,
+      };
     }
     const search = (data) => {
+      resetFilter();
       console.log(data, data.type, data.type === 'like');
       postsData.getPosts(
-        postsData.getPostsData.page,
+        searchFilter.value.page,
         data.type === 'like' ? 'asc' : data.type,
         data.query,
         data.type === 'like' ? userData?.user?.id ?? '' : '',
       );
     };
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      const result = await postsData.getPosts(
+        searchFilter.value.page,
+        searchFilter.value.sort,
+        searchFilter.value.query,
+      );
+      if (result.data.data.length < 10) {
+        morePostBtn.value = false;
+      }
+    }
     async function init() {
       statusData.openPageLoader();
-      postsData.getPosts(
-        postsData.getPostsData.page,
-        postsData.getPostsData.sort,
-        postsData.getPostsData.query,
-      );
       usersList.value = await followData.getHotUser();
     }
     init();
-    onMounted(async () => {
-      window.addEventListener('scroll', handleScroll);
-    });
-    onUnmounted(() => {
-      window.removeEventListener('scroll', handleScroll);
-    });
     return {
       userData,
       postsData,
       search,
       usersList,
+      morePostBtn,
+      getMorePost,
     };
   },
 };
@@ -92,6 +100,7 @@ export default {
         <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" :post-index="index" />
         </template>
+        <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost"><p>點擊載入更多貼文...</p></div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
         <RecommendFollowCard :user-list="usersList" />
