@@ -67,6 +67,7 @@ export default {
           confirmPassword: password.confirmPassword,
         });
         statusData.openRemindModel('變更密碼成功', '下次登入請輸入新密碼');
+        router.go(0);
       } catch (e) {
         statusData.openRemindModel('變更密碼失敗', e.response.data.message);
       }
@@ -88,7 +89,7 @@ export default {
 
 <template>
   <div class="d-flex gap-4">
-    <div class="subSide me-0">
+    <div class="subSide me-0 flex-shrink-0">
       <div
         v-for="t in tabs"
         :key="t.type"

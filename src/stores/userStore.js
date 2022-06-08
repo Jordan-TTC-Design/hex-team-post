@@ -13,7 +13,7 @@ const userStore = defineStore({
       token: '',
       photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
-    checkUser: {
+    ProfileUser: {
       name: '',
       id: '',
       token: '',
