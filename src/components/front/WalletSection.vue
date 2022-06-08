@@ -1,12 +1,16 @@
 <script>
 import { ref, onMounted } from 'vue';
 import DiamondPurchaseRecordCard from '@/components/front/DiamondPurchaseRecordCard.vue';
+import DiaryRetailRecordCard from '@/components/front/DiaryRetailRecordCard.vue';
+import DiaryBuyRecordCard from '@/components/front/DiaryBuyRecordCard.vue';
 
 import walletStore from '@/stores/walletStore';
 
 export default {
   components: {
     DiamondPurchaseRecordCard,
+    DiaryRetailRecordCard,
+    DiaryBuyRecordCard,
   },
   props: {
     user: Object,
@@ -29,6 +33,17 @@ export default {
     ];
     const currentTab = ref(tabs[0].type);
 
+    const changeTab = async (newTab) => {
+      if (newTab === tabs[0].type) {
+        await walletData.getDiaryPurchaseRecord();
+      } else if (newTab === tabs[1].type) {
+        await walletData.getDiaryRetailRecord();
+      } else if (newTab === tabs[2].type) {
+        await walletData.getDiamondPurchaseRecord();
+      }
+      currentTab.value = newTab;
+    };
+
     onMounted(async () => {
       const diam = await walletData.getDiamond();
       console.log(diam.data);
@@ -39,6 +54,7 @@ export default {
       walletData,
       currentTab,
       tabs,
+      changeTab,
     };
   },
 };
@@ -52,19 +68,29 @@ export default {
         :key="t.type"
         class="subSide__item"
         :class="[currentTab === t.type ? 'active' : '']"
-        @click="currentTab = t.type"
+        @click="changeTab(t.type)"
       >
         {{ t.text }}
       </div>
     </div>
     <div class="subContent d-flex flex-column gap-3" v-if="currentTab === tabs[0].type">
-      <DiamondPurchaseRecordCard />
-      <DiamondPurchaseRecordCard />
-      <DiamondPurchaseRecordCard />
-      <DiamondPurchaseRecordCard />
+      <DiamondPurchaseRecordCard
+        v-for="r in walletData.diamondPurchaseRecord"
+        :key="r.id"
+        :record="r"/>
     </div>
-    <div class="subContent" v-else-if="currentTab === tabs[1].type">Oops 1 !</div>
-    <div class="subContent" v-else-if="currentTab === tabs[2].type">Oops 2 !</div>
+    <div class="subContent" v-else-if="currentTab === tabs[1].type">
+      <DiaryRetailRecordCard
+        v-for="r in walletData.diaryRetailRecord"
+        :key="r.id"
+        :record="r"/>
+    </div>
+    <div class="subContent" v-else-if="currentTab === tabs[2].type">
+      <DiaryBuyRecordCard
+        v-for="r in walletData.diaryPurchaseRecord"
+        :key="r.id"
+        :record="r"/>
+    </div>
   </div>
 </template>
 
@@ -90,7 +116,5 @@ export default {
       color: var(--bs-primary);
     }
   }
-}
-.subContent {
 }
 </style>

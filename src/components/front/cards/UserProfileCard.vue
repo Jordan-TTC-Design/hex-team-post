@@ -57,13 +57,12 @@ export default {
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
-    console.log(props.isFollowing);
-    watch(
-      () => props.isSelf,
-      (newIsSelf) => {
-        currentTabs.value = newIsSelf ? myTabs : userTabs;
-      },
-    );
+
+    watch(() => props.isSelf, (newIsSelf) => {
+      currentTabs.value = newIsSelf ? myTabs : userTabs;
+    });
+
+    console.log(props.user);
 
     return {
       currentTabs,
@@ -83,23 +82,22 @@ export default {
         class="user-picture user-picture-lg m-0"
       />
       <div class="userContentBox" v-if="props.user?.user?.name">
-        <span class="userProfileCard-title">{{ props.user?.user?.name }}</span>
+        <span class="userProfileCard-title">{{
+          props.user?.user?.name
+        }}</span>
         <div class="userContentBox__info">
-          <p class="userContentBox__info__item">
-            <span class="bold">{{ props.user?.postCounts }}</span
-            >貼文
+          <p  class="userContentBox__info__item">
+            <span class="bold">{{ props.user?.postCounts }}</span> 貼文
           </p>
           <p class="userContentBox__info__item">
-            <span class="bold">{{ props.user?.privateposts }}</span
-            >秘密日記
+            <span class="bold">{{ props.user?.privateposts }}</span> 秘密日記
           </p>
           <p class="userContentBox__info__item">
-            <span class="bold">{{ props.user?.follows }}</span
-            >位追蹤者
+            <span class="bold">{{ props.user?.follows }}</span> 位追蹤者
           </p>
-          <p class="userContentBox__info__item">
-            <span class="bold"> {{ props.user?.following?.length ?? 0 }} </span>追蹤中
-          </p>
+          <p class="userContentBox__info__item"><span class="bold">
+            {{ props.user?.user?.following?.length ?? 0 }}
+          </span> 追蹤中</p>
         </div>
         <span v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</span>
         <div class="position-absolute top-0 end-0" v-if="!props.isSelf">
