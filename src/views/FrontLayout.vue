@@ -67,11 +67,11 @@ export default {
     <LogInModel />
     <AskModel />
     <RemindModel />
-    <NewPostModel v-if="postsData.newPostModel.open === true" />
+    <NewPostModel />
     <ForgetPasswordModel />
     <PageLoader class="zindex-fixed" v-show="statusData.pageLoading === true" />
     <Loader class="zindex-fixed" v-show="statusData.isLoading.length > 0" />
-    <ImageSquareCropperModal v-if="statusData.imgCropperModel.open === true" />
+    <ImageSquareCropperModal />
     <EmailModel />
   </div>
 </template>

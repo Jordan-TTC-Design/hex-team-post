@@ -14,9 +14,9 @@ export default {
     const userData = userStore();
     const statusData = statusStore();
     const process = ref(1);
-    const imgUploadGetter = ref(null);
+    const userImgUploadGetter = ref(null);
     let cropper = {};
-    let imgData = { };
+    let imgData = {};
     const cropperImage = ref(null);
     const destination = ref({});
     // eslint-disable-next-line no-unused-vars
@@ -24,7 +24,7 @@ export default {
     const ogPhoto = computed(() => userData.user.photo);
     function toogleCropper() {
       process.value = 2;
-      const [file] = imgUploadGetter.value.files;
+      const [file] = userImgUploadGetter.value.files;
       statusData.imgCropperModel.file = file;
       statusData.imgCropperModel.name = 'upload';
     }
@@ -122,7 +122,7 @@ export default {
     return {
       statusData,
       process,
-      imgUploadGetter,
+      userImgUploadGetter,
       ogPhoto,
       cropperImage,
       destination,
@@ -156,10 +156,10 @@ export default {
             :src="ogPhoto || 'https://i.imgur.com/ZWHoRPi.png'"
             alt="用戶頭像"
           />
-          <label for="imgUploader" class="ogImgBox__cover">變更圖片</label>
+          <label for="userImgUploader" class="ogImgBox__cover">變更圖片</label>
           <input
-            ref="imgUploadGetter"
-            id="imgUploader"
+            ref="userImgUploadGetter"
+            id="userImgUploader"
             class="d-none"
             type="file"
             @change="toogleCropper"
@@ -184,7 +184,7 @@ export default {
             </div>
           </div> -->
           <div class="d-flex flex-column gap-3">
-            <label for="imgUploader" class="newPostUpLoader">變更圖片</label>
+            <label for="userImgUploader" class="newPostUpLoader">變更圖片</label>
             <button type="button" @click="croppingImg" class="btn btn-primary text-white rounded">
               確定
             </button>
