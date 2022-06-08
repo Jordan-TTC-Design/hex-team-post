@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue';
 import statusStore from '@/stores/statusStore';
+import orderStore from '@/stores/orderStore';
 
 export default {
   props: {
@@ -9,6 +10,7 @@ export default {
   components: {},
   setup(props) {
     const statusData = statusStore();
+    const orderData = orderStore();
     const listShow = ref(false);
     function openModel() {
       listShow.value = true;
@@ -18,11 +20,29 @@ export default {
       listShow.value = false;
       statusData.noScroll = false;
     }
+
+    const purchase = ({ id, name }) => {
+      console.log(id, name);
+      statusData.openAskModel('確定是否購買', name, async () => {
+        try {
+          const res = await orderData.createOrder(id);
+          if (res.status === 'success') {
+            statusData.openRemindModel('購買成功', `訂單編號：${res.message}`);
+          } else {
+            statusData.openRemindModel('購買失敗', `${res.message}`);
+          }
+        } catch (e) {
+          statusData.openRemindModel('購買失敗', `${e.response.data.message}`);
+        }
+      });
+    };
+
     return {
       props,
       listShow,
       openModel,
       closeModel,
+      purchase,
     };
   },
 };
@@ -37,7 +57,10 @@ export default {
         <div class="card-title">訂閱方案</div>
       </div>
       <div class="card-body">
-        <div class="sponsor" v-for="p in props.products" :key="p._id">
+        <div class="sponsor"
+          v-for="p in props.products"
+          :key="p._id"
+          @click="purchase({ id: p._id, name: p.name })">
           <span class="sponsor-title">{{ p.coin }} SD / {{ p.effectiveOfMonthNumber }} 月</span>
           <span class="sponsor-subtitle">{{ p.name }}</span>
         </div>
