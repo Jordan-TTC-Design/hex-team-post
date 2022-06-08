@@ -7,7 +7,9 @@ export default {
     const statusData = statusStore();
     function toogleStatusFunction() {
       console.log(statusData.askModel.action);
-      statusData.askModel.action();
+      if (typeof statusData.askModel.action === 'function') {
+        statusData.askModel.action();
+      }
       statusData.closeAskModel();
     }
     return {

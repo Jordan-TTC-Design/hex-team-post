@@ -29,8 +29,8 @@ export default {
   },
   setup() {
     const userData = userStore();
+
     const statusData = statusStore();
-    statusData.openPageLoader();
     // 頁籤分頁
     const productData = productStore();
 
@@ -82,10 +82,16 @@ export default {
 
     onMounted(async () => {
       // 查詢使用者資訊
+      // statusData.openPageLoader();
       if (userData.user.id === userId.value) {
         const returnUser = await userData.getMyUser(userData.user.token);
         myInfo.value = { ...returnUser };
         currentUserInfo.value = { ...returnUser };
+        userData.user.name = returnUser.user.name;
+        userData.user.email = returnUser.user.email;
+        userData.user.birthday = returnUser.user.birthday;
+        userData.user.gender = returnUser.user.gender;
+        userData.user.memo = returnUser.user.memo;
       } else {
         const returnUser = await userData.getProfileUser(userId.value, userData.user.token);
         userInfo.value = { ...returnUser };

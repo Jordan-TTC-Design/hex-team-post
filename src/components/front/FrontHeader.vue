@@ -15,18 +15,6 @@ export default {
     const postsData = postsStore();
     const followData = followStore();
     const modalOpen = ref(false);
-    async function checkLogin() {
-      const checkLocalResult = await userData.getLocalToken();
-      if (checkLocalResult) {
-        const checkResult = await userData.checkLogIn(userData.user.token);
-        if (checkResult.status) {
-          localStorage.setItem('sd-user', JSON.stringify(userData.user));
-          followData.getMyFollow(userData.user.token);
-        } else {
-          userData.resetUser();
-        }
-      }
-    }
     const nowPath = computed(() => route.path);
     watch(nowPath, (newValue, oldValue) => {
       if (newValue !== oldValue) {
@@ -42,7 +30,9 @@ export default {
       statusData.noScroll = true;
     }
     onMounted(async () => {
-      await checkLogin();
+      if (userData.user.token) {
+        followData.getMyFollow(userData.user.token);
+      }
     });
     return {
       userData,
