@@ -28,7 +28,7 @@ const statusStore = defineStore({
       text: '您尚未登入，無法購買！',
     },
     popInfoModel: {
-      open: true,
+      open: false,
       title: '',
     },
     emailModel: false,

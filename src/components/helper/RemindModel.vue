@@ -64,7 +64,7 @@ export default {
 
 <style lang="scss" scoped>
 .z-popModal {
-  z-index: 2500;
+  z-index: 5000;
 }
 .popModalContainer {
   height: 100vh;
@@ -82,7 +82,7 @@ export default {
   }
   .popModal {
     opacity: 1;
-    z-index: 100;
+    z-index: 5001;
     position: absolute;
     border-radius: 0.5rem;
     opacity: 0;
