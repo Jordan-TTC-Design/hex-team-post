@@ -98,7 +98,7 @@ export default {
 
 <template>
   <div class="card userProfileCard position-relative">
-    <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-start">
+    <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-md-start align-items-center">
       <div class="position-relative">
         <img
           :src="props.user?.user?.photo ? props.user.user.photo : 'https://i.imgur.com/ZWHoRPi.png'"
