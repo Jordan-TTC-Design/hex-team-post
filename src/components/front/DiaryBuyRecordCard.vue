@@ -1,7 +1,12 @@
 <script>
 export default {
-  setup() {
-    return {};
+  props: {
+    record: Object,
+  },
+  setup(props) {
+    return {
+      props,
+    };
   },
 };
 </script>
@@ -11,6 +16,7 @@ export default {
     <div class="card-body position-relative">
       <div class="card-title mb-1">
         {{ props.record.summary }}
+        <span class="postId">({{ props.record.postId }})</span>
       </div>
       <p class="time mb-3">{{ props.record.createdAt.replace('T', ' ').replace('Z', '') }}</p>
       <div class="d-flex">
@@ -19,8 +25,8 @@ export default {
           <p class="b">{{ props.record.amountCoin }} SD</p>
         </div>
         <div class="tmp">
-          <p class="a">台幣總價</p>
-          <p class="b">{{ props.record.amountNTD }} SD</p>
+          <p class="a">交易對象</p>
+          <p class="b">{{ props.record.name }}</p>
         </div>
         <div class="tmp">
           <p class="a">交易明細(交易編號)</p>
@@ -31,6 +37,9 @@ export default {
         {{ props.record.postId ? '交易成功' : '交易失敗' }}
       </div>
     </div>
+    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
+      <i class="bi bi-person-heart"></i>
+    </button>
   </div>
 </template>
 
@@ -40,7 +49,8 @@ export default {
   color: #979797;
 }
 .tmp {
-  flex-grow: 1;
+  flex-basis: 120px;
+
   .a {
     font-size: 12px;
     color: #979797;

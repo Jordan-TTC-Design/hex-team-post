@@ -1,43 +1,39 @@
 <script>
 export default {
-  setup() {
-    return {};
+  props: {
+    record: Object,
+  },
+  setup(props) {
+    return {
+      props,
+    };
   },
 };
 </script>
-
 <template>
   <div class="card mb-3">
-    <div class="card-body border-bottom">
-      <div class="card-title">您所購買過的創作者</div>
-    </div>
-    <div class="card-body">
-      <input type="text" class="form-control mb-4" placeholder="搜尋關鍵字" />
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
+    <div class="card-body position-relative">
+      <div class="card-title mb-1">
+        {{ props.record.summary }}
+        <span class="postId">({{ props.record.postId }})</span>
+      </div>
+      <p class="time mb-3">{{ props.record.createdAt.replace('T', ' ').replace('Z', '') }}</p>
+      <div class="d-flex">
+        <div class="tmp">
+          <p class="a">交易金額</p>
+          <p class="b">{{ props.record.amountCoin }} SD</p>
+        </div>
+        <div class="tmp">
+          <p class="a">交易對象</p>
+          <p class="b">{{ props.record.name }}</p>
+        </div>
+        <div class="tmp">
+          <p class="a">交易明細(交易編號)</p>
+          <p class="b">{{ props.record.serialNumber }}</p>
         </div>
       </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-          <span class="user-info-subtitle">2 篇新貼文</span>
-        </div>
-      </div>
-      <div class="d-flex align-items-center mb-4">
-        <div class="user-picture"></div>
-        <div class="user-info">
-          <span class="user-info-title">用戶名稱</span>
-          <span class="user-info-subtitle">2 篇新貼文 24 個新日記</span>
-        </div>
+      <div class="status">
+        {{ props.record.postId ? '交易成功' : '交易失敗' }}
       </div>
     </div>
   </div>
@@ -61,5 +57,19 @@ export default {
     font-size: 14px;
     color: #646464;
   }
+  .postId {
+    font-size: 14;
+  }
+
 }
+  .status {
+    position: absolute;
+    border-radius: 4px;
+    background-color: #e2e2e2;
+    font-size: 14px;
+    color: #1d1d1d;
+    padding: 2px 8px;
+    top: 12px;
+    right: 12px;
+  }
 </style>
