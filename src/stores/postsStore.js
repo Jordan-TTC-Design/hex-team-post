@@ -324,16 +324,21 @@ const postsStore = defineStore({
           },
         });
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].likes = res.data.data.likes;
+          const result = res.data.data;
+          if (result.type === 'group') {
+            const postIndex = this.posts.findIndex((item) => item._id === result._id);
+            this.posts[postIndex].likes = result.likes;
+          } else {
+            const postIndex = this.diaries.findIndex((item) => item._id === result._id);
+            this.diaries[postIndex].likes = result.likes;
+          }
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async deleteLike(postId, userToken) {
@@ -348,16 +353,21 @@ const postsStore = defineStore({
         });
         console.log(res);
         if (res.data.status === 'success') {
-          const postIndex = this.posts.findIndex((item) => item._id === res.data.data._id);
-          console.log(this.posts[postIndex]);
-          this.posts[postIndex].likes = res.data.data.likes;
+          const result = res.data.data;
+          if (result.type === 'group') {
+            const postIndex = this.posts.findIndex((item) => item._id === result._id);
+            this.posts[postIndex].likes = result.likes;
+          } else {
+            const postIndex = this.diaries.findIndex((item) => item._id === result._id);
+            this.diaries[postIndex].likes = result.likes;
+          }
         }
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async upLoadImage(data, userToken) {
