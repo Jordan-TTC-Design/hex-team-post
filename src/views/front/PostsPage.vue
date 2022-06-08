@@ -31,17 +31,6 @@ export default {
         );
       }
     }
-    postsData.getPosts(
-      postsData.getPostsData.page,
-      postsData.getPostsData.sort,
-      postsData.getPostsData.query,
-    );
-    onMounted(async () => {
-      window.addEventListener('scroll', handleScroll);
-    });
-    onUnmounted(() => {
-      window.removeEventListener('scroll', handleScroll);
-    });
     const search = (data) => {
       console.log(data, data.type, data.type === 'like');
       postsData.getPosts(
@@ -53,10 +42,20 @@ export default {
     };
     async function init() {
       statusData.openPageLoader();
+      postsData.getPosts(
+        postsData.getPostsData.page,
+        postsData.getPostsData.sort,
+        postsData.getPostsData.query,
+      );
       usersList.value = await followData.getHotUser();
     }
     init();
-
+    onMounted(async () => {
+      window.addEventListener('scroll', handleScroll);
+    });
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+    });
     return {
       userData,
       postsData,
