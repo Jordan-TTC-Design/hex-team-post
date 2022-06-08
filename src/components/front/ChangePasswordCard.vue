@@ -29,7 +29,7 @@ export default {
       <div class="tmp">
         <p class="a mb-1">新密碼</p>
         <input
-          type="text"
+          type="password"
           class="form-control border bg-white"
           v-model="password.password"
         />
@@ -38,7 +38,7 @@ export default {
         <p class="a mb-1">確認新密碼</p>
         <p class="b">
           <input
-            type="text"
+            type="password"
             class="form-control border bg-white"
             v-model="password.confirmPassword"
           />

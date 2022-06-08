@@ -1,20 +1,34 @@
 <script>
-// import { ref } from 'vue';
+import { reactive } from 'vue';
 import FormRadioButton from '@/components/helper/FormRadioButton.vue';
 
 export default {
   components: {
     FormRadioButton,
   },
+  props: {
+    user: Object,
+  },
   setup(props, { emit }) {
     const cancel = () => {
       emit('hide-edit');
     };
+    const editUser = reactive({
+      name: props.user?.user?.name,
+      birthday: props.user?.user?.birthday.split('T')[0],
+      gender: props.user?.user?.gender,
+      memo: props.user?.user?.memo,
+    });
     const save = () => {
-      emit('hide-edit');
+      emit('save', { ...editUser });
     };
 
-    return { props, cancel, save };
+    return {
+      props,
+      editUser,
+      cancel,
+      save,
+    };
   },
 };
 </script>
@@ -29,15 +43,15 @@ export default {
           <input
             type="text"
             class="form-control border bg-white"
-            value="Jordan"
+            v-model="editUser.name"
           />
         </p>
       </div>
       <div class="tmp">
         <p class="a mb-1 ms-3">性別</p>
         <p class="b">
-          <FormRadioButton class="me-2">男性</FormRadioButton>
-          <FormRadioButton class="me-2">女性</FormRadioButton>
+          <FormRadioButton name="gender" class="me-2">男性</FormRadioButton>
+          <FormRadioButton name="gender" class="me-2">女性</FormRadioButton>
         </p>
       </div>
       <div class="tmp">
@@ -46,18 +60,18 @@ export default {
           <input
             type="text"
             class="form-control border bg-white"
-            value="2022 / 12 / 12"
+            v-model="editUser.birthday"
           />
         </p>
       </div>
       <div class="tmp">
-        <p class="a mb-1 ms-3">電子郵件</p>
+        <p class="a mb-1 ms-3">備註</p>
         <p class="b">
-          <input
+          <textarea
+            v-model="editUser.memo"
             type="text"
             class="form-control border bg-white"
-            value="Jordan.ttc.design@gmail.com"
-          />
+          ></textarea>
         </p>
       </div>
       <div class="d-flex justify-content-end">

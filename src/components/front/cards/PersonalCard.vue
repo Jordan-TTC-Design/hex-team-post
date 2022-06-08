@@ -1,17 +1,20 @@
 <script>
-// import { ref } from 'vue';
+import userStore from '@/stores/userStore';
 
 export default {
   props: {
     user: Object,
   },
   setup(props, { emit }) {
-    console.log(props.user);
-
+    const userData = userStore();
     const showEdit = () => {
       emit('show-edit');
     };
-    return { props, showEdit };
+    return {
+      props,
+      userData,
+      showEdit,
+    };
   },
 };
 </script>
@@ -34,17 +37,26 @@ export default {
       </div>
       <div class="tmp">
         <p class="a">暱稱</p>
-        <p class="b">{{ props.user?.user?.name }}</p>
+        <p class="b">{{ userData.user?.name }}</p>
+      </div>
+      <div class="tmp">
+        <p class="a">Email</p>
+        <p class="b">{{ userData.user?.email }}</p>
+      </div>
+      <div class="tmp">
+        <p class="a">生日</p>
+        <p class="b">{{ userData.user?.birthday?.split('T')[0] }}</p>
       </div>
       <div class="tmp">
         <p class="a">性別</p>
         <p class="b">
-          {{ props.user?.user?.gender === 'male' ? '男性' : '女性' }}
+          {{ userData.user?.gender ?
+             userData.user?.gender === 'male' ? '男性' : '女性' : '' }}
         </p>
       </div>
       <div class="tmp">
-        <p class="a">Email</p>
-        <p class="b">{{ props.user?.user?.email }}</p>
+        <p class="a">備註</p>
+        <p class="b">{{ userData.user?.memo }}</p>
       </div>
     </div>
   </div>

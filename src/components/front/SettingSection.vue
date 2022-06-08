@@ -5,6 +5,7 @@ import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
 import ChangePasswordCard from '@/components/front/ChangePasswordCard.vue';
 
 import userStore from '@/stores/userStore';
+import statusStore from '@/stores/statusStore';
 
 const tabs = [
   {
@@ -28,27 +29,43 @@ export default {
   },
   setup(props) {
     const userData = userStore();
+    const statusData = statusStore();
     const currentTab = ref(tabs[0].type);
 
     const isShowPersonalEditCard = ref(false);
-    const ShowEditPersonal = () => {
+    const showEditPersonal = () => {
       isShowPersonalEditCard.value = true;
     };
-    const HideEditPersonal = () => {
+    const hideEditPersonal = () => {
       isShowPersonalEditCard.value = false;
+    };
+    const updatePersonal = async (updateUser) => {
+      try {
+        userData.user.name = updateUser.name;
+        userData.user.gender = updateUser.gender;
+        userData.user.birthday = updateUser.birthday;
+        userData.user.memo = updateUser.memo;
+        const res = await userData.updateUser();
+        console.log(res);
+        isShowPersonalEditCard.value = false;
+        statusData.openRemindModel('個人資料更新成功', '');
+      } catch (e) {
+        console.log(e);
+        statusData.openRemindModel('個人資料更新失敗', e.response.data.message);
+      }
     };
 
     const changePassword = async (password) => {
       // call api
       console.log(password);
       try {
-        const res = await userData.resetPassword({
+        await userData.resetPassword({
           password: password.password,
           confirmPassword: password.confirmPassword,
         });
-        console.log(res);
+        statusData.openRemindModel('變更密碼成功', '下次登入請輸入新密碼');
       } catch (e) {
-        console.dir(e.response.data.message);
+        statusData.openRemindModel('變更密碼失敗', e.response.data.message);
       }
     };
 
@@ -57,8 +74,9 @@ export default {
       props,
       currentTab,
       isShowPersonalEditCard,
-      ShowEditPersonal,
-      HideEditPersonal,
+      showEditPersonal,
+      hideEditPersonal,
+      updatePersonal,
       changePassword,
     };
   },
@@ -82,12 +100,14 @@ export default {
       <PersonalCard
         class="mb-3"
         v-if="!isShowPersonalEditCard"
-        @show-edit="ShowEditPersonal"
+        @show-edit="showEditPersonal"
         :user="props.user"
       />
       <PersonalEditCard
         v-if="isShowPersonalEditCard"
-        @hide-edit="HideEditPersonal"
+        @save="updatePersonal"
+        @hide-edit="hideEditPersonal"
+        :user="props.user"
       />
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[1].type">
