@@ -58,7 +58,7 @@ const userStore = defineStore({
         return res.data;
       } catch (err) {
         console.dir(err);
-        return err;
+        return err.response.data;
       } finally {
         statusData.shiftLoading();
       }
@@ -75,7 +75,7 @@ const userStore = defineStore({
         return res.data;
       } catch (err) {
         console.dir(err);
-        return err;
+        return err.response.data;
       } finally {
         statusData.shiftLoading();
       }
