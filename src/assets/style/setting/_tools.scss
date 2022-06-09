@@ -474,7 +474,10 @@
   font-size: 1.25rem;
   transition: all 0.3s;
   gap: 0.25rem;
-  p{
+  p {
     color: var(--bs-gray-dark);
   }
+}
+.noContentBox--sm {
+  font-size: 1rem;
 }
