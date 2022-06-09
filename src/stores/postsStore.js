@@ -278,7 +278,8 @@ const postsStore = defineStore({
         });
         console.log(res);
         const result = res.data.data;
-        this.diaries.push(...result.data[0]);
+        // console.log(result.data[0]);
+        this.diaries.push({ ...result.data[0] });
         return res.data;
       } catch (err) {
         console.dir(err);
