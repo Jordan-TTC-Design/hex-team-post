@@ -134,7 +134,7 @@ export default {
               showAll: textContentShowData.isShowAll === true,
             }"
           >
-            <p v-if="props.user?.user?.memo">{{ props.user?.user?.memo }}</p>
+            <div v-if="props.user?.user?.memo" v-html="props.user?.user?.memo" class="b"></div>
           </div>
           <p
             v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
