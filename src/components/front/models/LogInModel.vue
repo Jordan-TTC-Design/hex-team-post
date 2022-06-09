@@ -1,5 +1,6 @@
 <script>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
 import FormInput from '@/components/helper/FormInput.vue';
@@ -9,10 +10,9 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    const loginData = ref({
-      email: '',
-      password: '',
-    });
+    const router = useRouter();
+    const loginData = ref({});
+    const resultInfo = ref('');
     function goToForgetPassword() {
       statusData.logInModel = false;
       statusData.forgetPasswordsModel = true;
@@ -20,6 +20,14 @@ export default {
     function goToSignUp() {
       statusData.logInModel = false;
       statusData.signUpModel = true;
+    }
+    function resetData() {
+      loginData.value = { email: '', password: '' };
+      resultInfo.value = '';
+    }
+    function closeModel() {
+      resetData();
+      statusData.logInModel = false;
     }
     async function logIn() {
       const result = await userData.logIn(loginData.value);
@@ -31,14 +39,18 @@ export default {
         userData.user.id = result.user._id;
         localStorage.setItem('sd-user', JSON.stringify(userData.user));
         statusData.logInModel = false;
+        router.push('/');
       } else {
-        console.log('使用者帳密錯誤');
+        resultInfo.value = result.message;
       }
     }
+    resetData();
     return {
       loginData,
       statusData,
       userData,
+      resultInfo,
+      closeModel,
       logIn,
       goToSignUp,
       goToForgetPassword,
@@ -53,14 +65,10 @@ export default {
     :class="{ active: statusData.logInModel === true }"
   >
     <!-- Modal-Overlay -->
-    <div class="popModalCover" @click="statusData.logInModel = false" />
+    <div class="popModalCover" @click="closeModel" />
     <!-- Modal-Window -->
     <div class="signUpModel popModal" :class="{ active: statusData.logInModel === true }">
-      <button
-        @click="statusData.logInModel = false"
-        type="button"
-        class="btn position-absolute popModel__btn"
-      >
+      <button @click="closeModel" type="button" class="btn position-absolute popModel__btn">
         <i class="bi bi-x-lg"></i>
       </button>
       <div class="bg-secondary rounded-top p-6 position-relative overflow-hidden">
@@ -87,7 +95,9 @@ export default {
             <p class="text-danger">忘記密碼?</p>
           </button>
         </div>
-
+        <div v-if="resultInfo.length > 0" class="mx-6 pb-2 border-bottom border-danger">
+          <p class="text-danger text-center">錯誤提示：{{ resultInfo }}</p>
+        </div>
         <button
           type="button"
           @click="logIn"

@@ -1,7 +1,7 @@
 <script>
 // eslint-disable-next-line object-curly-newline
 import { ref, watch, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import userStore from '@/stores/userStore';
 import statusStore from '@/stores/statusStore';
 import postsStore from '@/stores/postsStore';
@@ -10,6 +10,7 @@ import followStore from '@/stores/followStore';
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const userData = userStore();
     const statusData = statusStore();
     const postsData = postsStore();
@@ -29,6 +30,12 @@ export default {
       statusData[target] = true;
       statusData.noScroll = true;
     }
+    const userId = computed(() => userData.user.id);
+    watch(userId, (newValue, oldValue) => {
+      if (newValue !== oldValue && newValue.length === 0) {
+        router.push('/');
+      }
+    });
     onMounted(async () => {
       await userData.getLocalToken();
       if (userData.user.token) {

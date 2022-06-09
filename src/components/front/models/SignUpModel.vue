@@ -1,5 +1,6 @@
 <script>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
 import FormInput from '@/components/helper/FormInput.vue';
@@ -9,35 +10,59 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    const newUser = ref({
-      name: '',
-      photo: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      birthday: '',
-      gender: 'male',
-    });
+    const router = useRouter();
+    const resultInfo = ref({});
+    const newUser = ref({});
+    function resetData() {
+      newUser.value = {
+        name: '',
+        photo: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        birthday: '',
+        gender: 'male',
+      };
+      resultInfo.value = {
+        name: '',
+        email: '',
+        birthday: '',
+        password: '',
+      };
+    }
     function goToLogin() {
       statusData.signUpModel = false;
       statusData.logInModel = true;
     }
     async function signUp() {
-      const result = await userData.signUp(newUser.value);
-      if (result.status === 'success') {
-        localStorage.setItem('sd-user', JSON.stringify(userData.user));
+      if (newUser.value.password.length === 0 || newUser.value.confirmPassword.length === 0) {
+        resultInfo.value.password += '請輸入密碼';
+      } else if (newUser.value.password !== newUser.value.confirmPassword) {
+        resultInfo.value.password += '密碼填寫不相同';
       } else {
-        console.log('使用者帳密錯誤');
+        const result = await userData.signUp(newUser.value);
+        if (result.status === 'success') {
+          localStorage.setItem('sd-user', JSON.stringify(userData.user));
+          router.push('/');
+        } else {
+          const errArray = Object.keys(result.message);
+          errArray.forEach((item) => {
+            resultInfo.value[item] = result.message[item];
+          });
+        }
       }
     }
     function closeModel() {
+      resetData();
       statusData.signUpModel = false;
       statusData.noScroll = false;
     }
+    resetData();
     return {
       newUser,
       statusData,
       userData,
+      resultInfo,
       signUp,
       goToLogin,
       closeModel,
@@ -70,9 +95,13 @@ export default {
             <FormInput v-model="newUser.name" input-id="signUserName" type="text">
               <template v-slot:default>暱稱</template>
             </FormInput>
-            <FormInput v-model="newUser.email" input-id="signUserEmail" type="text">
+            <p v-if="resultInfo.name !== ''" class="errorTxt text-danger">{{ resultInfo.name }}</p>
+            <FormInput v-model="newUser.email" input-id="signUserEmail" type="email">
               <template v-slot:default>電子郵件</template>
             </FormInput>
+            <p v-if="resultInfo.email !== ''" class="errorTxt text-danger">
+              {{ resultInfo.email }}
+            </p>
             <div class="d-flex flex-md-row flex-column gap-3">
               <FormInput v-model="newUser.password" input-id="signUserPassword" type="password">
                 <template v-slot:default>密碼</template>
@@ -85,6 +114,9 @@ export default {
                 <template v-slot:default>重複確認密碼</template>
               </FormInput>
             </div>
+            <p v-if="resultInfo.password !== ''" class="errorTxt text-danger">
+              {{ resultInfo.password }}
+            </p>
             <div class="d-flex flex-column gap-1">
               <label class="ms-3" for="userBirthday">生日</label>
               <input
@@ -94,6 +126,9 @@ export default {
                 type="date"
               />
             </div>
+            <p v-if="resultInfo.birthday !== ''" class="errorTxt text-danger">
+              {{ resultInfo.birthday }}
+            </p>
             <div class="formRadio w-100 d-flex flex-column gap-1">
               <p class="ms-3">性別</p>
               <div class="d-flex gap-2">
@@ -126,7 +161,7 @@ export default {
               </div>
             </div>
           </div>
-          <div class="d-flex gap-4 mt-2">
+          <div class="d-flex gap-4 mt-4">
             <button
               type="button"
               @click="goToLogin"
@@ -263,5 +298,9 @@ export default {
       color: #892092;
     }
   }
+}
+.errorTxt {
+  margin-left: 0.75rem;
+  margin-top: -0.75rem;
 }
 </style>
