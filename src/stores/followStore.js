@@ -119,6 +119,33 @@ const followData = defineStore({
           return err;
         });
     },
+    async newSubscribed(userId, productId, userToken) {
+      statusData.addLoading();
+      const subscribedData = {
+        subscriptionUserId: userId,
+        productId,
+      };
+      console.log(subscribedData);
+
+      return axios({
+        method: 'POST',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/order/pay/subscription',
+        data: subscribedData,
+        headers: {
+          authorization: `${userToken}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          statusData.shiftLoading();
+          return res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
+          statusData.shiftLoading();
+          return err.response.data;
+        });
+    },
     async getHotCreater() {
       statusData.addLoading();
       try {

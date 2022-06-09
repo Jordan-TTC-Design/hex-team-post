@@ -19,8 +19,10 @@ export default {
     const posts = computed(() => postsData.posts);
     const searchFilter = ref({});
     const morePostBtn = ref(false);
+    const isLoading = ref(false);
     function resetFilter(sort = 'desc', query = '') {
       postsData.getPostsData.page = 1;
+      isLoading.value = false;
       morePostBtn.value = false;
       searchFilter.value = {
         page: 1,
@@ -42,6 +44,7 @@ export default {
           morePostBtn.value = false;
         }
       }
+      isLoading.value = true;
     }
     async function search(data) {
       resetFilter(data.type, data.query, '');
@@ -56,6 +59,7 @@ export default {
       props,
       posts,
       morePostBtn,
+      isLoading,
       search,
     };
   },
@@ -82,7 +86,7 @@ export default {
     <template v-for="postItem in posts" :key="postItem.id">
       <PostCard :post-item="postItem" />
     </template>
-    <div v-if="posts.length === 0" class="noContentBox noContentBox--sm">
+    <div v-if="posts.length === 0 && isLoading" class="noContentBox noContentBox--sm">
       <p>您尚未發布任何生活貼文</p>
     </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">

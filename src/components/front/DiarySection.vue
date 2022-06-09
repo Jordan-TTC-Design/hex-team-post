@@ -22,8 +22,10 @@ export default {
     const isLogin = ref(false);
     const privates = reactive([]);
     const searchFilter = ref({});
+    const isLoading = ref(false);
     const morePostBtn = ref(false);
     function resetFilter(sort = 'desc', query = '') {
+      isLoading.value = false;
       postsData.getPostsData.page = 1;
       morePostBtn.value = false;
       searchFilter.value = {
@@ -80,6 +82,7 @@ export default {
           }
         }
       }
+      isLoading.value = true;
     }
 
     async function search(data) {
@@ -90,7 +93,6 @@ export default {
       statusData.addLoading();
       await userData.getLocalToken();
       isLogin.value = await userData.checkLogIn(userData.user.token || '');
-      console.log(isLogin.value);
       getPosts();
       statusData.shiftLoading();
     });
@@ -99,6 +101,7 @@ export default {
       props,
       privates,
       postsData,
+      isLoading,
       morePostBtn,
       search,
     };
@@ -122,7 +125,7 @@ export default {
     <template v-for="diary in postsData.diaries" :key="diary._id">
       <DiaryCard :post-item="diary" />
     </template>
-    <div v-if="postsData.diaries.length === 0" class="noContentBox noContentBox--sm">
+    <div v-if="postsData.diaries.length === 0 && isLoading" class="noContentBox noContentBox--sm">
       <p>您尚未發布任何秘密日記</p>
     </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">

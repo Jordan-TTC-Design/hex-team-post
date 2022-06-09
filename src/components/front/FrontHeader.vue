@@ -142,9 +142,6 @@ export default {
                 <RouterLink :to="`/profile/${userData.user.id}`" class="list-group-item"
                   >查看個人檔案</RouterLink
                 >
-                <RouterLink to="/profile/628e4bbfad29e4c054c9f380" class="list-group-item"
-                  >消費記錄</RouterLink
-                >
                 <li @click="openTagertModel('emailModel')" class="list-group-item">客服支援</li>
                 <li @click="userData.logOut" class="list-group-item">登出</li>
               </ul>
