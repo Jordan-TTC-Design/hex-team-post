@@ -1,12 +1,15 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+
 import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 
+import PostFilter from '@/components/front/PostFilter.vue';
 import PostCard from '@/components/front/cards/PostCard.vue';
 
 export default {
   components: {
+    PostFilter,
     PostCard,
   },
   props: {
@@ -15,19 +18,58 @@ export default {
   setup(props) {
     const postsData = postsStore();
     const userData = userStore();
-
-    const posts = ref([]);
-    //       postsData.getPosts(postSort.value, postQuery.value);
-
+    const posts = computed(() => postsData.posts);
+    const searchFilter = ref({});
+    const morePostBtn = ref(false);
+    const isLoading = ref(false);
+    function resetFilter(sort = 'desc', query = '', likes = '') {
+      postsData.getPostsData.page = 1;
+      isLoading.value = false;
+      morePostBtn.value = false;
+      searchFilter.value = {
+        page: 1,
+        sort,
+        query,
+        likes,
+      };
+    }
+    async function getPosts() {
+      const result = await postsData.getPosts(
+        searchFilter.value.page,
+        searchFilter.value.sort,
+        searchFilter.value.query,
+        searchFilter.value.likes,
+      );
+      console.log(result);
+      if (result.status === 'success') {
+        if (result.data.data.length === 10) {
+          morePostBtn.value = true;
+        } else {
+          morePostBtn.value = false;
+        }
+      }
+      isLoading.value = true;
+    }
+    async function search(data) {
+      if (data.type === 'like') {
+        resetFilter(data.type, data.query, userData?.user?.id);
+      } else {
+        resetFilter(data.type, data.query, '');
+      }
+      getPosts();
+    }
     onMounted(async () => {
-      const res = await postsData.getPosts(1, 'asc', '', userData.user.id);
-      console.log(res.data);
-      posts.value = [...res.data];
+      postsData.posts.length = 0;
+      resetFilter();
+      getPosts();
     });
 
     return {
       props,
       posts,
+      morePostBtn,
+      isLoading,
+      search,
     };
   },
 };
@@ -35,9 +77,26 @@ export default {
 
 <template>
   <div class="d-flex flex-column gap-4">
+    <PostFilter
+      @search="search"
+      header="排序"
+      :items="[
+        {
+          name: '由新到舊',
+          type: 'desc',
+        },
+        {
+          name: '由舊到新',
+          type: 'asc',
+        },
+      ]"
+    />
     <PostCard v-for="postItem in posts" :key="postItem.key" :post-item="postItem" />
-    <div v-if="posts.length === 0" class="noContentBox noContentBox--sm">
+    <div v-if="posts.length === 0 && isLoading" class="noContentBox noContentBox--sm">
       <p>您尚未按任何貼文愛心</p>
+    </div>
+    <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
+      <p>點擊載入更多貼文...</p>
     </div>
   </div>
 </template>
