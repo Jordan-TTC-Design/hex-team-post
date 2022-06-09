@@ -107,7 +107,7 @@ export default {
               <ArticleCard class="h-100" :post-item="hotPost" :post-index="index" />
             </div>
           </template>
-          <div class="toBeCome" v-if="hotPostList.length < 10">敬請期待</div>
+          <div class="col" v-if="hotPostList.length < 9"><p class="toBeCome">敬請期待</p></div>
         </div>
       </div>
     </div>
@@ -195,6 +195,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  min-height: 10rem;
   background-color: var(--bs-gray-light);
   border-radius: 0.75rem 0.75rem;
   @media (max-width: 767.98px) {

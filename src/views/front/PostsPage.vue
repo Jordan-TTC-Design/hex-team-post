@@ -22,7 +22,7 @@ export default {
     const postsData = postsStore();
     const statusData = statusStore();
     const usersList = ref([]);
-    const morePostBtn = ref(true);
+    const morePostBtn = ref(false);
     const searchFilter = ref({
       page: 1,
       sort: 'desc',
@@ -36,15 +36,18 @@ export default {
         query,
       };
     }
-    const search = (data) => {
+    const search = async (data) => {
       resetFilter();
       console.log(data, data.type, data.type === 'like');
-      postsData.getPosts(
+      const result = await postsData.getPosts(
         searchFilter.value.page,
         data.type === 'like' ? 'asc' : data.type,
         data.query,
         data.type === 'like' ? userData?.user?.id ?? '' : '',
       );
+      if (result.data.data.length === 10) {
+        morePostBtn.value = true;
+      }
     };
     async function getMorePost() {
       searchFilter.value.page += 1;
@@ -100,7 +103,9 @@ export default {
         <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" :post-index="index" />
         </template>
-        <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost"><p>點擊載入更多貼文...</p></div>
+        <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
+          <p>點擊載入更多貼文...</p>
+        </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
         <RecommendFollowCard :user-list="usersList" />

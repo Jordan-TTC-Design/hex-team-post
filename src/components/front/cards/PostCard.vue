@@ -42,11 +42,10 @@ export default {
     checkComment();
     async function addComment() {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
-      console.log(targetItem.value.id, newComment.value);
+      console.log(targetItem.value._id, newComment.value);
       const result = await postsData.addComment(
         newComment.value,
-        targetItem.value.id,
-        // eslint-disable-next-line comma-dangle
+        targetItem.value._id,
         localUser.token,
       );
       if (result.status === 'success') {

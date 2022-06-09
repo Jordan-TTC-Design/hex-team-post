@@ -1,94 +1,81 @@
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
+import followStore from '@/stores/followStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import DiaryCard from '@/components/front/cards/DiaryCard.vue';
-import DiaryPurchaseRecordCard from '@/components/front/DiaryPurchaseRecordCard.vue';
+import SubscribedCard from '@/components/front/SubscribedCard.vue';
 
 export default {
   components: {
     PostFilter,
     DiaryCard,
-    DiaryPurchaseRecordCard,
+    SubscribedCard,
   },
   setup() {
     const userData = userStore();
     const postsData = postsStore();
     const statusData = statusStore();
-    statusData.openPageLoader();
+    const followData = followStore();
     const diariesList = ref([]);
-    const pageInfo = ref(null);
-    const nowPage = ref(0);
-    const filterData = ref({
-      type: '',
+    const morePostBtn = ref(false);
+    const searchFilter = ref({
+      page: 1,
+      sort: 'desc',
       query: '',
     });
-    const localUser = ref(null);
-    const likesList = ref([]);
-    async function search(data, page = 1) {
-      console.log(data);
-      diariesList.value = [];
+    async function getMorePost() {
+      searchFilter.value.page += 1;
       const result = await postsData.getBuyDiary(
-        page,
-        data.type === 'like' ? 'asc' : data.type,
-        data.query,
-        data.type === 'like' ? userData?.user?.id ?? '' : '',
-        localUser.value.token,
-      );
-      filterData.value.type = data.type;
-      filterData.value.query = data.query;
-      console.log(result);
-      pageInfo.value = { ...result.data.paging };
-      if (pageInfo.value) {
-        diariesList.value = [...result.data.data];
-        postsData.diaries = diariesList.value;
-        nowPage.value += 1;
-      }
-    }
-    async function getMoreDiary(page) {
-      const result = await postsData.getBuyDiary(
-        page,
-        filterData.value.type === 'like' ? 'asc' : filterData.value.type,
-        filterData.value.type,
-        filterData.value.type === 'like' ? userData?.user?.id ?? '' : '',
-        localUser.value.token,
+        searchFilter.value.page,
+        searchFilter.value.sort === 'like' ? 'asc' : searchFilter.value.sort,
+        searchFilter.value.sort,
+        searchFilter.value.sort === 'like' ? userData?.user?.id ?? '' : '',
+        userData.user.token,
       );
       diariesList.value = [...result.data.data];
       postsData.diaries = diariesList.value;
-    }
-    function handleScroll() {
-      if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
-        if (nowPage.value < pageInfo.value.total_pages) {
-          getMoreDiary(nowPage.value + 1);
-        }
+      if (result.data.data.length < 10) {
+        morePostBtn.value = false;
       }
     }
-    onMounted(async () => {
-      window.addEventListener('scroll', handleScroll);
-    });
-    onUnmounted(() => {
-      window.addEventListener('scroll', handleScroll);
-    });
-    async function init() {
-      localUser.value = JSON.parse(localStorage.getItem('sd-user'));
-      const tempLikes = await postsData.getBuyDiary(
-        1,
-        '',
-        '',
-        localUser.value.id,
-        localUser.value.token,
+
+    function resetFilter(sort = 'desc', query = '') {
+      postsData.getPostsData.page = 1;
+      searchFilter.value = {
+        page: 1,
+        sort,
+        query,
+      };
+    }
+    const search = async (data) => {
+      resetFilter();
+      const result = await postsData.getBuyDiary(
+        postsData.getPostsData.page,
+        data.type === 'like' ? 'asc' : data.type,
+        data.query,
+        data.type === 'like' ? userData?.user?.id ?? '' : '',
+        userData.user.token,
       );
-      likesList.value = tempLikes.data.data;
-      console.log(likesList.value);
+      diariesList.value = result.data.data;
+      postsData.diaries = diariesList.value;
+      if (result.data.data.length === 10) {
+        morePostBtn.value = true;
+      }
+    };
+    async function init() {
+      statusData.openPageLoader();
+      await followData.getMySubscribed(userData.user.token);
     }
     init();
     return {
       postsData,
       userData,
-      nowPage,
-      likesList,
+      followData,
+      morePostBtn,
+      getMorePost,
       search,
     };
   },
@@ -116,9 +103,12 @@ export default {
         <template v-for="(diaryItem, index) in postsData.diaries" :key="diaryItem.id">
           <DiaryCard :post-item="diaryItem" :post-index="index" />
         </template>
+        <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
+          <p>點擊載入更多貼文...</p>
+        </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <DiaryPurchaseRecordCard :likes-list="likesList" />
+        <SubscribedCard :user-list="followData.mySubscribed" />
       </div>
     </div>
   </div>

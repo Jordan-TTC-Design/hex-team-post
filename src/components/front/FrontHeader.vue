@@ -195,6 +195,7 @@ export default {
       font-size: 16px;
       color: #1d1d1d;
       position: relative;
+      white-space: nowrap;
       &::after {
         content: '';
         width: 64%;
