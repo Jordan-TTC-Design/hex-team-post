@@ -16,6 +16,7 @@ import RecommendFollowCard from '@/components/front/cards/RecommendFollowCard.vu
 
 import userStore from '@/stores/userStore';
 import followStore from '@/stores/followStore';
+import productStore from '@/stores/productStore';
 
 export default {
   components: {
@@ -34,6 +35,7 @@ export default {
     const userData = userStore();
     // 頁籤分頁
     const followData = followStore();
+    const productData = productStore();
 
     const currentTab = ref('POST');
     const changeCurrentTab = (newTab) => {
@@ -47,7 +49,8 @@ export default {
 
     const userId = ref(route.params.id);
     watch(
-      () => route.params.id, (newUserId) => {
+      () => route.params.id,
+      (newUserId) => {
         userId.value = newUserId;
         currentTab.value = 'POST';
       },
@@ -56,6 +59,8 @@ export default {
     onMounted(async () => {
       if (userData.user.id === userId.value) {
         usersList.value = await followData.getHotUser();
+      } else {
+        products.value = await productData.getProducts('ticket');
       }
     });
 
@@ -75,19 +80,19 @@ export default {
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
-          <MyProfileCard
-            v-if="userId === userData.user.id"
-            :tabType="currentTab"
-            @change-tab="changeCurrentTab"
-          />
-          <UserProfileCard
-            v-else
-            :userId="userId"
-            :tabType="currentTab"
-            @change-tab="changeCurrentTab"
-          />
+        <MyProfileCard
+          v-if="userId === userData.user.id"
+          :tabType="currentTab"
+          @change-tab="changeCurrentTab"
+        />
+        <UserProfileCard
+          v-else
+          :userId="userId"
+          :tabType="currentTab"
+          @change-tab="changeCurrentTab"
+        />
         <div v-if="userId === userData.user.id">
-          <PostSection :userId="userId" v-if="currentTab === 'POST'"  />
+          <PostSection :userId="userId" v-if="currentTab === 'POST'" />
           <DiarySection :userId="userId" v-if="currentTab === 'DIARY'" />
           <FollowSection :userId="userId" v-if="currentTab === 'FOLLOW'" />
           <LikeSection v-if="currentTab === 'LIKE'" />
@@ -101,7 +106,7 @@ export default {
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <ProductCard v-if="userData.user.id !== userId" :products="products" />
+        <ProductCard v-if="userData.user.id !== userId" :userId="userId" :products="products" />
         <RecommendFollowCard v-if="userData.user.id === userId" :user-list="usersList" />
       </div>
     </div>
