@@ -141,14 +141,10 @@ export default {
           </p>
         </div>
         <div class="followBox">
-          <button
-            class="btn btn-sm btn-outline text-primary"
-            v-if="!isFollowing"
-            @click="addFollow()"
-          >
+          <button class="followBtn btn btn-sm" v-if="!isFollowing" @click="addFollow()">
             追蹤
           </button>
-          <button class="btn btn-sm btn-outline text-primary" v-else @click="deleteFollow()">
+          <button class="followBtn btn btn-sm followed" v-else @click="deleteFollow()">
             取消追蹤
           </button>
         </div>
@@ -173,6 +169,22 @@ export default {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  .followBtn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--bs-gray-middle);
+    border-radius: 0.5rem;
+    color: var(--bs-dark);
+    &:hover {
+      border: 1px solid var(--bs-primary);
+      color: var(--bs-primary);
+    }
+    &.followed {
+      border: 1px solid var(--bs-gray-light);
+      background-color: var(--bs-gray-light);
+      color: var(--bs-gray-dark);
+    }
+  }
 }
 .userContentBox {
   display: flex;

@@ -57,6 +57,9 @@ export default {
           </div>
         </RouterLink>
       </template>
+      <div v-if="followings.length === 0" class="noContentBox noContentBox--sm">
+        <p>您尚未追蹤任何用戶</p>
+      </div>
     </div>
   </div>
 </template>

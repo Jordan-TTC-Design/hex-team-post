@@ -82,6 +82,9 @@ export default {
     <template v-for="postItem in posts" :key="postItem.id">
       <PostCard :post-item="postItem" />
     </template>
+    <div v-if="posts.length === 0" class="noContentBox noContentBox--sm">
+      <p>您尚未發布任何生活貼文</p>
+    </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
       <p>點擊載入更多貼文...</p>
     </div>

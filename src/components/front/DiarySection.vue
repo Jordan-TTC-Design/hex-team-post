@@ -92,32 +92,6 @@ export default {
       isLogin.value = await userData.checkLogIn(userData.user.token || '');
       console.log(isLogin.value);
       getPosts();
-
-      // const header = {
-      //   headers: {
-      //     Authorization: `${userData.user.token}`,
-      //   },
-      // };
-      console.log('props.userId', props.userId);
-      // if (props.userId) {
-      //   try {
-      //     const url = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${props.userId}`;
-      //     const res = await axios.get(url, header);
-      //     privates.push(...res.data.data);
-      //   } catch (err) {
-      //     console.err(err);
-      //   }
-      // } else {
-      //   try {
-      //     let url = 'https://hex-post-team-api-server';
-      //     url += '.herokuapp.com/api/posts/private';
-      //     const res = await axios.get(url, header);
-      //     console.log(res.data.data);
-      //     privates.push(...res.data.data);
-      //   } catch (err) {
-      //     console.err(err);
-      //   }
-      // }
       statusData.shiftLoading();
     });
 
@@ -148,6 +122,9 @@ export default {
     <template v-for="diary in postsData.diaries" :key="diary._id">
       <DiaryCard :post-item="diary" />
     </template>
+    <div v-if="postsData.diaries.length === 0" class="noContentBox noContentBox--sm">
+      <p>您尚未發布任何秘密日記</p>
+    </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
       <p>點擊載入更多貼文...</p>
     </div>

@@ -36,6 +36,9 @@ export default {
 <template>
   <div class="d-flex flex-column gap-4">
     <PostCard v-for="postItem in posts" :key="postItem.key" :post-item="postItem" />
+    <div v-if="posts.length === 0" class="noContentBox noContentBox--sm">
+      <p>您尚未按任何貼文愛心</p>
+    </div>
   </div>
 </template>
 

@@ -79,12 +79,24 @@ export default {
         :key="r.id"
         :record="r"
       />
+      <div
+        v-if="walletData.diamondPurchaseRecord.length === 0"
+        class="noContentBox noContentBox--sm"
+      >
+        <p>您尚未購買任何日記</p>
+      </div>
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[1].type">
       <DiaryRetailRecordCard v-for="r in walletData.diaryRetailRecord" :key="r.id" :record="r" />
+      <div v-if="walletData.diaryRetailRecord.length === 0" class="noContentBox noContentBox--sm">
+        <p>您尚未售出任何日記</p>
+      </div>
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[2].type">
       <DiaryBuyRecordCard v-for="r in walletData.diaryPurchaseRecord" :key="r.id" :record="r" />
+      <div v-if="walletData.diaryPurchaseRecord.length === 0" class="noContentBox noContentBox--sm">
+        <p>您尚未購買秘密鑽石</p>
+      </div>
     </div>
   </div>
 </template>
