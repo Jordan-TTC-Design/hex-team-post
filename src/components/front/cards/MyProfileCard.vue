@@ -117,7 +117,11 @@ export default {
               showAll: textContentShowData.isShowAll === true,
             }"
           >
-            <p v-if="userData.myProfile.memo">{{ userData.myProfile.memo }}</p>
+            <div
+              v-if="userData.myProfile.memo"
+              v-html="userData.myProfile.memo"
+              class="b"
+            ></div>
           </div>
           <p
             v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
