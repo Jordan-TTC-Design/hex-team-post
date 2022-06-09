@@ -46,9 +46,12 @@ export default {
     });
 
     const isFollowing = ref(false);
-    watch(() => userData.userProfile.followers, (newFollowers) => {
-      isFollowing.value = (newFollowers && newFollowers.some((m) => m === userData.user.id));
-    });
+    watch(
+      () => userData.userProfile.followers,
+      (newFollowers) => {
+        isFollowing.value = newFollowers && newFollowers.some((m) => m === userData.user.id);
+      },
+    );
 
     onMounted(async () => {
       if (userData.userProfile.id !== props.userId) {
@@ -123,7 +126,11 @@ export default {
               showAll: textContentShowData.isShowAll === true,
             }"
           >
-            <p v-if="userData.userProfile.memo">{{ userData.userProfile.memo }}</p>
+            <div
+              v-if="userData.userProfile.memo"
+              v-html="userData.userProfile.memo"
+              class="b"
+            ></div>
           </div>
           <p
             v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
@@ -137,14 +144,13 @@ export default {
           <button
             class="btn btn-sm btn-outline text-primary"
             v-if="!isFollowing"
-            @click="addFollow()">
+            @click="addFollow()"
+          >
             追蹤
           </button>
-          <button
-            class="btn btn-sm btn-outline text-primary"
-            v-else
-            @click="deleteFollow()">
-            取消追蹤</button>
+          <button class="btn btn-sm btn-outline text-primary" v-else @click="deleteFollow()">
+            取消追蹤
+          </button>
         </div>
       </div>
     </div>

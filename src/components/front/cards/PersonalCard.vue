@@ -2,8 +2,7 @@
 import userStore from '@/stores/userStore';
 
 export default {
-  props: {
-  },
+  props: {},
   setup(props, { emit }) {
     const userData = userStore();
     const showEdit = () => {
@@ -21,16 +20,7 @@ export default {
 <template>
   <div class="card" :class="props.class">
     <div class="card-body">
-      <div
-        class="
-          card-title
-          border-bottom
-          pb-3
-          mb-3
-          d-flex
-          justify-content-between
-        "
-      >
+      <div class="card-title border-bottom pb-3 mb-3 d-flex justify-content-between">
         個人資料
         <i class="bi bi-pencil-square cp" @click="showEdit"></i>
       </div>
@@ -49,13 +39,18 @@ export default {
       <div class="tmp">
         <p class="a">性別</p>
         <p class="b">
-          {{ userData.myProfile.gender ?
-             userData.myProfile.gender === 'male' ? '男性' : '女性' : '' }}
+          {{
+            userData.myProfile.gender
+              ? userData.myProfile.gender === 'male'
+                ? '男性'
+                : '女性'
+              : ''
+          }}
         </p>
       </div>
       <div class="tmp">
         <p class="a">個人簡介</p>
-        <p class="b">{{ userData.myProfile.memo }}</p>
+        <div v-html="userData.myProfile.memo" class="b"></div>
       </div>
     </div>
   </div>
@@ -81,5 +76,4 @@ export default {
 .cp {
   cursor: pointer;
 }
-
 </style>
