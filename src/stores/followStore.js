@@ -9,6 +9,7 @@ const followData = defineStore({
   state: () => ({
     myFollowUser: [],
     myFollower: [],
+    mySubscribed: [],
   }),
   getters: {},
   actions: {
@@ -30,6 +31,7 @@ const followData = defineStore({
         })
         .catch((err) => {
           console.dir(err);
+          statusData.shiftLoading();
           return err;
         });
     },
@@ -92,6 +94,27 @@ const followData = defineStore({
         })
         .catch((err) => {
           console.log(err);
+          statusData.shiftLoading();
+          return err;
+        });
+    },
+    async getMySubscribed(userToken) {
+      statusData.addLoading();
+      return axios({
+        method: 'GET',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/subscribed',
+        headers: {
+          authorization: `${userToken}`,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          statusData.shiftLoading();
+          this.mySubscribed = res.data.data;
+          return res.data;
+        })
+        .catch((err) => {
+          console.dir(err);
           statusData.shiftLoading();
           return err;
         });

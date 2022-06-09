@@ -34,9 +34,12 @@ const postsStore = defineStore({
   }),
   getters: {},
   actions: {
-    async getPosts(page = 1, timeSort = 'asc', query = '', like = '') {
+    async getPosts(page = 1, timeSort = 'desc', query = '', like = '') {
       console.log(page, timeSort, query, like);
       statusData.addLoading();
+      if (page === 1 && this.posts.length > 0) {
+        this.posts.length = 0;
+      }
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&sort=${timeSort}`;
       if (query) {
         apiUrl += `&q=${query}`;
@@ -48,9 +51,31 @@ const postsStore = defineStore({
         const res = await axios.get(apiUrl);
         const result = res.data.data;
         console.log(page, res);
-        if (page === 1) {
-          this.post = [];
-        }
+        this.posts.push(...result.data);
+        console.log(this.posts);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
+    },
+    async getMyFollowPosts(page = 1, timeSort = 'desc', query = '', userToken) {
+      statusData.addLoading();
+      if (page === 1 && this.posts.length > 0) {
+        this.posts.length = 0;
+      }
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/follow/auth/followposts?page=${page}&sort=${timeSort}&q=${query}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        const result = res.data.data;
+        console.log(page, res);
         this.posts.push(...result.data);
         console.log(this.posts);
         return res.data;

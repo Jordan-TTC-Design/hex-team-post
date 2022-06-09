@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
@@ -21,34 +21,56 @@ export default {
     const postsData = postsStore();
     const statusData = statusStore();
     const followData = followStore();
-    statusData.openPageLoader();
     const following = ref([]);
-    const postSort = ref('asc');
-    const postQuery = ref('');
-    postsData.getPosts();
-    function sortPostsData() {
-      postsData.getPosts(postSort.value, postQuery.value);
-    }
-    const search = (data) => {
-      postsData.getPosts(
-        postsData.getPostsData.page,
-        data.type === 'like' ? 'asc' : data.type,
-        data.query,
-        data.type === 'like' ? userData?.user?.id ?? '' : '',
-      );
-    };
-    onMounted(async () => {
-      const localUser = await JSON.parse(localStorage.getItem('sd-user'));
-      const res = await followData.getMyFollow(localUser.token);
-      console.log(res);
-      following.value = [...res.data[0].following];
+    const morePostBtn = ref(false);
+    const searchFilter = ref({
+      page: 1,
+      sort: 'desc',
+      query: '',
     });
+    function resetFilter(sort = 'desc', query = '') {
+      postsData.getPostsData.page = 1;
+      searchFilter.value = {
+        page: 1,
+        sort,
+        query,
+      };
+    }
+    const search = async (data) => {
+      resetFilter();
+      const result = await postsData.getMyFollowPosts(
+        searchFilter.value.page,
+        data.type,
+        data.query,
+        userData.user.token,
+      );
+      if (result.data.data.length < 10) {
+        morePostBtn.value = true;
+      }
+    };
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      const result = await postsData.getMyFollowPosts(
+        searchFilter.value.page,
+        searchFilter.value.sort,
+        searchFilter.value.query,
+        userData.user.token,
+      );
+      if (result.data.data.length < 10) {
+        morePostBtn.value = false;
+      }
+    }
+    async function init() {
+      statusData.openPageLoader();
+      const res = await followData.getMyFollow(userData.user.token);
+      following.value = [...res.data[0].following];
+    }
+    init();
     return {
-      postSort,
-      postQuery,
       postsData,
       following,
-      sortPostsData,
+      morePostBtn,
+      getMorePost,
       userData,
       search,
     };
@@ -60,27 +82,34 @@ export default {
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
-        <PostFilter @search="search" header="排序" :items="[
-          {
-            name: '由新到舊',
-            type: 'desc',
-          },
-          {
-            name: '由舊到新',
-            type: 'asc',
-          },
-          {
-            name: '按讚的貼文',
-            type: 'like',
-          },
-        ]"/>
+        <PostFilter
+          @search="search"
+          header="排序"
+          :items="[
+            {
+              name: '由新到舊',
+              type: 'desc',
+            },
+            {
+              name: '由舊到新',
+              type: 'asc',
+            },
+            {
+              name: '按讚的貼文',
+              type: 'like',
+            },
+          ]"
+        />
         <AddPostCard v-if="userData.userToken" />
         <template v-for="postItem in postsData.posts" :key="postItem.id">
           <PostCard :post-item="postItem" />
         </template>
+        <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
+          <p>點擊載入更多貼文...</p>
+        </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <FollowingCard  :following="following"/>
+        <FollowingCard :following="following" />
       </div>
     </div>
   </div>
