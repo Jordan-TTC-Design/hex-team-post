@@ -48,20 +48,24 @@ export default {
     const route = useRoute();
 
     const userId = ref(route.params.id);
+    async function processUser(targetId) {
+      if (userData.user.id === targetId) {
+        usersList.value = await followData.getHotUser();
+      } else {
+        products.value = await productData.getProducts('ticket');
+      }
+    }
     watch(
       () => route.params.id,
       (newUserId) => {
         userId.value = newUserId;
         currentTab.value = 'POST';
+        processUser(newUserId);
       },
     );
 
     onMounted(async () => {
-      if (userData.user.id === userId.value) {
-        usersList.value = await followData.getHotUser();
-      } else {
-        products.value = await productData.getProducts('ticket');
-      }
+      processUser(userId.value);
     });
 
     return {
@@ -106,7 +110,7 @@ export default {
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <ProductCard v-if="userData.user.id !== userId" :userId="userId" :products="products" />
+        <ProductCard v-if="userData.user.id !== userId" :user-id="userId" :products="products" />
         <RecommendFollowCard v-if="userData.user.id === userId" :user-list="usersList" />
       </div>
     </div>

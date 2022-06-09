@@ -119,12 +119,18 @@ const followData = defineStore({
           return err;
         });
     },
-    async newSubscribed(data, userToken) {
+    async newSubscribed(userId, productId, userToken) {
       statusData.addLoading();
+      const subscribedData = {
+        subscriptionUserId: userId,
+        productId,
+      };
+      console.log(subscribedData);
+
       return axios({
         method: 'POST',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/order/pay/subscription',
-        data,
+        data: subscribedData,
         headers: {
           authorization: `${userToken}`,
         },

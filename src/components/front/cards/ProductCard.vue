@@ -25,14 +25,9 @@ export default {
     }
 
     const purchase = ({ id, name }) => {
-      const subscribedData = {
-        subscriptionUserId: props.userId,
-        productId: id,
-      };
-      console.log(subscribedData);
       statusData.openAskModel('確定是否購買', name, async () => {
         try {
-          const res = await followData.newSubscribed(subscribedData, userData.user.token);
+          const res = await followData.newSubscribed(props.userId, id, userData.user.token);
           console.log(res);
           if (res.status === 'success') {
             statusData.openRemindModel('購買成功', `訂單編號：${res.message}`);
