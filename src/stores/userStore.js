@@ -13,7 +13,13 @@ const userStore = defineStore({
       token: '',
       photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
-    ProfileUser: {
+    myProfile: {
+      name: '',
+      id: '',
+      token: '',
+      photo: 'https://i.imgur.com/ZWHoRPi.png',
+    },
+    userProfile: {
       name: '',
       id: '',
       token: '',
@@ -98,14 +104,30 @@ const userStore = defineStore({
         statusData.shiftLoading();
       }
     },
-    async getProfileUser(id) {
+    async getUserProfile(id) {
       try {
         statusData.addLoading();
         const res = await axios({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/user/${id}`,
         });
-        console.log(res);
+        const {
+          follows,
+          likes,
+          postCounts,
+          privateposts,
+          user,
+        } = res.data.data;
+        statusData.shiftLoading();
+        user.photo = user.photo || this.userProfile.photo;
+        this.userProfile = {
+          ...user,
+          follows,
+          likes,
+          postCounts,
+          privateposts,
+        };
+        console.log(user);
         return res.data.data;
       } catch (err) {
         console.dir(err);
@@ -114,22 +136,35 @@ const userStore = defineStore({
         statusData.shiftLoading();
       }
     },
-    async getMyUser(userToken) {
+    async getMyProfile() {
       statusData.addLoading();
       return axios({
         method: 'GET',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
         headers: {
-          authorization: `${userToken}`,
+          authorization: `${this.user.token}`,
         },
       })
         .then((res) => {
-          console.log(res);
+          const {
+            follows,
+            likes,
+            postCounts,
+            privateposts,
+            user,
+          } = res.data.data;
           statusData.shiftLoading();
+          user.photo = user.photo || this.myProfile.photo;
+          this.myProfile = {
+            ...user,
+            follows,
+            likes,
+            postCounts,
+            privateposts,
+          };
           return res.data.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -201,10 +236,52 @@ const userStore = defineStore({
           return err;
         });
     },
+    async editUser(user) {
+      statusData.addLoading();
+      console.log(user);
+      const {
+        name,
+        birthday,
+        gender,
+        memo,
+      } = user;
+      return axios({
+        method: 'PATCH',
+        url: 'https://hex-post-team-api-server.herokuapp.com/api/user/',
+        data: {
+          name,
+          birthday,
+          gender,
+          memo,
+        },
+        headers: {
+          authorization: `${this.user.token}`,
+        },
+      })
+        .then((res) => {
+          this.user = {
+            ...this.user,
+            ...res.data.data,
+          };
+          this.myProfile = {
+            ...this.myProfile,
+            ...res.data.data,
+          };
+          statusData.shiftLoading();
+          this.updatedLocalUser();
+          // this.checkLogIn(this.user.token);
+          statusData.openRemindModel('變更個人資料成功', '');
 
+          return res.data.data;
+        })
+        .catch((err) => {
+          statusData.shiftLoading();
+          statusData.openRemindModel('變更個人資料失敗', err.response.data.message);
+          return err.response.data;
+        });
+    },
     async resetPassword(forgetData) {
       statusData.addLoading();
-      console.log(forgetData);
       return axios({
         method: 'POST',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/reset_password',
@@ -215,12 +292,14 @@ const userStore = defineStore({
       })
         .then((res) => {
           statusData.shiftLoading();
-          this.checkLogIn(this.user.token);
-          return res.data.data;
+          statusData.openRemindModel('變更密碼成功', '下次登入請輸入新密碼');
+          // this.checkLogIn(this.user.token);
+          return res.data;
         })
         .catch((err) => {
           statusData.shiftLoading();
-          throw err;
+          statusData.openRemindModel('變更密碼失敗', err.response.data.message);
+          return err.response.data;
         });
     },
     logOut() {

@@ -1,10 +1,10 @@
 <script>
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
-import followStore from '@/stores/followStore';
 
-// 他人 tab
-const userTabs = [
+// 本人 tab
+const myTabs = [
   {
     text: '貼文',
     type: 'POST',
@@ -17,18 +17,29 @@ const userTabs = [
     text: '追蹤',
     type: 'FOLLOW',
   },
+  {
+    text: '喜歡',
+    type: 'LIKE',
+  },
+  {
+    text: '錢包',
+    type: 'WALLET',
+  },
+  {
+    text: '設定',
+    type: 'SETTING',
+  },
 ];
 
 export default {
   props: {
     tabType: String,
-    userId: String,
   },
   setup(props, { emit }) {
+    const statusData = statusStore();
     const userData = userStore();
-    const followData = followStore();
 
-    const currentTabs = ref(userTabs);
+    const currentTabs = ref(myTabs);
     const handleChangeTab = (newTab) => {
       emit('change-tab', newTab);
     };
@@ -45,42 +56,24 @@ export default {
       }
     });
 
-    const isFollowing = ref(false);
-    watch(() => userData.userProfile.followers, (newFollowers) => {
-      isFollowing.value = (newFollowers && newFollowers.some((m) => m === userData.user.id));
-    });
+    function openEditImg() {
+      statusData.openUserImageCropper();
+    }
 
     onMounted(async () => {
-      if (userData.userProfile.id !== props.userId) {
-        await userData.getUserProfile(props.userId);
+      if (userData.myProfile.id !== userData.user.id) {
+        await userData.getMyProfile();
       }
     });
 
-    const addFollow = async () => {
-      const res = await followData.addFollow(userData.userProfile.id, userData.user.token);
-      if (res.data.status === 'success') {
-        await userData.getUserProfile(props.userId);
-      }
-    };
-
-    const deleteFollow = async () => {
-      const res = await followData.deleteFollow(userData.userProfile.id, userData.user.token);
-      if (res.data.status === 'success') {
-        await userData.getUserProfile(props.userId);
-      }
-    };
-
     return {
-      currentTabs,
       userData,
-      followData,
+      currentTabs,
       props,
       textContentShowData,
       userMemoTextContent,
-      isFollowing,
-      addFollow,
-      deleteFollow,
       handleChangeTab,
+      openEditImg,
     };
   },
 };
@@ -91,26 +84,27 @@ export default {
     <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-md-start align-items-center">
       <div class="position-relative">
         <img
-          :src="userData.userProfile.photo"
+          :src="userData.myProfile.photo || 'https://i.imgur.com/ZWHoRPi.png'"
           alt="user-picture"
           class="user-picture user-picture-lg m-0"
         />
+        <p class="user-picture_cover" @click="openEditImg">查看</p>
       </div>
-      <div class="userContentBox" v-if="userData.userProfile.id">
-        <span class="userProfileCard-title">{{ userData.userProfile.name }}</span>
+      <div class="userContentBox" v-if="userData.myProfile.id">
+        <span class="userProfileCard-title">{{ userData.myProfile.name }}</span>
         <div class="userContentBox__info">
           <p class="userContentBox__info__item">
-            <span class="bold">{{ userData.userProfile.postCounts }}</span> 貼文
+            <span class="bold">{{ userData.myProfile.postCounts }}</span> 貼文
           </p>
           <p class="userContentBox__info__item">
-            <span class="bold">{{ userData.userProfile.privateposts }}</span> 秘密日記
+            <span class="bold">{{ userData.myProfile.privateposts }}</span> 秘密日記
           </p>
           <p class="userContentBox__info__item">
-            <span class="bold">{{ userData.userProfile.follows }}</span> 位追蹤者
+            <span class="bold">{{ userData.myProfile.follows }}</span> 位追蹤者
           </p>
           <p class="userContentBox__info__item">
             <span class="bold">
-              {{ userData.userProfile.following?.length ?? '' }}
+              {{ userData.myProfile.following?.length ?? 0 }}
             </span>
             追蹤中
           </p>
@@ -123,7 +117,7 @@ export default {
               showAll: textContentShowData.isShowAll === true,
             }"
           >
-            <p v-if="userData.userProfile.memo">{{ userData.userProfile.memo }}</p>
+            <p v-if="userData.myProfile.memo">{{ userData.myProfile.memo }}</p>
           </div>
           <p
             v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"
@@ -132,19 +126,6 @@ export default {
           >
             顯示完整簡介
           </p>
-        </div>
-        <div class="followBox">
-          <button
-            class="btn btn-sm btn-outline text-primary"
-            v-if="!isFollowing"
-            @click="addFollow()">
-            追蹤
-          </button>
-          <button
-            class="btn btn-sm btn-outline text-primary"
-            v-else
-            @click="deleteFollow()">
-            取消追蹤</button>
         </div>
       </div>
     </div>

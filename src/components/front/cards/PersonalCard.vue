@@ -3,7 +3,6 @@ import userStore from '@/stores/userStore';
 
 export default {
   props: {
-    user: Object,
   },
   setup(props, { emit }) {
     const userData = userStore();
@@ -33,30 +32,30 @@ export default {
         "
       >
         個人資料
-        <i class="bi bi-pencil-square" @click="showEdit"></i>
+        <i class="bi bi-pencil-square cp" @click="showEdit"></i>
       </div>
       <div class="tmp">
         <p class="a">暱稱</p>
-        <p class="b">{{ userData.user?.name }}</p>
+        <p class="b">{{ userData.myProfile.name }}</p>
       </div>
       <div class="tmp">
         <p class="a">Email</p>
-        <p class="b">{{ userData.user?.email }}</p>
+        <p class="b">{{ userData.myProfile.email }}</p>
       </div>
       <div class="tmp">
         <p class="a">生日</p>
-        <p class="b">{{ userData.user?.birthday?.split('T')[0] }}</p>
+        <p class="b">{{ userData.myProfile.birthday?.split('T')[0] }}</p>
       </div>
       <div class="tmp">
         <p class="a">性別</p>
         <p class="b">
-          {{ userData.user?.gender ?
-             userData.user?.gender === 'male' ? '男性' : '女性' : '' }}
+          {{ userData.myProfile.gender ?
+             userData.myProfile.gender === 'male' ? '男性' : '女性' : '' }}
         </p>
       </div>
       <div class="tmp">
         <p class="a">個人簡介</p>
-        <p class="b">{{ userData.user?.memo }}</p>
+        <p class="b">{{ userData.myProfile.memo }}</p>
       </div>
     </div>
   </div>
@@ -78,4 +77,9 @@ export default {
 .c {
   color: #1d1d1d;
 }
+
+.cp {
+  cursor: pointer;
+}
+
 </style>

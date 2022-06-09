@@ -1,22 +1,32 @@
 <script>
 import { reactive } from 'vue';
+import userStore from '@/stores/userStore';
 
 export default {
   props: {
     user: Object,
   },
   setup(props, { emit }) {
-    const cancel = () => {
+    const userData = userStore();
+    const {
+      name,
+      birthday,
+      gender,
+      memo,
+    } = userData.myProfile;
+    const editUser = reactive({
+      name,
+      birthday: birthday.split('T')[0],
+      gender,
+      memo,
+    });
+
+    const save = async () => {
+      await userData.editUser({ ...editUser });
       emit('hide-edit');
     };
-    const editUser = reactive({
-      name: props.user?.user?.name,
-      birthday: props.user?.user?.birthday.split('T')[0],
-      gender: props.user?.user?.gender,
-      memo: props.user?.user?.memo,
-    });
-    const save = () => {
-      emit('save', { ...editUser });
+    const cancel = () => {
+      emit('hide-edit');
     };
 
     return {

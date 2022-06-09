@@ -1,13 +1,13 @@
 <script>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, ref } from 'vue';
+// import { useRouter } from 'vue-router';
 
 import PersonalCard from '@/components/front/cards/PersonalCard.vue';
 import PersonalEditCard from '@/components/front/cards/PersonalEditCard.vue';
 import ChangePasswordCard from '@/components/front/ChangePasswordCard.vue';
 
 import userStore from '@/stores/userStore';
-import statusStore from '@/stores/statusStore';
+// import statusStore from '@/stores/statusStore';
 
 const tabs = [
   {
@@ -26,14 +26,12 @@ export default {
     PersonalEditCard,
     ChangePasswordCard,
   },
-  props: {
-    user: Object,
-  },
-  setup(props) {
+  setup() {
+    // const router = useRouter();
     const userData = userStore();
-    const statusData = statusStore();
+    // const statusData = statusStore();
+
     const currentTab = ref(tabs[0].type);
-    const router = useRouter();
 
     const isShowPersonalEditCard = ref(false);
     const showEditPersonal = () => {
@@ -42,45 +40,24 @@ export default {
     const hideEditPersonal = () => {
       isShowPersonalEditCard.value = false;
     };
-    const updatePersonal = async (updateUser) => {
-      try {
-        userData.user.name = updateUser.name;
-        userData.user.gender = updateUser.gender;
-        userData.user.birthday = updateUser.birthday;
-        userData.user.memo = updateUser.memo;
-        await userData.updateUser(userData.user.token);
-        isShowPersonalEditCard.value = false;
-        statusData.openRemindModel('個人資料更新成功', '');
-        router.go(0);
-      } catch (e) {
-        console.log(e);
-        statusData.openRemindModel('個人資料更新失敗', e.response.data.message);
-      }
-    };
+
+    const user = reactive({});
 
     const changePassword = async (password) => {
-      // call api
-      console.log(password);
-      try {
-        await userData.resetPassword({
-          password: password.password,
-          confirmPassword: password.confirmPassword,
-        });
-        statusData.openRemindModel('變更密碼成功', '下次登入請輸入新密碼');
-        router.go(0);
-      } catch (e) {
-        statusData.openRemindModel('變更密碼失敗', e.response.data.message);
-      }
+      await userData.resetPassword({
+        password: password.password,
+        confirmPassword: password.confirmPassword,
+      });
     };
 
     return {
       tabs,
-      props,
       currentTab,
       isShowPersonalEditCard,
       showEditPersonal,
       hideEditPersonal,
-      updatePersonal,
+      user,
+      // updatePersonal,
       changePassword,
     };
   },
@@ -105,19 +82,15 @@ export default {
         class="mb-3"
         v-if="!isShowPersonalEditCard"
         @show-edit="showEditPersonal"
-        :user="props.user"
       />
       <PersonalEditCard
         v-if="isShowPersonalEditCard"
-        @save="updatePersonal"
         @hide-edit="hideEditPersonal"
-        :user="props.user"
       />
     </div>
     <div class="subContent" v-else-if="currentTab === tabs[1].type">
       <ChangePasswordCard @change-password="changePassword" />
     </div>
-    <div class="subContent" v-else-if="currentTab === tabs[2].type">Oops !</div>
   </div>
 </template>
 
