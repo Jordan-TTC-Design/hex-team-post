@@ -78,10 +78,6 @@ export default {
           />
           <div class="mb-md-0">
             <p class="fs-5 text-dark mb-1 ps-md-0 ps-2">{{ userData.user.name }}</p>
-            <div class="d-flex gap-2 justify-content-md-start justify-content-end">
-              <button type="button" class="btn btn-white">儲值紀錄</button>
-              <button type="button" class="btn btn-white">消費紀錄</button>
-            </div>
             <img
               class="diamondContainer__user__logoMark"
               src="@/assets/image/logo-mark.svg"
