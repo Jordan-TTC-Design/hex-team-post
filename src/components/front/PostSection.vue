@@ -1,12 +1,9 @@
 <script>
-import { reactive, onMounted } from 'vue';
-// import PostFilter from '@/components/front/PostFilter.vue';
+import { ref, computed, onMounted } from 'vue';
 import PostCard from '@/components/front/cards/PostCard.vue';
-import axios from 'axios';
-import userStore from '@/stores/userStore';
-import PostFilter from '@/components/front/PostFilter.vue';
-
+import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
+import PostFilter from '@/components/front/PostFilter.vue';
 
 export default {
   components: {
@@ -17,43 +14,48 @@ export default {
     userId: String,
   },
   setup(props) {
-    const posts = reactive([]);
-    const userData = userStore();
+    const postsData = postsStore();
     const statusData = statusStore();
-
-    const search = () => {};
-
-    onMounted(async () => {
-      statusData.addLoading();
-      const header = {
-        headers: {
-          Authorization: `${userData.user.token}`,
-        },
+    const posts = computed(() => postsData.posts);
+    const searchFilter = ref({});
+    const morePostBtn = ref(false);
+    function resetFilter(sort = 'desc', query = '') {
+      postsData.getPostsData.page = 1;
+      morePostBtn.value = false;
+      searchFilter.value = {
+        page: 1,
+        sort,
+        query,
       };
-      if (props.userId) {
-        try {
-          const url = `https://hex-post-team-api-server.herokuapp.com/api/posts/${props.userId}`;
-          const res = await axios.get(url, header);
-          posts.push(...res.data.data);
-        } catch (err) {
-          console.err(err);
-        }
-      } else {
-        try {
-          let url = 'https://hex-post-team-api-server';
-          url += '.herokuapp.com/api/posts/?sort=asc';
-          const res = await axios.get(url, header);
-          posts.push(...res.data.data);
-        } catch (err) {
-          console.err(err);
+    }
+    async function getPosts() {
+      const result = await postsData.getUserPost(
+        props.userId,
+        searchFilter.value.page,
+        searchFilter.value.sort,
+        searchFilter.value.query,
+      );
+      if (result.status === 'success') {
+        if (result.data.data.length === 10) {
+          morePostBtn.value = true;
+        } else {
+          morePostBtn.value = false;
         }
       }
+    }
+    async function search(data) {
+      resetFilter(data.type, data.query, '');
+      getPosts();
+    }
+    onMounted(async () => {
+      statusData.addLoading();
+      getPosts();
       statusData.shiftLoading();
     });
-
     return {
       props,
       posts,
+      morePostBtn,
       search,
     };
   },
@@ -68,6 +70,10 @@ export default {
     :items="[
       {
         name: '由新到舊',
+        type: 'desc',
+      },
+      {
+        name: '由舊到新',
         type: 'asc',
       },
     ]"
@@ -76,6 +82,9 @@ export default {
     <template v-for="postItem in posts" :key="postItem.id">
       <PostCard :post-item="postItem" />
     </template>
+    <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
+      <p>點擊載入更多貼文...</p>
+    </div>
   </div>
 </template>
 

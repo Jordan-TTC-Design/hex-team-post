@@ -140,16 +140,16 @@ export default {
           @change-tab="changeCurrentTab"
         />
         <div v-if="isSelf">
-          <PostSection v-if="currentTab === 'POST'" />
-          <DiarySection v-if="currentTab === 'DIARY'" />
-          <FollowSection v-if="currentTab === 'FOLLOW'" />
+          <PostSection :userId="userId" v-if="currentTab === 'POST'"  />
+          <DiarySection :userId="userId" v-if="currentTab === 'DIARY'" />
+          <FollowSection :userId="userId" v-if="currentTab === 'FOLLOW'" />
           <LikeSection v-if="currentTab === 'LIKE'" />
           <WalletSection v-if="currentTab === 'WALLET'" />
           <SettingSection v-if="currentTab === 'SETTING'" :user="myInfo"></SettingSection>
         </div>
         <div v-else>
           <PostSection :userId="userId" v-if="currentTab === 'POST'" />
-          <DiarySection v-if="currentTab === 'DIARY'" />
+          <DiarySection :userId="userId" v-if="currentTab === 'DIARY'" />
           <FollowSection :userId="userId" v-if="currentTab === 'FOLLOW'" />
         </div>
       </div>

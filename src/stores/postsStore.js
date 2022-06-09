@@ -152,17 +152,20 @@ const postsStore = defineStore({
         statusData.shiftLoading();
       }
     },
-    async getUserPost(userToken) {
+    async getUserPost(userId, page = 1, timeSort = 'desc', query = '') {
       statusData.addLoading();
+      if (page === 1 && this.posts.length > 0) {
+        this.posts.length = 0;
+      }
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/UserAll',
-          headers: {
-            authorization: `${userToken}`,
-          },
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
         });
-        console.log(res.data);
+        const result = res.data.data;
+        console.log(page, res);
+        this.posts.push(...result.data);
+        console.log(this.posts);
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -206,7 +209,7 @@ const postsStore = defineStore({
         statusData.shiftLoading();
       }
     },
-    async getBuyDiary(page = 1, timeSort = 'dasc', query = '', like = '', userToken) {
+    async getBuyDiary(page = 1, timeSort = 'desc', query = '', like = '', userToken) {
       console.log(page, timeSort, query, like);
       statusData.addLoading();
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/diary?page=${page}&sort=${timeSort}`;
@@ -234,19 +237,76 @@ const postsStore = defineStore({
         statusData.shiftLoading();
       }
     },
-    async getUserDiary(userId) {
+    async getMyDiary(userToken, page = 1, timeSort = 'desc', query = '') {
       statusData.addLoading();
-      const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}`;
+      console.log(userToken, page, timeSort, query);
+      if (page === 1 && this.diaries.length > 0) {
+        this.diaries.length = 0;
+      }
       try {
-        const res = await axios.get(apiUrl);
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private?page=${page}&sort=${timeSort}&query=${query}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
         console.log(res);
-        this.diarys = res.data.data;
-        statusData.shiftLoading();
+        const result = res.data.data;
+        this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
-        statusData.shiftLoading();
         console.dir(err);
         return err;
+      } finally {
+        statusData.shiftLoading();
+      }
+    },
+    async getUserDiary(userId, userToken, page = 1, timeSort = 'desc', query = '') {
+      statusData.addLoading();
+      console.log(userId, page, timeSort, query);
+      if (page === 1 && this.diaries.length > 0) {
+        this.diaries.length = 0;
+      }
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private/Auth/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
+          headers: {
+            authorization: `${userToken}`,
+          },
+        });
+        console.log(res);
+        const result = res.data.data;
+        this.diaries.push(...result.data[0]);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
+      }
+    },
+    async getUserDiaryNoLogin(userId, page = 1, timeSort = 'desc', query = '') {
+      statusData.addLoading();
+      console.log(userId, page, timeSort, query);
+      if (page === 1 && this.diaries.length > 0) {
+        this.diaries.length = 0;
+      }
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
+        });
+        console.log(res);
+        const result = res.data.data;
+        this.diaries.push(...result.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async buyDiary(postId, userToken) {

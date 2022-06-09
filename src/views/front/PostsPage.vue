@@ -23,54 +23,55 @@ export default {
     const statusData = statusStore();
     const usersList = ref([]);
     const morePostBtn = ref(false);
-    const searchFilter = ref({
-      page: 1,
-      sort: 'desc',
-      query: '',
-    });
-    function resetFilter(sort = 'desc', query = '') {
+    const searchFilter = ref({});
+    function resetFilter(sort = 'desc', query = '', likes = '') {
       postsData.getPostsData.page = 1;
+      morePostBtn.value = false;
       searchFilter.value = {
         page: 1,
         sort,
         query,
+        likes,
       };
     }
-    const search = async (data) => {
-      resetFilter();
-      console.log(data, data.type, data.type === 'like');
-      const result = await postsData.getPosts(
-        searchFilter.value.page,
-        data.type === 'like' ? 'asc' : data.type,
-        data.query,
-        data.type === 'like' ? userData?.user?.id ?? '' : '',
-      );
-      if (result.data.data.length === 10) {
-        morePostBtn.value = true;
-      }
-    };
-    async function getMorePost() {
-      searchFilter.value.page += 1;
+    async function getPosts() {
       const result = await postsData.getPosts(
         searchFilter.value.page,
         searchFilter.value.sort,
         searchFilter.value.query,
+        searchFilter.value.likes,
       );
-      if (result.data.data.length < 10) {
+      if (result.data.data.length === 10) {
+        morePostBtn.value = true;
+      } else {
         morePostBtn.value = false;
       }
     }
+    async function search(data) {
+      if (data.type === 'like') {
+        resetFilter(data.type, data.query, userData?.user?.id);
+      } else {
+        resetFilter(data.type, data.query, '');
+      }
+      getPosts();
+    }
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      getPosts();
+    }
     async function init() {
       statusData.openPageLoader();
+      resetFilter();
+      getPosts();
       usersList.value = await followData.getHotUser();
     }
     init();
     return {
       userData,
       postsData,
-      search,
       usersList,
       morePostBtn,
+      search,
       getMorePost,
     };
   },

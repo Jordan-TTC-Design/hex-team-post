@@ -52,7 +52,12 @@ export default {
         </p>
       </div>
     </div>
-    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
+    <button
+      v-if="userList.length > 0"
+      @click="openModel"
+      type="button"
+      class="sideBtn d-lg-none d-block"
+    >
       <i class="bi bi-binoculars-fill"></i>
     </button>
   </div>

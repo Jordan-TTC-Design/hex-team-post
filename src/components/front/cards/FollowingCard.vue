@@ -4,7 +4,7 @@ import statusStore from '@/stores/statusStore';
 
 export default {
   props: ['following'],
-  setup(props) {
+  setup() {
     const statusData = statusStore();
     const listShow = ref(false);
     function openModel() {
@@ -16,7 +16,6 @@ export default {
       statusData.noScroll = false;
     }
     return {
-      props,
       listShow,
       openModel,
       closeModel,
@@ -31,10 +30,10 @@ export default {
         <button @click="closeModel" type="button" class="btn d-lg-none d-block">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <div class="card-title">我的蹤名單</div>
+        <div class="card-title">我的追蹤</div>
       </div>
       <div class="followUserList card-body d-flex flex-column gap-3">
-        <template v-for="userItem in props.following" :key="userItem._id">
+        <template v-for="userItem in following" :key="userItem._id">
           <RouterLink :to="`/profile/${userItem._id}`" class="followUser">
             <img
               class="user-picture"
@@ -47,9 +46,20 @@ export default {
             <div class="btn btn-sm"><i class="bi bi-arrow-right-circle"></i></div>
           </RouterLink>
         </template>
+        <p
+          class="d-flex flex-grow-1 align-items-center justify-content-center text-gray-middle"
+          v-if="following.length === 0"
+        >
+          目前尚未追蹤任何用戶
+        </p>
       </div>
     </div>
-    <button @click="openModel" type="button" class="sideBtn d-lg-none d-block">
+    <button
+      v-if="following.length > 0"
+      @click="openModel"
+      type="button"
+      class="sideBtn d-lg-none d-block"
+    >
       <i class="bi bi-person-square"></i>
     </button>
   </div>

@@ -23,45 +23,45 @@ export default {
     const followData = followStore();
     const following = ref([]);
     const morePostBtn = ref(false);
-    const searchFilter = ref({
-      page: 1,
-      sort: 'desc',
-      query: '',
-    });
-    function resetFilter(sort = 'desc', query = '') {
+    const searchFilter = ref({});
+    function resetFilter(sort = 'desc', query = '', likes = '') {
       postsData.getPostsData.page = 1;
       searchFilter.value = {
         page: 1,
         sort,
         query,
+        likes,
       };
     }
-    const search = async (data) => {
-      resetFilter();
-      const result = await postsData.getMyFollowPosts(
-        searchFilter.value.page,
-        data.type,
-        data.query,
-        userData.user.token,
-      );
-      if (result.data.data.length < 10) {
-        morePostBtn.value = true;
-      }
-    };
-    async function getMorePost() {
-      searchFilter.value.page += 1;
+    async function getPosts() {
       const result = await postsData.getMyFollowPosts(
         searchFilter.value.page,
         searchFilter.value.sort,
         searchFilter.value.query,
         userData.user.token,
       );
-      if (result.data.data.length < 10) {
+      if (result.data.data.length === 10) {
+        morePostBtn.value = true;
+      } else {
         morePostBtn.value = false;
       }
     }
+    async function search(data) {
+      if (data.type === 'like') {
+        resetFilter(data.type, data.query, userData?.user?.id);
+      } else {
+        resetFilter(data.type, data.query, '');
+      }
+      getPosts();
+    }
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      getPosts();
+    }
     async function init() {
       statusData.openPageLoader();
+      resetFilter();
+      getPosts();
       const res = await followData.getMyFollow(userData.user.token);
       following.value = [...res.data[0].following];
     }
@@ -83,6 +83,7 @@ export default {
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
+          v-if="postsData.posts.length > 0"
           @search="search"
           header="排序"
           :items="[
@@ -94,10 +95,6 @@ export default {
               name: '由舊到新',
               type: 'asc',
             },
-            {
-              name: '按讚的貼文',
-              type: 'like',
-            },
           ]"
         />
         <AddPostCard v-if="userData.userToken" />
@@ -106,6 +103,10 @@ export default {
         </template>
         <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
           <p>點擊載入更多貼文...</p>
+        </div>
+        <div v-if="postsData.posts.length === 0" class="noContentBox">
+          <p>您尚未追蹤任何用戶～</p>
+          <p>歡迎追蹤喜歡的用戶，即時了解他們的狀況!</p>
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
