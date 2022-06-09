@@ -12,6 +12,8 @@ const postsStore = defineStore({
     getPostsData: {
       page: 1,
       total: 1,
+      has_next: false,
+      has_prev: false,
       sort: 'desc',
       query: '',
     },
@@ -33,6 +35,7 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'asc', query = '', like = '') {
+      console.log(page, timeSort, query, like);
       statusData.addLoading();
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/normal?page=${page}&sort=${timeSort}`;
       if (query) {
@@ -43,7 +46,13 @@ const postsStore = defineStore({
       }
       try {
         const res = await axios.get(apiUrl);
-        this.posts = res.data.data;
+        const result = res.data.data;
+        console.log(page, res);
+        if (page === 1) {
+          this.post = [];
+        }
+        this.posts.push(...result.data);
+        console.log(this.posts);
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -129,12 +138,12 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async deletePost(postId, userToken) {
@@ -148,12 +157,28 @@ const postsStore = defineStore({
           },
         });
         console.log(res.data);
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
         console.dir(err);
-        statusData.shiftLoading();
         return err;
+      } finally {
+        statusData.shiftLoading();
+      }
+    },
+    async getHotPost() {
+      statusData.addLoading();
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/order/likes',
+        });
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        console.dir(err);
+        return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async getBuyDiary(page = 1, timeSort = 'dasc', query = '', like = '', userToken) {
@@ -176,12 +201,12 @@ const postsStore = defineStore({
         });
         console.log(res);
         this.diarys = res.data.data;
-        statusData.shiftLoading();
         return res.data;
       } catch (err) {
-        statusData.shiftLoading();
         console.dir(err);
         return err;
+      } finally {
+        statusData.shiftLoading();
       }
     },
     async getUserDiary(userId) {
