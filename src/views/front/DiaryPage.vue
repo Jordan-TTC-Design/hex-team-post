@@ -7,6 +7,7 @@ import followStore from '@/stores/followStore';
 import PostFilter from '@/components/front/PostFilter.vue';
 import DiaryCard from '@/components/front/cards/DiaryCard.vue';
 import SubscribedCard from '@/components/front/SubscribedCard.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -19,6 +20,7 @@ export default {
     const postsData = postsStore();
     const statusData = statusStore();
     const followData = followStore();
+    const router = useRouter();
     const diariesList = ref([]);
     const morePostBtn = ref(false);
     const searchFilter = ref({
@@ -67,6 +69,10 @@ export default {
     };
     async function init() {
       statusData.openPageLoader();
+      const result = await userData.getLocalToken();
+      if (!result) {
+        router.push('/');
+      }
       await followData.getMySubscribed(userData.user.token);
     }
     init();
@@ -87,6 +93,7 @@ export default {
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
+          v-if="postsData.diaries.length > 0"
           @search="search"
           header="排序"
           :items="[
@@ -105,6 +112,9 @@ export default {
         </template>
         <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
           <p>點擊載入更多貼文...</p>
+        </div>
+        <div v-if="postsData.diaries.length === 0" class="noContentBox">
+          <p>尚未購買任何秘密日記或訂閱創作者</p>
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">

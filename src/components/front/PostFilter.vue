@@ -1,5 +1,5 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 
 export default {
   components: {},
@@ -32,9 +32,6 @@ export default {
       toggle();
       search();
     };
-    onMounted(async () => {
-      search();
-    });
     return {
       props,
       query,
