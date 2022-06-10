@@ -1,6 +1,6 @@
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
 import FormInput from '@/components/helper/FormInput.vue';
@@ -10,7 +10,7 @@ export default {
   setup() {
     const userData = userStore();
     const statusData = statusStore();
-    const router = useRouter();
+    // const router = useRouter();
     const resultInfo = ref({});
     const newUser = ref({});
     function resetData() {
@@ -42,8 +42,11 @@ export default {
       } else {
         const result = await userData.signUp(newUser.value);
         if (result.status === 'success') {
-          localStorage.setItem('sd-user', JSON.stringify(userData.user));
-          router.push('/');
+          statusData.openPopInfoModel('註冊成功');
+          statusData.signUpModel = false;
+          // router.go('/');
+        } else if (result.message.indexOf('duplicate') >= 0) {
+          resultInfo.value.email = '此帳號已被註冊';
         } else {
           const errArray = Object.keys(result.message);
           errArray.forEach((item) => {
@@ -103,13 +106,17 @@ export default {
               {{ resultInfo.email }}
             </p>
             <div class="d-flex flex-md-row flex-column gap-3">
-              <FormInput v-model="newUser.password" input-id="signUserPassword" type="password">
+              <FormInput
+                v-model="newUser.password"
+                input-id="signUserPassword"
+                input-type="password"
+              >
                 <template v-slot:default>密碼</template>
               </FormInput>
               <FormInput
                 v-model="newUser.confirmPassword"
                 input-id="userConfirmPassword"
-                type="text"
+                input-type="password"
               >
                 <template v-slot:default>重複確認密碼</template>
               </FormInput>
@@ -122,6 +129,7 @@ export default {
               <input
                 class="form-control bg-white border border-gray-middle"
                 id="userBirthday"
+                placeholder="請選擇您的生日"
                 v-model="newUser.birthday"
                 type="date"
               />
