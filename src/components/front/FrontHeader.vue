@@ -69,13 +69,14 @@ export default {
         </RouterLink>
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/follow` }">
-        <div
+        <a
           class="menu-navbar-item__link"
           v-if="userData.user.token.length === 0"
-          @click="statusData.logInModel = true"
+          @click.prevent="statusData.logInModel = true"
+          href="#"
         >
           <i class="bi bi-bell-fill"></i> 追蹤動態
-        </div>
+        </a>
         <RouterLink
           class="menu-navbar-item__link"
           to="/follow"
@@ -90,13 +91,14 @@ export default {
         >
       </div>
       <div class="menu-navbar-item" :class="{ active: route.path === `/diary` }">
-        <div
+        <a
           class="menu-navbar-item__link"
           v-if="userData.user.token.length === 0"
-          @click="statusData.logInModel = true"
+          @click.prevent="statusData.logInModel = true"
+          href="#"
         >
           <i class="bi bi-envelope-heart"></i> 私密日記本
-        </div>
+        </a>
         <RouterLink
           class="menu-navbar-item__link"
           to="/diary"

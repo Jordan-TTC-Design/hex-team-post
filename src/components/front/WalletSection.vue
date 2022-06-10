@@ -79,7 +79,7 @@ export default {
       <DiaryBuyRecordCard v-for="r in walletData.diaryPurchaseRecord" :key="r.id" :record="r" />
 
       <div
-        v-if="walletData.diamondPurchaseRecord.length === 0"
+        v-if="walletData.diaryPurchaseRecord.length === 0"
         class="noContentBox noContentBox--sm"
       >
         <p>您尚未購買任何日記</p>

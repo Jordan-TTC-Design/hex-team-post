@@ -40,7 +40,7 @@ export default {
     const targetTime = computed(() => {
       const result = moment(targetItem.value.createdAt)
         .locale('zh-tw')
-        .format('YYYY/MM/DD h:mm:ss ');
+        .format('YYYY/MM/DD HH:mm:ss ');
       return result;
     });
     watch(postCardTextContent, (newValue) => {

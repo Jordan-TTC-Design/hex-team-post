@@ -90,7 +90,7 @@ export default {
     <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-md-start align-items-center">
       <div class="position-relative">
         <img
-          :src="userData.myProfile.photo || 'https://i.imgur.com/ZWHoRPi.png'"
+          :src="userData.myProfile.photo || userData.defaultPhoto"
           alt="user-picture"
           class="user-picture user-picture-lg m-0"
         />

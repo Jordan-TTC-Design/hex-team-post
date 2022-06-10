@@ -107,7 +107,7 @@ export default {
     }
     // eslint-disable-next-line max-len
     const isLiked = computed(() => targetItem.value.likes.findIndex((item) => item._id === localUser.id));
-    const targetTime = computed(() => moment(targetItem.value.createdAt).locale('zh-tw').format('YYYY/MM/DD h:mm:ss '));
+    const targetTime = computed(() => moment(targetItem.value.createdAt).locale('zh-tw').format('YYYY/MM/DD HH:mm:ss '));
     return {
       userData,
       postsData,

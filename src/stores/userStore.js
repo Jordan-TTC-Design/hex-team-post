@@ -26,6 +26,7 @@ const userStore = defineStore({
       photo: 'https://i.imgur.com/ZWHoRPi.png',
     },
     myWallet: 0,
+    defaultPhoto: 'https://i.imgur.com/ZWHoRPi.png',
   }),
   getters: {},
   actions: {
@@ -106,10 +107,9 @@ const userStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        return res;
+        return res.data.status === 'success' || false;
       } catch (err) {
-        console.dir(err);
-        return err;
+        return err.response.data.status === 'success' || false;
       } finally {
         statusData.shiftLoading();
       }
@@ -323,6 +323,7 @@ const userStore = defineStore({
       this.user.id = '';
       this.user.token = '';
       this.user.photo = '';
+      this.myProfile = {};
     },
   },
 });
