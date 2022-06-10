@@ -120,7 +120,7 @@ export default {
           class="user-picture"
         />
         <div class="user-info">
-          <RouterLink :to="`/profile/${targetItem.user}`" class="user-info-title mb-1">
+          <RouterLink :to="`/profile/${targetItem.user._id}`" class="user-info-title mb-1">
             {{ targetItem.user.name }}
           </RouterLink>
           <div class="d-flex align-items-center gap-2">

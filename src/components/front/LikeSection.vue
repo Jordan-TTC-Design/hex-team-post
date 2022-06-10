@@ -93,7 +93,7 @@ export default {
     />
     <PostCard v-for="postItem in posts" :key="postItem.key" :post-item="postItem" />
     <div v-if="posts.length === 0 && isLoading" class="noContentBox noContentBox--sm">
-      <p>您尚未按任何貼文愛心</p>
+      <p>無資料</p>
     </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
       <p>點擊載入更多貼文...</p>

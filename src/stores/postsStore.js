@@ -212,6 +212,9 @@ const postsStore = defineStore({
     async getBuyDiary(page = 1, timeSort = 'desc', query = '', like = '', userToken) {
       console.log(page, timeSort, query, like);
       statusData.addLoading();
+      if (page === 1 && this.diaries.length > 0) {
+        this.diaries.length = 0;
+      }
       let apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/posts/diary?page=${page}&sort=${timeSort}`;
       if (query) {
         apiUrl += `&q=${query}`;
@@ -228,7 +231,8 @@ const postsStore = defineStore({
           },
         });
         console.log(res);
-        this.diarys = res.data.data;
+        const result = res.data.data;
+        this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
         console.dir(err);

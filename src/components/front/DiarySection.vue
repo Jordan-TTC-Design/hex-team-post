@@ -126,7 +126,7 @@ export default {
       <DiaryCard :post-item="diary" />
     </template>
     <div v-if="postsData.diaries.length === 0 && isLoading" class="noContentBox noContentBox--sm">
-      <p>您尚未發布任何秘密日記</p>
+      <p>無資料</p>
     </div>
     <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
       <p>點擊載入更多貼文...</p>

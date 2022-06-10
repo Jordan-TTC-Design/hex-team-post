@@ -30,8 +30,8 @@ export default {
         <div class="card-title">我的訂閱名單</div>
       </div>
       <div class="card-body d-flex flex-column gap-3">
-        <template v-for="(userItem, index) in userList" :key="userItem._id">
-          <RouterLink :to="`/profile/${userItem._id}`" v-if="index < 5" class="followUser">
+        <template v-for="(userItem, index) in userList" :key="userItem.id">
+          <RouterLink :to="`/profile/${userItem.id}`" v-if="index < 5" class="followUser">
             <img
               class="user-picture"
               :src="userItem.photo || 'https://i.imgur.com/ZWHoRPi.png'"

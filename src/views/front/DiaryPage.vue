@@ -73,6 +73,7 @@ export default {
       if (!result) {
         router.push('/');
       }
+      await postsData.getBuyDiary(postsData.getPostsData.page, 'desc', '', '', userData.user.token);
       await followData.getMySubscribed(userData.user.token);
     }
     init();
