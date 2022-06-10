@@ -62,7 +62,6 @@ export default {
     }
     watch(props, (newValue) => {
       if (userData.user.id === newValue.userId) {
-        statusData.openPageLoader();
         userData.getMyProfile();
       }
     });

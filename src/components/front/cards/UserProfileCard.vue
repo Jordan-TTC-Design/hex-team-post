@@ -61,8 +61,8 @@ export default {
       }
     });
     onMounted(async () => {
+      statusData.openPageLoader();
       if (userData.userProfile.id !== props.userId) {
-        statusData.openPageLoader();
         await userData.getUserProfile(props.userId);
       }
     });

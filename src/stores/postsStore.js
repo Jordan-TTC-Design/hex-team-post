@@ -338,7 +338,7 @@ const postsStore = defineStore({
       } catch (err) {
         console.dir(err);
         statusData.shiftLoading();
-        return err;
+        return err.response.data;
       }
     },
     async getPostWithToken(postId, userToken) {

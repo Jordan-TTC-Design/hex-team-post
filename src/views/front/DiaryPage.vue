@@ -21,6 +21,7 @@ export default {
     const statusData = statusStore();
     const followData = followStore();
     const router = useRouter();
+    const isLoading = ref(false);
     const diariesList = ref([]);
     const morePostBtn = ref(false);
     const searchFilter = ref({
@@ -53,6 +54,7 @@ export default {
       };
     }
     const search = async (data) => {
+      isLoading.value = true;
       resetFilter();
       const result = await postsData.getBuyDiary(
         postsData.getPostsData.page,
@@ -66,6 +68,7 @@ export default {
       if (result.data.data.length === 10) {
         morePostBtn.value = true;
       }
+      isLoading.value = false;
     };
     async function init() {
       statusData.openPageLoader();
@@ -81,6 +84,7 @@ export default {
       postsData,
       userData,
       followData,
+      isLoading,
       morePostBtn,
       getMorePost,
       search,
@@ -114,7 +118,7 @@ export default {
         <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
           <p>點擊載入更多貼文...</p>
         </div>
-        <div v-if="postsData.diaries.length === 0" class="noContentBox">
+        <div v-if="postsData.diaries.length === 0 && !isLoading" class="noContentBox">
           <p>尚未購買任何秘密日記或訂閱創作者</p>
         </div>
       </div>
