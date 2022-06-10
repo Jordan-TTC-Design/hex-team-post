@@ -35,6 +35,12 @@ export default {
       statusData.logInModel = true;
     }
     async function signUp() {
+      resultInfo.value = {
+        name: '',
+        email: '',
+        birthday: '',
+        password: '',
+      };
       if (newUser.value.password.length === 0 || newUser.value.confirmPassword.length === 0) {
         resultInfo.value.password += '請輸入密碼';
       } else if (newUser.value.password !== newUser.value.confirmPassword) {
@@ -45,7 +51,7 @@ export default {
           statusData.openPopInfoModel('註冊成功');
           statusData.signUpModel = false;
           // router.go('/');
-        } else if (result.message.indexOf('duplicate') >= 0) {
+        } else if (typeof result.message === 'string' && result.message.indexOf('duplicate') >= 0) {
           resultInfo.value.email = '此帳號已被註冊';
         } else {
           const errArray = Object.keys(result.message);
