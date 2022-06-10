@@ -8,7 +8,7 @@ export default {
   },
   setup(props) {
     const targetTime = computed(() => {
-      const result = moment(props.record.createdAt).locale('zh-tw').format('YYYY/MM/DD h:mm:ss ');
+      const result = moment(props.record.createdAt).locale('zh-tw').format('YYYY/MM/DD HH:mm:ss ');
       return result;
     });
     return { props, targetTime };
