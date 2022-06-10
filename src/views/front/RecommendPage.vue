@@ -107,7 +107,7 @@ export default {
               <ArticleCard class="h-100" :post-item="hotPost" :post-index="index" />
             </div>
           </template>
-          <div class="col" v-if="hotPostList.length < 9"><p class="toBeCome">敬請期待</p></div>
+          <div class="col"><p class="toBeCome">敬請期待</p></div>
         </div>
       </div>
     </div>
