@@ -87,8 +87,12 @@ export default {
     }
     function addPostTag() {
       console.log(tagTextContent.value);
-      postsData.targetPost.tag.push(tagTextContent.value);
-      tagTextContent.value = '';
+      if (tagTextContent.value.trim().length > 0) {
+        postsData.targetPost.tag.push(tagTextContent.value);
+        tagTextContent.value = '';
+      } else {
+        statusData.openPopInfoModel('沒輸入內容');
+      }
     }
     return {
       imgData,

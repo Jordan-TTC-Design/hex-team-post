@@ -42,14 +42,22 @@ export default {
             html: `${tempData.content}<br><br><p>用戶${tempData.userEamil}來信</p>`,
           },
         });
-        console.log(res);
         if (res.data === '發信成功') {
+          await axios({
+            method: 'POST',
+            url: 'https://hex-post-team-api-server.herokuapp.com/api/email',
+            data: {
+              to: tempData.userEamil,
+              subject: 'Secret Diary 秘密日記系統信',
+              html: `<p>親愛的用戶您好:</p><p>已收到您的來信，我們將儘速回覆您</p><br>
+              <p>來信內容：</p>${tempData.content}<br><p>秘密日記永遠陪在您的身邊</p>`,
+            },
+          });
           statusData.openPopInfoModel('傳送成功');
           closeModel();
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.openPopInfoModel('資料填寫錯誤或少填');
         return err;
       } finally {

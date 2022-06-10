@@ -230,7 +230,7 @@ export default {
                 {
                   name: '刪除',
                   func() {
-                    deleteComment(commentItem.id, userData.user.token);
+                    deleteComment(commentItem.id, index);
                   },
                 },
               ]"

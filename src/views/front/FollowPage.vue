@@ -26,6 +26,7 @@ export default {
     const morePostBtn = ref(false);
     const searchFilter = ref({});
     function resetFilter(sort = 'desc', query = '', likes = '') {
+      console.log(sort, query, likes);
       postsData.getPostsData.page = 1;
       searchFilter.value = {
         page: 1,
@@ -87,7 +88,6 @@ export default {
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
-          v-if="postsData.posts.length > 0"
           @search="search"
           header="排序"
           :items="[
@@ -102,8 +102,8 @@ export default {
           ]"
         />
         <AddPostCard v-if="userData.userToken" />
-        <template v-for="postItem in postsData.posts" :key="postItem.id">
-          <PostCard :post-item="postItem" />
+        <template v-for="(postItem, index) in postsData.posts" :key="postItem.id">
+          <PostCard :post-item="postItem" :post-index="index" />
         </template>
         <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
           <p>點擊載入更多貼文...</p>

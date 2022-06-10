@@ -59,7 +59,9 @@ export default {
 
 <template>
   <div class="header">
-    <img src="@/assets/image/logo.svg" alt="logo" class="header-logo" />
+    <RouterLink class="header-logo" to="/">
+      <img src="@/assets/image/logo.svg" alt="logo" />
+    </RouterLink>
     <div class="menu-navbar">
       <div class="menu-navbar-item" :class="{ active: route.path === `/` }">
         <RouterLink class="menu-navbar-item__link" to="/">
@@ -163,14 +165,14 @@ export default {
   background: white;
   box-shadow: 0px 1px 1px #00000029;
   padding: 0 24px;
-  @media (max-width: 1199.98px) {
+  @media (max-width: 998.98px) {
     justify-content: space-between;
     padding: 0.5rem 0;
   }
   .header-logo {
     position: absolute;
     left: 24px;
-    @media (max-width: 1199.98px) {
+    @media (max-width: 998.98px) {
       position: relative;
     }
   }
@@ -179,7 +181,7 @@ export default {
     position: absolute;
     right: 24px;
     display: flex;
-    @media (max-width: 1199.98px) {
+    @media (max-width: 998.98px) {
       position: relative;
     }
   }
@@ -235,6 +237,20 @@ export default {
 }
 @media (max-width: 1199.98px) {
   .menu-navbar {
+    .menu-navbar-item {
+      .menu-navbar-item__link {
+        padding:1rem 1.5rem;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        &::after {
+          width: 80%;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 991.98px) {
+  .menu-navbar {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -242,6 +258,16 @@ export default {
     background-color: var(--bs-white);
     justify-content: center;
     border-top: 1px solid var(--bs-gray-middle);
+    .menu-navbar-item {
+      .menu-navbar-item__link {
+        padding: 1rem 0.25rem;
+        gap: 1rem;
+        font-size: 0.875rem;
+        &::after {
+          width: 80%;
+        }
+      }
+    }
   }
 }
 @media (max-width: 991.98px) {
