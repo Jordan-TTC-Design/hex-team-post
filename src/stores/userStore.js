@@ -65,6 +65,7 @@ const userStore = defineStore({
         this.user.token = res.data.user.token;
         this.user.id = res.data.user._id;
         this.user.photo = res.data.user.photo;
+        this.getMyWallet(this.user.token);
         this.updatedLocalUser();
         return res.data;
       } catch (err) {
@@ -86,6 +87,7 @@ const userStore = defineStore({
         this.user.token = res.data.user.token;
         this.user.id = res.data.user._id;
         this.user.photo = res.data.user.photo;
+        this.getMyWallet(this.user.token);
         return res.data;
       } catch (err) {
         console.dir(err);
