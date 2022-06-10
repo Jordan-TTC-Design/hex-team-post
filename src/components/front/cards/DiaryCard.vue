@@ -89,11 +89,17 @@ export default {
     }
     async function buyDiary() {
       console.log(targetItem.value._id);
-      const res = await postsData.buyDiary(targetItem.value._id, userData.user.token);
-      console.log(res);
-      if (res.status === 'error' && res.message === '餘額不足') {
-        statusData.openPopInfoModel(res.message);
-      }
+      statusData.openAskModel(
+        '是否購買該篇日記',
+        `點擊確認後將會扣除${targetItem.value.pay}顆鑽石`,
+        async () => {
+          const res = await postsData.buyDiary(targetItem.value._id, userData.user.token);
+          console.log(res);
+          if (res.status === 'error' && res.message === '餘額不足') {
+            statusData.openPopInfoModel(res.message);
+          }
+        },
+      );
     }
     return {
       userData,
@@ -189,7 +195,6 @@ export default {
         >
           <i class="coverLock bi bi-file-lock2"></i>
           <div class="w-75 p-4 rounded bg-gray-light">
-            <p class="text-center">已有 20 人購買</p>
             <p class="text-center text-dark fs-5">贊助用戶可以查看貼文，或可以點擊單次購買！</p>
           </div>
         </div>
