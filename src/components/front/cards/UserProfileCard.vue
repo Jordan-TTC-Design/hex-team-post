@@ -102,7 +102,7 @@ export default {
     <div class="p-4 d-flex gap-4 flex-md-row flex-column align-items-md-start align-items-center">
       <div class="position-relative">
         <img
-          :src="userData.userProfile.photo"
+          :src="userData.userProfile.photo || userData.defaultPhoto"
           alt="user-picture"
           class="user-picture user-picture-lg m-0"
         />
@@ -148,7 +148,7 @@ export default {
             顯示完整簡介
           </p>
         </div>
-        <div class="followBox">
+        <div class="followBox" v-if="userData.user.id">
           <button class="followBtn btn btn-sm" v-if="!isFollowing" @click="addFollow()">
             追蹤
           </button>
