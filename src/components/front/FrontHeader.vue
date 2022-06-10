@@ -158,6 +158,9 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.list-group-item:hover {
+  color: var(--bs-primary);
+}
 .header {
   display: flex;
   align-items: center;
@@ -239,7 +242,7 @@ export default {
   .menu-navbar {
     .menu-navbar-item {
       .menu-navbar-item__link {
-        padding:1rem 1.5rem;
+        padding: 1rem 1.5rem;
         gap: 0.25rem;
         font-size: 0.875rem;
         &::after {

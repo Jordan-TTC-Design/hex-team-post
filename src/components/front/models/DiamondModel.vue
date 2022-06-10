@@ -14,14 +14,16 @@ export default {
     const paymentData = paymentStore();
     const payContent = ref('');
     paymentData.getDiamonProduct('coin');
-    async function buyDiamond(productId) {
-      const result = await paymentData.payDiamonProduct(productId, userData.user.token);
-      if (result.status === 'success') {
-        const { orderId } = result.data;
-        console.log(orderId);
-        const goToPay = await paymentData.goToPaymentPage(orderId, userData.user.token);
-        console.log(goToPay);
-      }
+    async function buyDiamond(productId, productName) {
+      statusData.openAskModel(`是否購買${productName}`, '將會為您導向藍新金流結帳', async () => {
+        const result = await paymentData.payDiamonProduct(productId, userData.user.token);
+        if (result.status === 'success') {
+          const { orderId } = result.data;
+          console.log(orderId);
+          const goToPay = await paymentData.goToPaymentPage(orderId, userData.user.token);
+          console.log(goToPay);
+        }
+      });
     }
     function closeDiamondModel() {
       statusData.diamondModel = false;
@@ -50,11 +52,7 @@ export default {
 
     <!-- Modal-Window -->
     <div class="popModal" :class="{ active: statusData.diamondModel === true }">
-      <button
-        @click="closeDiamondModel"
-        type="button"
-        class="btn position-absolute top-2 end-2"
-      >
+      <button @click="closeDiamondModel" type="button" class="btn position-absolute top-2 end-2">
         <i class="webIcon bi bi-x-lg"></i>
       </button>
       <img
@@ -96,10 +94,10 @@ export default {
                   <i class="webIcon bi bi-gem"></i>
                 </div>
                 <div class="d-flex flex-column align-items-md-start align-items-center flex-grow-1">
-                  <p class="mb-1">{{ product.coin }}顆{{ product.name }}</p>
+                  <p class="mb-1">{{ product.name }}</p>
                   <p class="mb-md-3 mb-1">NTD {{ product.price - product.discount }}</p>
                   <button
-                    @click="buyDiamond(product._id)"
+                    @click="buyDiamond(product._id, product.name)"
                     type="button"
                     class="btn btn-white align-self-md-end"
                   >

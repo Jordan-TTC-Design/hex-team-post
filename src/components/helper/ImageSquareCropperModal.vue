@@ -5,6 +5,7 @@ import statusStore from '@/stores/statusStore';
 import postsStore from '@/stores/postsStore';
 import userStore from '@/stores/userStore';
 import 'cropperjs/dist/cropper.min.css';
+import { useRouter } from 'vue-router';
 
 export default {
   props: ['imgName'],
@@ -12,6 +13,7 @@ export default {
   setup() {
     const postsData = postsStore();
     const userData = userStore();
+    const router = useRouter();
     const statusData = statusStore();
     const process = ref(1);
     const userImgUploadGetter = ref(null);
@@ -59,7 +61,6 @@ export default {
       if (Object.keys(cropper).length > 0) {
         cropper.destroy();
       }
-      // Object.keys(cropper).forEach((k) => delete cropper[k]);
       setTimeout(() => {
         putImage(data);
       }, 100);
@@ -71,7 +72,6 @@ export default {
       }
     });
     function closeModel() {
-      // adminData.closeImgToCrop();
       if (Object.keys(cropper).length > 0) {
         cropper.destroy();
       }
@@ -101,9 +101,8 @@ export default {
       console.log(result);
       if (result.status === 'success') {
         userData.user.photo = result.data.imgUrl;
-        localStorage.setItem('sd-user', JSON.stringify(userData.user));
         await userData.updateUser(userData.user.token);
-        userData.getLocalToken();
+        router.go(0);
       }
     }
     function croppingImg() {
