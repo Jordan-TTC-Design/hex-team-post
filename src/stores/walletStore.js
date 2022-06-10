@@ -44,13 +44,14 @@ const paymentStore = defineStore({
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://hex-post-team-api-server.herokuapp.com/api/wallet/record/add-credit/',
+          url: 'https://hex-post-team-api-server.herokuapp.com/api/wallet/record/add-credit',
           headers: {
             authorization: `${userData.user?.token}`,
           },
         });
+        console.log(res);
         if (res.data.status === 'success') {
-          this.diamonPurchaseRecord = [...res.data.data];
+          this.diamondPurchaseRecord = res.data.data;
         }
         return res.data.data;
       } catch (err) {
@@ -71,8 +72,9 @@ const paymentStore = defineStore({
             authorization: `${userData.user?.token}`,
           },
         });
+        console.log(res);
         if (res.data.status === 'success') {
-          this.diaryPurchaseRecord = [...res.data.data];
+          this.diaryPurchaseRecord = res.data.data;
         }
         return res.data.data;
       } catch (err) {
@@ -94,7 +96,7 @@ const paymentStore = defineStore({
           },
         });
         console.log(res.data.data);
-        this.diaryRetailRecord = [...res.data.data];
+        this.diaryRetailRecord = res.data.data;
 
         return res.data.data;
       } catch (err) {

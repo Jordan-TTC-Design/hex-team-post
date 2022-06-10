@@ -22,6 +22,7 @@ export default {
     const statusData = statusStore();
     const followData = followStore();
     const following = ref([]);
+    const isLoading = ref(false);
     const morePostBtn = ref(false);
     const searchFilter = ref({});
     function resetFilter(sort = 'desc', query = '', likes = '') {
@@ -34,6 +35,7 @@ export default {
       };
     }
     async function getPosts() {
+      isLoading.value = true;
       const result = await postsData.getMyFollowPosts(
         searchFilter.value.page,
         searchFilter.value.sort,
@@ -45,6 +47,7 @@ export default {
       } else {
         morePostBtn.value = false;
       }
+      isLoading.value = false;
     }
     async function search(data) {
       if (data.type === 'like') {
@@ -70,6 +73,7 @@ export default {
       postsData,
       following,
       morePostBtn,
+      isLoading,
       getMorePost,
       userData,
       search,
@@ -104,7 +108,7 @@ export default {
         <div v-if="morePostBtn" class="getMorePostBtn" @click="getMorePost">
           <p>點擊載入更多貼文...</p>
         </div>
-        <div v-if="postsData.posts.length === 0" class="noContentBox">
+        <div v-if="postsData.posts.length === 0 && !isLoading" class="noContentBox">
           <p>您尚未追蹤任何用戶～</p>
           <p>歡迎追蹤喜歡的用戶，即時了解他們的狀況!</p>
         </div>

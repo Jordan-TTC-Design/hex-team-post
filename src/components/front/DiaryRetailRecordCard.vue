@@ -1,24 +1,35 @@
 <script>
+import { computed } from 'vue';
+import moment from 'moment';
+
 export default {
   props: {
     record: Object,
   },
   setup(props) {
+    const targetTime = computed(() => {
+      const result = moment(props.record.createdAt).locale('zh-tw').format('YYYY/MM/DD h:mm:ss ');
+      return result;
+    });
     return {
       props,
+      targetTime,
     };
   },
 };
 </script>
 <template>
-  <div class="card mb-3">
+  <div class="card">
     <div class="card-body position-relative">
-      <div class="card-title mb-1">
-        {{ props.record.summary }}
-        <span class="postId">({{ props.record.postId }})</span>
+      <div class="status">
+        {{ props.record.status ? '交易成功' : '交易失敗' }}
       </div>
-      <p class="time mb-3">{{ props.record.createdAt.replace('T', ' ').replace('Z', '') }}</p>
-      <div class="d-flex">
+      <p class="text-dark mb-1 d-flex align-items-center gap-1">
+        {{ props.record.summary }}
+        <span class="fs-6">({{ props.record.name }})</span>
+      </p>
+      <p class="time mb-3">{{ targetTime }}</p>
+      <div class="d-flex flex-md-row flex-column gap-1">
         <div class="tmp">
           <p class="a">交易金額</p>
           <p class="b">{{ props.record.amountCoin }} SD</p>
@@ -32,9 +43,6 @@ export default {
           <p class="b">{{ props.record.serialNumber }}</p>
         </div>
       </div>
-      <div class="status">
-        {{ props.record.postId ? '交易成功' : '交易失敗' }}
-      </div>
     </div>
   </div>
 </template>
@@ -45,8 +53,7 @@ export default {
   color: #979797;
 }
 .tmp {
-  flex-basis: 120px;
-
+  flex: 1;
   .a {
     font-size: 12px;
     color: #979797;
@@ -60,16 +67,22 @@ export default {
   .postId {
     font-size: 14;
   }
-
 }
-  .status {
-    position: absolute;
-    border-radius: 4px;
-    background-color: #e2e2e2;
-    font-size: 14px;
-    color: #1d1d1d;
-    padding: 2px 8px;
-    top: 12px;
-    right: 12px;
+.status {
+  position: absolute;
+  border-radius: 4px;
+  background-color: var(--bs-gray-light);
+  font-size: 14px;
+  color: #1d1d1d;
+  padding: 2px 8px;
+  top: 12px;
+  right: 12px;
+  @media (max-width: 576.98px){
+    position: relative;
+    top: 0;
+    right: 0;
+    padding: 0.125rem 0.5rem;
+    margin-bottom: 0.5rem;
   }
+}
 </style>

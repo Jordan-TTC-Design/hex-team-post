@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
+import statusStore from '@/stores/statusStore';
 import MoreModel from '@/components/helper/MoreModel.vue';
 import moment from 'moment';
 
@@ -13,6 +14,7 @@ export default {
     const userData = userStore();
     const postsData = postsStore();
     const followData = followStore();
+    const statusData = statusStore();
     const newComment = ref('');
     const postCardTextContent = ref(null);
     let localUser = JSON.parse(localStorage.getItem('sd-user')) || {};
@@ -87,7 +89,11 @@ export default {
     }
     async function buyDiary() {
       console.log(targetItem.value._id);
-      await postsData.buyDiary(targetItem.value._id, userData.user.token);
+      const res = await postsData.buyDiary(targetItem.value._id, userData.user.token);
+      console.log(res);
+      if (res.status === 'error' && res.message === '餘額不足') {
+        statusData.openPopInfoModel(res.message);
+      }
     }
     return {
       userData,

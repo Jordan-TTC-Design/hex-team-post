@@ -34,6 +34,7 @@ export default {
     const currentTab = ref(tabs[0].type);
 
     const changeTab = async (newTab) => {
+      console.log(newTab);
       if (newTab === tabs[0].type) {
         await walletData.getDiaryPurchaseRecord();
       } else if (newTab === tabs[1].type) {
@@ -45,6 +46,7 @@ export default {
     };
 
     onMounted(async () => {
+      changeTab(currentTab.value);
       const diam = await walletData.getDiamond();
       console.log(diam.data);
     });
@@ -74,6 +76,22 @@ export default {
       </div>
     </div>
     <div class="subContent d-flex flex-column gap-3" v-if="currentTab === tabs[0].type">
+      <DiaryBuyRecordCard v-for="r in walletData.diaryPurchaseRecord" :key="r.id" :record="r" />
+
+      <div
+        v-if="walletData.diamondPurchaseRecord.length === 0"
+        class="noContentBox noContentBox--sm"
+      >
+        <p>您尚未購買任何日記</p>
+      </div>
+    </div>
+    <div class="subContent d-flex flex-column gap-3" v-else-if="currentTab === tabs[1].type">
+      <DiaryRetailRecordCard v-for="r in walletData.diaryRetailRecord" :key="r.id" :record="r" />
+      <div v-if="walletData.diaryRetailRecord.length === 0" class="noContentBox noContentBox--sm">
+        <p>您尚未售出任何日記</p>
+      </div>
+    </div>
+    <div class="subContent d-flex flex-column gap-3" v-else-if="currentTab === tabs[2].type">
       <DiamondPurchaseRecordCard
         v-for="r in walletData.diamondPurchaseRecord"
         :key="r.id"
@@ -83,18 +101,6 @@ export default {
         v-if="walletData.diamondPurchaseRecord.length === 0"
         class="noContentBox noContentBox--sm"
       >
-        <p>您尚未購買任何日記</p>
-      </div>
-    </div>
-    <div class="subContent" v-else-if="currentTab === tabs[1].type">
-      <DiaryRetailRecordCard v-for="r in walletData.diaryRetailRecord" :key="r.id" :record="r" />
-      <div v-if="walletData.diaryRetailRecord.length === 0" class="noContentBox noContentBox--sm">
-        <p>您尚未售出任何日記</p>
-      </div>
-    </div>
-    <div class="subContent" v-else-if="currentTab === tabs[2].type">
-      <DiaryBuyRecordCard v-for="r in walletData.diaryPurchaseRecord" :key="r.id" :record="r" />
-      <div v-if="walletData.diaryPurchaseRecord.length === 0" class="noContentBox noContentBox--sm">
         <p>您尚未購買秘密鑽石</p>
       </div>
     </div>
