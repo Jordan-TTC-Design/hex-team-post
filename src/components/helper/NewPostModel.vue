@@ -4,6 +4,7 @@ import postsStore from '@/stores/postsStore';
 import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
 import FormArticle from '@/components/helper/FormArticle.vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -12,6 +13,7 @@ export default {
   setup() {
     const userData = userStore();
     const postsData = postsStore();
+    const router = useRouter();
     const statusData = statusStore();
     const imgUploadGetter = ref(null);
     const editPhoto = ref(false);
@@ -46,7 +48,13 @@ export default {
             postsData.targetPost.image = result.data.imgUrl;
           }
           if (postsData.newPostModel.action === 'new') {
-            postsData.addPost(postsData.targetPost, userData.user.token);
+            const res = await postsData.addPost(postsData.targetPost, userData.user.token);
+            console.log(res);
+            if (res.status === 'success') {
+              statusData.openAskModel('成功發布', '是否要重新更新資料', async () => {
+                router.go(0);
+              });
+            }
           } else {
             postsData.updatePost(
               postsData.targetPost,
@@ -60,7 +68,13 @@ export default {
         closeNewPostModel();
       } else {
         if (postsData.newPostModel.action === 'new') {
-          postsData.addPost(postsData.targetPost, userData.user.token);
+          const res = await postsData.addPost(postsData.targetPost, userData.user.token);
+          console.log(res);
+          if (res.status === 'success') {
+            statusData.openAskModel('成功發布', '是否要更新頁面資料？', async () => {
+              router.go(0);
+            });
+          }
         } else {
           postsData.updatePost(
             postsData.targetPost,

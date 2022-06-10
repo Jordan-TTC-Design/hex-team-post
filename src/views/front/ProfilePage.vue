@@ -1,5 +1,6 @@
 <script>
-import { ref, onMounted, watch } from 'vue';
+// eslint-disable-next-line object-curly-newline
+import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 import PostSection from '@/components/front/PostSection.vue';
@@ -47,7 +48,7 @@ export default {
 
     const route = useRoute();
 
-    const userId = ref(route.params.id);
+    const userId = computed(() => route.params.id);
     async function processUser(targetId) {
       if (userData.user.id === targetId) {
         usersList.value = await followData.getHotUser();
@@ -58,7 +59,6 @@ export default {
     watch(
       () => route.params.id,
       (newUserId) => {
-        userId.value = newUserId;
         currentTab.value = 'POST';
         processUser(newUserId);
       },
@@ -86,6 +86,7 @@ export default {
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <MyProfileCard
           v-if="userId === userData.user.id"
+          :userId="userData.user.id"
           :tabType="currentTab"
           @change-tab="changeCurrentTab"
         />
@@ -110,8 +111,8 @@ export default {
         </div>
       </div>
       <div class="col-lg-4 col-5 position-relative">
-        <ProductCard v-if="userData.user.id !== userId" :user-id="userId" :products="products" />
-        <RecommendFollowCard v-if="userData.user.id === userId" :user-list="usersList" />
+        <ProductCard v-show="userData.user.id !== userId" :user-id="userId" :products="products" />
+        <RecommendFollowCard v-show="userData.user.id === userId" :user-list="usersList" />
       </div>
     </div>
   </div>
