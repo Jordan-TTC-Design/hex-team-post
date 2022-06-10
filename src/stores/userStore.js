@@ -61,6 +61,12 @@ const userStore = defineStore({
           data,
         });
         console.log(res);
+        this.user.name = res.data.user.name;
+        this.user.token = res.data.user.token;
+        this.user.id = res.data.user._id;
+        this.user.photo = res.data.user.photo;
+        this.getMyWallet(this.user.token);
+        this.updatedLocalUser();
         return res.data;
       } catch (err) {
         console.dir(err);
@@ -77,7 +83,11 @@ const userStore = defineStore({
           url: 'https://hex-post-team-api-server.herokuapp.com/api/user/sign-in',
           data,
         });
-        console.log(res);
+        this.user.name = res.data.user.name;
+        this.user.token = res.data.user.token;
+        this.user.id = res.data.user._id;
+        this.user.photo = res.data.user.photo;
+        this.getMyWallet(this.user.token);
         return res.data;
       } catch (err) {
         console.dir(err);
