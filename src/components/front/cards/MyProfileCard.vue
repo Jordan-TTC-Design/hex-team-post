@@ -33,6 +33,7 @@ const myTabs = [
 
 export default {
   props: {
+    userId: String,
     tabType: String,
   },
   setup(props, { emit }) {
@@ -59,9 +60,15 @@ export default {
     function openEditImg() {
       statusData.openUserImageCropper();
     }
-
+    watch(props, (newValue) => {
+      if (userData.user.id === newValue.userId) {
+        statusData.openPageLoader();
+        userData.getMyProfile();
+      }
+    });
     onMounted(async () => {
-      if (userData.myProfile.id !== userData.user.id) {
+      if (userData.user.id === props.userId) {
+        statusData.openPageLoader();
         await userData.getMyProfile();
       }
     });
@@ -117,11 +124,7 @@ export default {
               showAll: textContentShowData.isShowAll === true,
             }"
           >
-            <div
-              v-if="userData.myProfile.memo"
-              v-html="userData.myProfile.memo"
-              class="b"
-            ></div>
+            <div v-if="userData.myProfile.memo" v-html="userData.myProfile.memo" class="b"></div>
           </div>
           <p
             v-if="textContentShowData.needHide === true && textContentShowData.isShowAll === false"

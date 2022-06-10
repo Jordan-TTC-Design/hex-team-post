@@ -331,7 +331,7 @@ const postsStore = defineStore({
         console.log(res);
         statusData.shiftLoading();
         if (res.data.status === 'success') {
-          statusData.openPopInfoModel('資料錯誤');
+          statusData.openPopInfoModel('購買成功');
           this.getPostWithToken(postId, userToken);
         }
         return res.data;

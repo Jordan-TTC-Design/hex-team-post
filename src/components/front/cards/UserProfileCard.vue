@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import userStore from '@/stores/userStore';
 import followStore from '@/stores/followStore';
+import statusStore from '@/stores/statusStore';
 
 // 他人 tab
 const userTabs = [
@@ -27,6 +28,7 @@ export default {
   setup(props, { emit }) {
     const userData = userStore();
     const followData = followStore();
+    const statusData = statusStore();
 
     const currentTabs = ref(userTabs);
     const handleChangeTab = (newTab) => {
@@ -52,9 +54,15 @@ export default {
         isFollowing.value = newFollowers && newFollowers.some((m) => m === userData.user.id);
       },
     );
-
+    watch(props, (newValue) => {
+      if (userData.userProfile.id !== newValue.userId) {
+        statusData.openPageLoader();
+        userData.getUserProfile(newValue.userId);
+      }
+    });
     onMounted(async () => {
       if (userData.userProfile.id !== props.userId) {
+        statusData.openPageLoader();
         await userData.getUserProfile(props.userId);
       }
     });
