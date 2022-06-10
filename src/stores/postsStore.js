@@ -137,12 +137,20 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
+        console.log(res);
         if (res.data.status === 'success') {
           const newPost = res.data.data[0];
-          const replaceIndex = this.posts.findIndex((item) => item._id === newPost._id);
-          const tempUser = this.posts[replaceIndex].user;
-          this.posts.splice(replaceIndex, 1, newPost);
-          this.posts[replaceIndex].user = tempUser;
+          if (newPost.type === 'group') {
+            const replaceIndex = this.posts.findIndex((item) => item._id === newPost._id);
+            const tempUser = this.posts[replaceIndex].user;
+            this.posts.splice(replaceIndex, 1, newPost);
+            this.posts[replaceIndex].user = tempUser;
+          } else {
+            const replaceIndex = this.diaries.findIndex((item) => item._id === newPost._id);
+            const tempUser = this.diaries[replaceIndex].user;
+            this.diaries.splice(replaceIndex, 1, newPost);
+            this.diaries[replaceIndex].user = tempUser;
+          }
         }
         return res.data;
       } catch (err) {
