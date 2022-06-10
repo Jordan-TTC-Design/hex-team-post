@@ -93,7 +93,7 @@ export default {
       statusData.addLoading();
       await userData.getLocalToken();
       isLogin.value = await userData.checkLogIn(userData.user.token || '');
-      getPosts();
+      await getPosts();
       statusData.shiftLoading();
     });
 
