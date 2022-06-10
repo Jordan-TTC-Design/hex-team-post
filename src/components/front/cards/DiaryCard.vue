@@ -53,7 +53,7 @@ export default {
       const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
       console.log(result);
       if (result.status === 'success') {
-        postsData.posts.splice(props.postIndex, 1);
+        postsData.diaries.splice(props.postIndex, 1);
       }
     }
     async function editPost() {
@@ -149,7 +149,7 @@ export default {
           </div>
         </div>
         <MoreModel
-          v-if="targetItem.user.id === userData.user.id && userData.user.token.length > 0"
+          v-if="targetItem.user._id === userData.user.id && userData.user.token.length > 0"
           :item-id="targetItem._id"
           :function-list="[
             {
