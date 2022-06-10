@@ -236,7 +236,7 @@ const postsStore = defineStore({
         return res.data;
       } catch (err) {
         console.dir(err);
-        return err;
+        return err.respon.data;
       } finally {
         statusData.shiftLoading();
       }

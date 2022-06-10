@@ -83,8 +83,8 @@ export default {
     ]"
   />
   <div class="d-flex flex-column gap-4">
-    <template v-for="postItem in posts" :key="postItem.id">
-      <PostCard :post-item="postItem" />
+    <template v-for="(postItem, index) in posts" :key="postItem.id">
+      <PostCard :post-index="index" :post-item="postItem" />
     </template>
     <div v-if="posts.length === 0 && isLoading" class="noContentBox noContentBox--sm">
       <p>無資料</p>

@@ -122,8 +122,8 @@ export default {
     ]"
   />
   <div class="d-flex flex-column gap-4">
-    <template v-for="diary in postsData.diaries" :key="diary._id">
-      <DiaryCard :post-item="diary" />
+    <template v-for="(diary, index) in postsData.diaries" :key="diary._id">
+      <DiaryCard :post-index="index" :post-item="diary" />
     </template>
     <div v-if="postsData.diaries.length === 0 && isLoading" class="noContentBox noContentBox--sm">
       <p>無資料</p>
