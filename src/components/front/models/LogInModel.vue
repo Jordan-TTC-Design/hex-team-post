@@ -39,6 +39,7 @@ export default {
         userData.user.id = result.user._id;
         localStorage.setItem('sd-user', JSON.stringify(userData.user));
         statusData.logInModel = false;
+        resetData();
         router.push('/');
       } else {
         resultInfo.value = result.message;
