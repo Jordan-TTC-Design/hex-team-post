@@ -59,11 +59,12 @@ export default {
     async function editPost() {
       postsData.newPostModel.action = 'edit';
       postsData.newPostModel.id = targetItem.value._id;
-      postsData.targetPost.content = targetItem.value.content;
-      postsData.targetPost.image = targetItem.value.image;
-      postsData.targetPost.contentType = targetItem.value.contentType;
-      postsData.targetPost.tag = targetItem.value.tag || [];
-      postsData.openPostModel('group');
+      postsData.targetPost = {
+        ...postsData.targetPost,
+        ...targetItem.value,
+        tag: targetItem.value.tag || [],
+      };
+      postsData.openPostModel(targetItem.value.type);
     }
     async function toggleFollow() {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
@@ -137,7 +138,7 @@ export default {
           </RouterLink>
           <div class="d-flex align-items-center gap-2">
             <button
-              v-if="targetItem.user.id !== userData.user.id && userData.user.token.length > 0"
+              v-if="targetItem.user._id !== userData.user.id && userData.user.token.length > 0"
               @click="toggleFollow"
               type="button"
               class="followBtn"
