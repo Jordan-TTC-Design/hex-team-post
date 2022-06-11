@@ -129,7 +129,7 @@ const userStore = defineStore({
           user,
         } = res.data.data;
         statusData.shiftLoading();
-        user.photo = user.photo || this.userProfile.photo;
+        user.photo = user.photo || this.defaultPhoto;
         this.userProfile = {
           ...user,
           follows,
