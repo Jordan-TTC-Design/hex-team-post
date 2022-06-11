@@ -22,7 +22,7 @@ export default {
     const searchFilter = ref({});
     const morePostBtn = ref(false);
     const isLoading = ref(false);
-    function resetFilter(sort = 'desc', query = '', likes = '') {
+    function resetFilter(sort = 'desc', query = '') {
       postsData.getPostsData.page = 1;
       isLoading.value = false;
       morePostBtn.value = false;
@@ -30,7 +30,7 @@ export default {
         page: 1,
         sort,
         query,
-        likes,
+        likes: userData.user.id,
       };
     }
     async function getPosts() {
@@ -51,17 +51,13 @@ export default {
       isLoading.value = true;
     }
     async function search(data) {
-      if (data.type === 'like') {
-        resetFilter(data.type, data.query, userData?.user?.id);
-      } else {
-        resetFilter(data.type, data.query, '');
-      }
-      getPosts();
+      resetFilter(data.type, data.query);
+      await getPosts();
     }
     onMounted(async () => {
       postsData.posts.length = 0;
       resetFilter();
-      getPosts();
+      await getPosts();
     });
 
     return {
