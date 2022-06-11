@@ -1,12 +1,17 @@
 <script>
 import { ref } from 'vue';
 import statusStore from '@/stores/statusStore';
+import moment from 'moment';
 
 export default {
   props: ['userList'],
   setup() {
     const statusData = statusStore();
     const listShow = ref(false);
+    function expiredTime(time) {
+      const result = moment(time).locale('zh-tw').format('YYYY/MM/DD');
+      return result;
+    }
     function openModel() {
       listShow.value = true;
       statusData.noScroll = true;
@@ -15,7 +20,12 @@ export default {
       listShow.value = false;
       statusData.noScroll = false;
     }
-    return { listShow, openModel, closeModel };
+    return {
+      listShow,
+      expiredTime,
+      openModel,
+      closeModel,
+    };
   },
 };
 </script>
@@ -39,7 +49,9 @@ export default {
             />
             <div class="user-info">
               <span class="user-info-title">{{ userItem.name }}</span>
-              <span class="user-info-subtitle">{{ userItem.followersSize }} 人追蹤</span>
+              <span class="user-info-subtitle"
+                >{{ expiredTime(userItem.effectiveOfEnd) }} 訂閱到期</span
+              >
             </div>
             <div class="btn btn-sm"><i class="bi bi-arrow-right-circle"></i></div>
           </RouterLink>
