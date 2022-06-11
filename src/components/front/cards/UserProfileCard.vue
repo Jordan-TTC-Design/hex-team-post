@@ -47,10 +47,15 @@ export default {
       }
     });
 
-    const isFollowing = ref(false);
+    // TODO 優化
+    const f = userData.user.id
+      ? (userData.userProfile.followers
+      && userData.userProfile.followers.some((m) => m === userData.user.id)) : undefined;
+    const isFollowing = ref(f);
     watch(
       () => userData.userProfile.followers,
       (newFollowers) => {
+        console.log('watch');
         isFollowing.value = newFollowers && newFollowers.some((m) => m === userData.user.id);
       },
     );
@@ -148,7 +153,7 @@ export default {
             顯示完整簡介
           </p>
         </div>
-        <div class="followBox" v-if="userData.user.id">
+        <div class="followBox" v-if="userData.user.id && isFollowing !== undefined">
           <button class="followBtn btn btn-sm" v-if="!isFollowing" @click="addFollow()">
             追蹤
           </button>
