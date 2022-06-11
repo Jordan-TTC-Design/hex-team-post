@@ -1,5 +1,10 @@
 <script>
-import { ref, computed, watch } from 'vue';
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+} from 'vue';
 import userStore from '@/stores/userStore';
 import postsStore from '@/stores/postsStore';
 import followStore from '@/stores/followStore';
@@ -21,8 +26,8 @@ export default {
       isShowAll: true,
     });
     const commentsShowData = ref({
-      needHide: false,
-      isShowAll: 2,
+      needHide: true,
+      showCount: 2,
     });
     const targetItem = computed(() => props.postItem);
     watch(postCardTextContent, (newValue) => {
@@ -31,18 +36,19 @@ export default {
         textContentShowData.value.isShowAll = false;
       }
     });
-    function checkComment() {
-      if (props.postItem && props.postItem.comments.length > 1) {
-        commentsShowData.value.needHide = true;
-      }
-    }
-    watch(targetItem.value.comments, () => {
-      checkComment();
-    });
-    checkComment();
+    // function checkComment() {
+    //   console.log('checkComment');
+    //   if (props.postItem && props.postItem.comments.length > 1) {
+    //     commentsShowData.value.needHide = true;
+    //   }
+    // }
+    // watch(props.postItem.comments, () => {
+    //   console.log('watch');
+    //   checkComment();
+    // });
+
     async function addComment() {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
-      console.log(targetItem.value._id, newComment.value);
       const result = await postsData.addComment(
         newComment.value,
         targetItem.value._id,
@@ -50,6 +56,9 @@ export default {
       );
       if (result.status === 'success') {
         newComment.value = '';
+        if (!commentsShowData.value.needHide) {
+          commentsShowData.value.showCount = targetItem.value.comments.length;
+        }
       }
     }
     async function deleteComment(commentId, commentIndex) {
@@ -57,17 +66,19 @@ export default {
       const result = await postsData.deleteComment(commentId, localUser.token);
       if (result.status === 'success') {
         postsData.posts[props.postIndex].comments.splice(commentIndex, 1);
+        if (targetItem.value.comments.length <= 2) {
+          commentsShowData.value.needHide = true;
+          commentsShowData.value.showCount = targetItem.value.comments.length;
+        }
       }
     }
     async function deletePost() {
       const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
-      console.log(result);
       if (result.status === 'success') {
         postsData.posts.splice(props.postIndex, 1);
       }
     }
     async function editPost() {
-      console.log(targetItem.value);
       postsData.newPostModel.action = 'edit';
       postsData.newPostModel.id = targetItem.value._id;
       postsData.targetPost.content = targetItem.value.content;
@@ -86,10 +97,8 @@ export default {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         if (isFollowed.value + 1 > 0) {
-          console.log('刪除');
           followData.deleteFollow(targetItem.value.user._id, userData.user.token);
         } else {
-          console.log('新增');
           followData.addFollow(targetItem.value.user._id, userData.user.token);
         }
       }
@@ -105,6 +114,17 @@ export default {
         }
       }
     }
+
+    const showComments = () => {
+      commentsShowData.value.needHide = false;
+      commentsShowData.value.showCount = targetItem.value.comments.length;
+    };
+
+    onMounted(() => {
+      // const isHide = targetItem.value.comments.length > commentsShowData.value.showCount;
+      // commentsShowData.value.needHide = isHide;
+    });
+
     // eslint-disable-next-line max-len
     const isLiked = computed(() => targetItem.value.likes.findIndex((item) => item._id === localUser.id));
     const targetTime = computed(() => moment(targetItem.value.createdAt).locale('zh-tw').format('YYYY/MM/DD HH:mm:ss '));
@@ -125,6 +145,7 @@ export default {
       editPost,
       deletePost,
       toggleFollow,
+      showComments,
     };
   },
 };
@@ -209,14 +230,14 @@ export default {
           {{ targetItem.likes.length }}
         </p>
         <p class="d-flex align-items-center gap-1 handPointer"
-         @click="commentsShowData.isShowAll = targetItem.comments.length">
+         @click="showComments">
           <i class="webIcon bi bi-chat-fill"></i>
           {{ targetItem.comments.length }}
         </p>
       </div>
       <ul class="commentList" :class="{ 'py-1': targetItem.comments.length > 0 }">
         <template v-for="(commentItem, index) in targetItem.comments" :key="commentItem.id">
-          <li v-if="index < commentsShowData.isShowAll" class="commentList__item">
+          <li v-if="index < commentsShowData.showCount" class="commentList__item">
             <RouterLink :to="`/profile/${targetItem.user.id}`" class="fs-6 fw-bolder text-dark">{{
               commentItem.user.name
             }}</RouterLink>
@@ -239,9 +260,9 @@ export default {
         </template>
         <li
           v-if="
-            commentsShowData.needHide && commentsShowData.isShowAll !== targetItem.comments.length
-          "
-          @click="commentsShowData.isShowAll = targetItem.comments.length"
+            commentsShowData.needHide &&
+            commentsShowData.showCount < targetItem.comments.length"
+          @click="showComments"
           class="text-gray-dark handPointer"
         >
           查看全部<span class="text-gray-dark px-1">{{ targetItem.comments.length }}</span
