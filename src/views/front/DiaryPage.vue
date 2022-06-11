@@ -98,7 +98,6 @@ export default {
     <div class="row justify-content-center">
       <div class="col-xl-6 col-lg-8 col-12 d-flex flex-column gap-4">
         <PostFilter
-          v-if="postsData.diaries.length > 0"
           @search="search"
           header="排序"
           :items="[
