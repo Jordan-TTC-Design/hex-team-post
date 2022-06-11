@@ -213,7 +213,7 @@ export default {
           </div>
         </div>
         <div class="d-flex flex-column gap-3">
-          <p v-if="imgDanger" class="text-danger">錯誤提示：圖片過大，檔案大小不得大於2mb。</p>
+          <p v-if="imgDanger" class="text-danger">錯誤提示：圖片過大，檔案大小不得大於 8mb。</p>
           <ul class="d-flex gap-1 flex-wrap">
             <li><p class="fs-6">文章標籤：</p></li>
             <li v-for="(tagItem, index) in postsData.targetPost.tag" :key="`${tagItem}${index}`">
