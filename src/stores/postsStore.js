@@ -165,10 +165,17 @@ const postsStore = defineStore({
       if (page === 1 && this.posts.length > 0) {
         this.posts.length = 0;
       }
+      let url = `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}?page=${page}`;
+      if (timeSort) {
+        url += `&sort=${timeSort}`;
+      }
+      if (query) {
+        url += `&q=${query}`;
+      }
       try {
         const res = await axios({
           method: 'GET',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
+          url,
         });
         const result = res.data.data;
         console.log(page, res);
@@ -255,10 +262,17 @@ const postsStore = defineStore({
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
+      let url = `https://hex-post-team-api-server.herokuapp.com/api/posts/private?page=${page}`;
+      if (timeSort) {
+        url += `&sort=${timeSort}`;
+      }
+      if (query) {
+        url += `&q=${query}`;
+      }
       try {
         const res = await axios({
           method: 'GET',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private?page=${page}&sort=${timeSort}&query=${query}`,
+          url,
           headers: {
             authorization: `${userToken}`,
           },
@@ -280,10 +294,18 @@ const postsStore = defineStore({
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
+      let url = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/Auth/${userId}?page=${page}`;
+      if (timeSort) {
+        url += `&sort=${timeSort}`;
+      }
+      if (query) {
+        url += `&q=${query}`;
+      }
+
       try {
         const res = await axios({
           method: 'GET',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private/Auth/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
+          url,
           headers: {
             authorization: `${userToken}`,
           },
@@ -306,10 +328,17 @@ const postsStore = defineStore({
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
+      let url = `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}?page=${page}`;
+      if (timeSort) {
+        url += `&sort=${timeSort}`;
+      }
+      if (query) {
+        url += `&q=${query}`;
+      }
       try {
         const res = await axios({
           method: 'GET',
-          url: `https://hex-post-team-api-server.herokuapp.com/api/posts/private/${userId}?page=${page}&sort=${timeSort}&query=${query}`,
+          url,
         });
         console.log(res);
         const result = res.data.data;
