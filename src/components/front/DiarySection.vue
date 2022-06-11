@@ -87,7 +87,7 @@ export default {
 
     async function search(data) {
       resetFilter(data.type, data.query, '');
-      getPosts();
+      await getPosts();
     }
     onMounted(async () => {
       statusData.addLoading();
@@ -116,7 +116,11 @@ export default {
     header="排序"
     :items="[
       {
-        name: '最新日記',
+        name: '由新到舊',
+        type: 'desc',
+      },
+      {
+        name: '由舊到新',
         type: 'asc',
       },
     ]"
