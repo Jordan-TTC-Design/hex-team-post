@@ -5,6 +5,7 @@ import statusStore from '@/stores/statusStore';
 import userStore from '@/stores/userStore';
 import FormArticle from '@/components/helper/FormArticle.vue';
 import { useRouter } from 'vue-router';
+import Compressor from 'compressorjs';
 
 export default {
   components: {
@@ -19,22 +20,68 @@ export default {
     const editPhoto = ref(false);
     const imgData = ref(null);
     const imgHistory = ref('');
+    const imgDanger = ref(false);
     const tagTextContent = ref('');
     function closeNewPostModel() {
       imgHistory.value = '';
       editPhoto.value = false;
       postsData.closePostModel();
     }
-    function toogleGetter() {
+    const compressFile = (blob) =>
+      // eslint-disable-next-line implicit-arrow-linebreak
+      new Promise((resolve, reject) => {
+        // eslint-disable-next-line no-new
+        new Compressor(blob, {
+          quality: 0.6,
+          success: resolve,
+          error: reject,
+        });
+      }).catch((err) => {
+        console.error(`Compress error: ${err.message}`);
+      });
+
+    const blobToData = async (blob) => {
+      const file = await compressFile(blob);
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    };
+    function dataURLtoFile(dataurl, filename) {
+      const arr = dataurl.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      // eslint-disable-next-line no-plusplus
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    }
+    async function toogleGetter() {
+      imgDanger.value = false;
       const [file] = imgUploadGetter.value.files;
-      imgData.value = file;
+      let resultFile;
+      if (file.size < 1000000) {
+        resultFile = file;
+      } else if (file.size >= 1000000 && file.size <= 8000000) {
+        const resData = await blobToData(file);
+        resultFile = dataURLtoFile(resData, 'file-to-upload.jpeg');
+      } else {
+        imgDanger.value = true;
+        return;
+      }
+      imgData.value = resultFile;
       imgHistory.value = postsData.targetPost.image;
       const imgShow = window.URL || window.webkitURL;
       postsData.targetPost.image = imgShow.createObjectURL(imgData.value);
       editPhoto.value = true;
       console.log(editPhoto.value);
-      console.log(postsData.targetPost.image, postsData.targetPost.image.length);
+      console.log(typeof postsData.targetPost.image, postsData.targetPost.image);
     }
+
     async function toogleAddPost() {
       if (editPhoto.value) {
         postsData.targetPost.contentType = 'photography';
@@ -96,6 +143,7 @@ export default {
     }
     return {
       imgData,
+      imgDanger,
       imgUploadGetter,
       postsData,
       statusData,
@@ -165,6 +213,7 @@ export default {
           </div>
         </div>
         <div class="d-flex flex-column gap-3">
+          <p v-if="imgDanger" class="text-danger">錯誤提示：圖片過大，檔案大小不得大於 8mb。</p>
           <ul class="d-flex gap-1 flex-wrap">
             <li><p class="fs-6">文章標籤：</p></li>
             <li v-for="(tagItem, index) in postsData.targetPost.tag" :key="`${tagItem}${index}`">
