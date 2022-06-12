@@ -26,13 +26,13 @@ export default {
     const morePostBtn = ref(false);
     function resetFilter(sort = 'desc', query = '') {
       isLoading.value = false;
-      postsData.getPostsData.page = 1;
       morePostBtn.value = false;
       searchFilter.value = {
         page: 1,
         sort,
         query,
       };
+      searchFilter.value.page = 1;
     }
 
     async function getPosts() {
@@ -84,7 +84,10 @@ export default {
       }
       isLoading.value = true;
     }
-
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      getPosts();
+    }
     async function search(data) {
       resetFilter(data.type, data.query, '');
       await getPosts();
@@ -103,6 +106,7 @@ export default {
       postsData,
       isLoading,
       morePostBtn,
+      getMorePost,
       search,
     };
   },
