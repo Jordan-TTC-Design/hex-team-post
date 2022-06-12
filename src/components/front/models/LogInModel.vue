@@ -31,7 +31,6 @@ export default {
     }
     async function logIn() {
       const result = await userData.logIn(loginData.value);
-      console.log(result);
       if (result.status === 'success') {
         userData.user.name = result.user.name;
         userData.user.token = result.user.token;

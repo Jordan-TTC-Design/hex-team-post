@@ -29,17 +29,14 @@ export default {
     }
     const thisUserId = computed(() => props.userId);
     watch(thisUserId, (newValue) => {
-      console.log(userData.user.id, newValue);
       if (userData.user.id !== '' && userData.user.id !== newValue) {
         checkSubscribe.value = followData.mySubscribed.findIndex((item) => item.id === newValue);
-        console.log(followData.mySubscribed, checkSubscribe.value);
       }
     });
     const purchase = ({ id, name }) => {
       statusData.openAskModel('確定是否購買', `${name}訂閱`, async () => {
         try {
           const res = await followData.newSubscribed(props.userId, id, userData.user.token);
-          console.log(res);
           if (res.status === 'success') {
             statusData.openAskModel('購買成功', '是否要重新更新資料', async () => {
               router.go(0);
@@ -58,7 +55,6 @@ export default {
         checkSubscribe.value = followData.mySubscribed.findIndex(
           (item) => item.id === thisUserId.value,
         );
-        console.log(followData.mySubscribed, checkSubscribe.value);
       }
     });
     return {

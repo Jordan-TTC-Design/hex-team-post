@@ -21,9 +21,6 @@ const backStatusStore = defineStore({
   }),
   getters: {},
   actions: {
-    getPosts() {
-      console.log('取得全部貼文');
-    },
     clearPostItem() {
       this.postItem = {};
     },

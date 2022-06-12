@@ -43,7 +43,6 @@ export default {
     watch(modelData, (newValue) => {
       if (newValue !== '' && timeCount.value === 1) {
         targetEditor.value.instance.setData(newValue);
-        console.dir(targetEditor.value.editor);
         timeCount.value = 2;
       } else if (newValue === '') {
         timeCount.value = 1;

@@ -36,10 +36,7 @@ export default {
           success: resolve,
           error: reject,
         });
-      }).catch((err) => {
-        console.error(`Compress error: ${err.message}`);
       });
-
     const blobToData = async (blob) => {
       const file = await compressFile(blob);
       return new Promise((resolve) => {
@@ -78,8 +75,6 @@ export default {
       const imgShow = window.URL || window.webkitURL;
       postsData.targetPost.image = imgShow.createObjectURL(imgData.value);
       editPhoto.value = true;
-      console.log(editPhoto.value);
-      console.log(typeof postsData.targetPost.image, postsData.targetPost.image);
     }
 
     async function toogleAddPost() {
@@ -89,34 +84,28 @@ export default {
         postsData.targetPost.contentType = 'article';
       }
       if (editPhoto.value === true) {
-        try {
-          const result = await postsData.upLoadImage(imgData.value, userData.user.token);
-          if (result.status === 'success') {
-            postsData.targetPost.image = result.data.imgUrl;
+        const result = await postsData.upLoadImage(imgData.value, userData.user.token);
+        if (result.status === 'success') {
+          postsData.targetPost.image = result.data.imgUrl;
+        }
+        if (postsData.newPostModel.action === 'new') {
+          const res = await postsData.addPost(postsData.targetPost, userData.user.token);
+          if (res.status === 'success') {
+            statusData.openAskModel('成功發布', '是否要重新更新資料', async () => {
+              router.go(0);
+            });
           }
-          if (postsData.newPostModel.action === 'new') {
-            const res = await postsData.addPost(postsData.targetPost, userData.user.token);
-            console.log(res);
-            if (res.status === 'success') {
-              statusData.openAskModel('成功發布', '是否要重新更新資料', async () => {
-                router.go(0);
-              });
-            }
-          } else {
-            postsData.updatePost(
-              postsData.targetPost,
-              postsData.newPostModel.id,
-              userData.user.token,
-            );
-          }
-        } catch (err) {
-          console.dir(err);
+        } else {
+          postsData.updatePost(
+            postsData.targetPost,
+            postsData.newPostModel.id,
+            userData.user.token,
+          );
         }
         closeNewPostModel();
       } else {
         if (postsData.newPostModel.action === 'new') {
           const res = await postsData.addPost(postsData.targetPost, userData.user.token);
-          console.log(res);
           if (res.status === 'success') {
             statusData.openAskModel('成功發布', '是否要更新頁面資料？', async () => {
               router.go(0);
@@ -133,7 +122,6 @@ export default {
       }
     }
     function addPostTag() {
-      console.log(tagTextContent.value);
       if (tagTextContent.value.trim().length > 0) {
         postsData.targetPost.tag.push(tagTextContent.value);
         tagTextContent.value = '';

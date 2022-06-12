@@ -66,7 +66,6 @@ export default {
       }, 100);
     }
     watch(targetItem.value, (newValue) => {
-      console.log(newValue);
       if (Object.keys(newValue).length !== 0 && newValue.file !== null) {
         processToCropImg(newValue.file);
       }
@@ -96,9 +95,7 @@ export default {
     }
     async function uploadmgToDB(image) {
       const file = dataURLtoFile(image.src, 'file-to-upload.jpeg');
-      console.log(file);
       const result = await postsData.upLoadImage(file, userData.user.token);
-      console.log(result);
       if (result.status === 'success') {
         userData.user.photo = result.data.imgUrl;
         await userData.updateUser(userData.user.token);

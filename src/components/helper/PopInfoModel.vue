@@ -12,7 +12,6 @@ export default {
     }
     const title = computed(() => statusData.popInfoModel.title);
     watch(title, (newValue, oldValue) => {
-      console.log(newValue, oldValue);
       if (newValue !== oldValue) {
         setTimeout(() => {
           closeModel();

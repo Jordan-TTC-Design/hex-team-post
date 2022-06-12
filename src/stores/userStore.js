@@ -61,7 +61,6 @@ const userStore = defineStore({
           url: 'https://hex-post-team-api-server.herokuapp.com/api/user',
           data,
         });
-        console.log(res);
         this.user.name = res.data.user.name;
         this.user.token = res.data.user.token;
         this.user.id = res.data.user._id;
@@ -70,7 +69,6 @@ const userStore = defineStore({
         this.updatedLocalUser();
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err.response.data;
       } finally {
         statusData.shiftLoading();
@@ -91,7 +89,6 @@ const userStore = defineStore({
         this.getMyWallet(this.user.token);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err.response.data;
       } finally {
         statusData.shiftLoading();
@@ -137,10 +134,8 @@ const userStore = defineStore({
           postCounts,
           privateposts,
         };
-        console.log(user);
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -189,33 +184,28 @@ const userStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
         if (res.data.status === 'success') {
           this.myWallet = res.data.data;
         }
         statusData.shiftLoading();
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }
     },
     async forgotPassword(forgetData) {
       statusData.addLoading();
-      console.log(forgetData);
       return axios({
         method: 'POST',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/user/forgot_password',
         data: forgetData,
       })
         .then((res) => {
-          console.log(res);
           statusData.shiftLoading();
           return res.data.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -231,7 +221,6 @@ const userStore = defineStore({
         },
       })
         .then((res) => {
-          console.log(res);
           const tempToken = this.user.token;
           this.user = res.data.data;
           this.user.token = tempToken;
@@ -241,14 +230,12 @@ const userStore = defineStore({
           return res.data.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
     },
     async editUser(user) {
       statusData.addLoading();
-      console.log(user);
       const {
         name,
         birthday,
@@ -303,7 +290,6 @@ const userStore = defineStore({
         .then((res) => {
           statusData.shiftLoading();
           statusData.openRemindModel('變更密碼成功', '下次登入請輸入新密碼');
-          // this.checkLogIn(this.user.token);
           return res.data;
         })
         .catch((err) => {

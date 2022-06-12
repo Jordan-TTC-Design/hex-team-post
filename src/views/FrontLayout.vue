@@ -47,7 +47,6 @@ export default {
       const checkLocalResult = await userData.getLocalToken();
       if (checkLocalResult) {
         const checkResult = await userData.checkLogIn(userData.user.token);
-        console.log(checkResult);
         if (checkResult.status) {
           localStorage.setItem('sd-user', JSON.stringify(userData.user));
         } else {

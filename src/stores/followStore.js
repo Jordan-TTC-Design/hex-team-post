@@ -23,14 +23,12 @@ const followData = defineStore({
         },
       })
         .then((res) => {
-          console.log(res.data);
           statusData.shiftLoading();
           this.myFollowUser = res.data.data[0].following;
           this.myFollower = res.data.data[0].followers;
           return res.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -41,14 +39,10 @@ const followData = defineStore({
         const res = await axios({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/follow/${userId}`,
-          headers: {
-            // authorization: `${userToken}`,
-          },
         });
         return res.data.data[0].following;
       } catch (error) {
-        console.log(error);
-        throw error;
+        return error;
       } finally {
         statusData.shiftLoading();
       }
@@ -67,13 +61,12 @@ const followData = defineStore({
         },
       })
         .then((res) => {
-          console.log(res);
           statusData.shiftLoading();
           this.getMyFollow(userToken);
           return res;
         })
         .catch((err) => {
-          console.log(err);
+          statusData.shiftLoading();
           return err;
         });
     },
@@ -87,13 +80,11 @@ const followData = defineStore({
         },
       })
         .then((res) => {
-          console.log(res);
           statusData.shiftLoading();
           this.getMyFollow(userToken);
           return res;
         })
         .catch((err) => {
-          console.log(err);
           statusData.shiftLoading();
           return err;
         });
@@ -108,13 +99,11 @@ const followData = defineStore({
         },
       })
         .then((res) => {
-          console.log(res.data);
           statusData.shiftLoading();
           this.mySubscribed = res.data.data;
           return res.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         });
@@ -125,8 +114,6 @@ const followData = defineStore({
         subscriptionUserId: userId,
         productId,
       };
-      console.log(subscribedData);
-
       return axios({
         method: 'POST',
         url: 'https://hex-post-team-api-server.herokuapp.com/api/order/pay/subscription',
@@ -136,12 +123,10 @@ const followData = defineStore({
         },
       })
         .then((res) => {
-          console.log(res);
           statusData.shiftLoading();
           return res.data;
         })
         .catch((err) => {
-          console.dir(err);
           statusData.shiftLoading();
           return err.response.data;
         });
@@ -156,7 +141,6 @@ const followData = defineStore({
         statusData.shiftLoading();
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }
@@ -168,11 +152,9 @@ const followData = defineStore({
           method: 'GET',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/follow/orders/followers',
         });
-        console.log(res.data);
         statusData.shiftLoading();
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }

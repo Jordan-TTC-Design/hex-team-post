@@ -34,7 +34,6 @@ export default {
     const currentTab = ref(tabs[0].type);
 
     const changeTab = async (newTab) => {
-      console.log(newTab);
       if (newTab === tabs[0].type) {
         await walletData.getDiaryPurchaseRecord();
       } else if (newTab === tabs[1].type) {
@@ -47,8 +46,7 @@ export default {
 
     onMounted(async () => {
       changeTab(currentTab.value);
-      const diam = await walletData.getDiamond();
-      console.log(diam.data);
+      await walletData.getDiamond();
     });
 
     return {

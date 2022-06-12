@@ -37,14 +37,12 @@ export default {
 
     async function getPosts() {
       if (isLogin.value && props.userId === userData.user.id) {
-        console.log('me');
         const result = await postsData.getMyDiary(
           userData.user.token,
           searchFilter.value.page,
           searchFilter.value.sort,
           searchFilter.value.query,
         );
-        console.log(result);
         if (result.status === 'success') {
           if (result.data.data.length === 10) {
             morePostBtn.value = true;
