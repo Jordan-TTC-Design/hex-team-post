@@ -40,7 +40,6 @@ export default {
         searchFilter.value.query,
         searchFilter.value.likes,
       );
-      console.log(result);
       if (result.status === 'success') {
         if (result.data.data.length === 10) {
           morePostBtn.value = true;

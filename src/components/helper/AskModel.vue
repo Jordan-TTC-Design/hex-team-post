@@ -6,7 +6,6 @@ export default {
   setup() {
     const statusData = statusStore();
     function toogleStatusFunction() {
-      console.log(statusData.askModel.action);
       if (typeof statusData.askModel.action === 'function') {
         statusData.askModel.action();
       }

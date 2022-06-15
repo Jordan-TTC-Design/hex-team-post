@@ -28,8 +28,7 @@ const paymentStore = defineStore({
         });
         return res.data;
       } catch (err) {
-        console.dir(err);
-        throw err;
+        return err;
       } finally {
         statusData.shiftLoading();
       }

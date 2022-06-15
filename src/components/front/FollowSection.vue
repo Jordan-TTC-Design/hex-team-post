@@ -12,22 +12,13 @@ export default {
     const followData = followStore();
 
     onMounted(async () => {
-      console.log(props.userId);
       if (props.userId) {
-        try {
-          const res = await followData.getUserFollow(props.userId);
-          followings.push(...res);
-        } catch (err) {
-          console.error(err);
-        }
+        const res = await followData.getUserFollow(props.userId);
+        followings.push(...res);
       } else {
         const localUser = await JSON.parse(localStorage.getItem('sd-user'));
-        try {
-          const res = await followData.getMyFollow(localUser.token);
-          followings.push(...res.data[0].following);
-        } catch (err) {
-          console.error(err);
-        }
+        const res = await followData.getMyFollow(localUser.token);
+        followings.push(...res.data[0].following);
       }
     });
 
@@ -52,8 +43,8 @@ export default {
           <div class="user-info">
             <span class="user-info-title">{{ userItem.name }}</span>
             <span class="user-info-subtitle"
-              >{{ userItem.followers.length }} 人追蹤 | 追蹤 {{ userItem.following.length }} 人 </span
-            >
+              >{{ userItem.followers.length }} 人追蹤 | 追蹤 {{ userItem.following.length }} 人
+            </span>
           </div>
         </RouterLink>
       </template>

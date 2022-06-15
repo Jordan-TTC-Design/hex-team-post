@@ -35,7 +35,6 @@ const postsStore = defineStore({
   getters: {},
   actions: {
     async getPosts(page = 1, timeSort = 'desc', query = '', like = '') {
-      console.log(page, timeSort, query, like);
       statusData.addLoading();
       if (page === 1 && this.posts.length > 0) {
         this.posts.length = 0;
@@ -50,12 +49,9 @@ const postsStore = defineStore({
       try {
         const res = await axios.get(apiUrl);
         const result = res.data.data;
-        console.log(page, res);
         this.posts.push(...result.data);
-        console.log(this.posts);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -75,12 +71,9 @@ const postsStore = defineStore({
           },
         });
         const result = res.data.data;
-        console.log(page, res);
         this.posts.push(...result.data);
-        console.log(this.posts);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -100,7 +93,6 @@ const postsStore = defineStore({
           });
           return res.data;
         } catch (err) {
-          console.dir(err);
           return err;
         } finally {
           statusData.shiftLoading();
@@ -115,18 +107,15 @@ const postsStore = defineStore({
               authorization: `${userToken}`,
             },
           });
-          console.log(res.data);
           statusData.shiftLoading();
           return res.data;
         } catch (err) {
-          console.dir(err);
           statusData.shiftLoading();
           return err;
         }
       }
     },
     async updatePost(data, postId, userToken) {
-      console.log(data, postId, userToken);
       statusData.addLoading();
       try {
         const res = await axios({
@@ -137,7 +126,6 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         if (res.data.status === 'success') {
           const newPost = res.data.data[0];
           if (newPost.type === 'group') {
@@ -154,7 +142,6 @@ const postsStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -178,12 +165,9 @@ const postsStore = defineStore({
           url,
         });
         const result = res.data.data;
-        console.log(page, res);
         this.posts.push(...result.data);
-        console.log(this.posts);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -199,10 +183,8 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -215,17 +197,14 @@ const postsStore = defineStore({
           method: 'GET',
           url: 'https://hex-post-team-api-server.herokuapp.com/api/posts/order/likes',
         });
-        console.log(res.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
       }
     },
     async getBuyDiary(page = 1, timeSort = 'desc', query = '', like = '', userToken) {
-      console.log(page, timeSort, query, like);
       statusData.addLoading();
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
@@ -245,12 +224,10 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         const result = res.data.data;
         this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err.respon.data;
       } finally {
         statusData.shiftLoading();
@@ -258,7 +235,6 @@ const postsStore = defineStore({
     },
     async getMyDiary(userToken, page = 1, timeSort = 'desc', query = '') {
       statusData.addLoading();
-      console.log(userToken, page, timeSort, query);
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
@@ -277,12 +253,10 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         const result = res.data.data;
         this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -290,7 +264,6 @@ const postsStore = defineStore({
     },
     async getUserDiary(userId, userToken, page = 1, timeSort = 'desc', query = '') {
       statusData.addLoading();
-      console.log(userId, page, timeSort, query);
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
@@ -310,13 +283,10 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         const result = res.data.data;
-        // console.log(result.data[0]);
         this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -324,7 +294,6 @@ const postsStore = defineStore({
     },
     async getUserDiaryNoLogin(userId, page = 1, timeSort = 'desc', query = '') {
       statusData.addLoading();
-      console.log(userId, page, timeSort, query);
       if (page === 1 && this.diaries.length > 0) {
         this.diaries.length = 0;
       }
@@ -340,12 +309,10 @@ const postsStore = defineStore({
           method: 'GET',
           url,
         });
-        console.log(res);
         const result = res.data.data;
         this.diaries.push(...result.data);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -365,7 +332,6 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         statusData.shiftLoading();
         if (res.data.status === 'success') {
           statusData.openPopInfoModel('購買成功');
@@ -373,7 +339,6 @@ const postsStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err.response.data;
       }
@@ -388,17 +353,13 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         statusData.shiftLoading();
         if (res.data.status === 'success') {
-          console.log(res.data.data._id, this.diaries);
           const resultIndex = this.diaries.findIndex((item) => item._id === res.data.data._id);
-          console.log(resultIndex);
           this.diaries.splice(resultIndex, 1, res.data.data);
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }
@@ -410,11 +371,9 @@ const postsStore = defineStore({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/posts/${userId}`,
         });
-        console.log(res.data);
         statusData.shiftLoading();
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }
@@ -440,7 +399,6 @@ const postsStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -456,10 +414,8 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -487,7 +443,6 @@ const postsStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -503,7 +458,6 @@ const postsStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         if (res.data.status === 'success') {
           const result = res.data.data;
           if (result.type === 'group') {
@@ -516,7 +470,6 @@ const postsStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -540,7 +493,6 @@ const postsStore = defineStore({
         resultData = res.data;
         statusData.shiftLoading();
       } catch (err) {
-        console.dir(err);
         return err;
       }
       return resultData;

@@ -34,10 +34,8 @@ export default {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         if (isFollowed.value + 1 > 0) {
-          console.log('刪除');
           followData.deleteFollow(targetItem.value.user._id, userData.user.token);
         } else {
-          console.log('新增');
           followData.addFollow(targetItem.value.user._id, userData.user.token);
         }
       }

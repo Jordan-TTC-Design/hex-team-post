@@ -22,7 +22,6 @@ export default {
         query: query.value,
         type: type.value || 'asc',
       };
-      console.log(data);
       emit('search', data);
     };
 

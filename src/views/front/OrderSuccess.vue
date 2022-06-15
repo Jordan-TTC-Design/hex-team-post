@@ -13,13 +13,11 @@ export default {
     const pageTitle = ref('查詢訂單中');
     const pageTxt = ref('正在為您處理，請等待片刻~');
     const sendOrderId = ref('');
-    console.log(route.query);
     async function checkOrder() {
       if (route.query.orderId) {
         const { orderId } = route.query;
         sendOrderId.value = orderId;
         const result = await paymentData.checkPayment(orderId);
-        console.log(result);
         if (result.message === '授權成功') {
           pageTitle.value = '交易成功，感謝您的購買！';
           pageTxt.value = '儲值後返回首頁';

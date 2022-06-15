@@ -24,7 +24,6 @@ export default {
       if (hotPostResult.status === 'success') {
         const tempArray = hotPostResult.data;
         hotPostList.value = tempArray.filter((item) => item.image.length > 0);
-        console.log(hotPostList.value);
       }
     }
     init();

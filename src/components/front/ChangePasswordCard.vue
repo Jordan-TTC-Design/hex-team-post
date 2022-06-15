@@ -10,7 +10,6 @@ export default {
     });
 
     const changePassword = () => {
-      console.log('inner change');
       emit('change-password', { ...password });
     };
     return {

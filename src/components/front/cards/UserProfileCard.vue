@@ -55,7 +55,6 @@ export default {
     watch(
       () => userData.userProfile.followers,
       (newFollowers) => {
-        console.log('watch');
         isFollowing.value = newFollowers && newFollowers.some((m) => m === userData.user.id);
       },
     );

@@ -25,13 +25,11 @@ const paymentStore = defineStore({
         return res.data;
       } catch (err) {
         statusData.shiftLoading();
-        console.dir(err);
         return err;
       }
     },
     async payDiamonProduct(productId, userToken) {
       statusData.addLoading();
-      console.log(productId, userToken);
       try {
         const res = await axios({
           method: 'POST',
@@ -43,18 +41,15 @@ const paymentStore = defineStore({
             authorization: `${userToken}`,
           },
         });
-        console.log(res);
         statusData.shiftLoading();
         return res.data;
       } catch (err) {
-        console.dir(err);
         statusData.shiftLoading();
         return err;
       }
     },
     async goToPaymentPage(orderId, userToken) {
       statusData.addLoading();
-      console.log(orderId, userToken);
       const apiUrl = `https://hex-post-team-api-server.herokuapp.com/api/payment/?orderId=${orderId}`;
       fetch(apiUrl, {
         headers: {
@@ -69,23 +64,20 @@ const paymentStore = defineStore({
         })
         .catch((err) => {
           statusData.shiftLoading();
-          console.log(err);
+          return err;
         });
     },
-    async checkPayment(orderId, userToken) {
+    async checkPayment(orderId) {
       statusData.addLoading();
-      console.log(orderId, userToken);
       try {
         const res = await axios({
           method: 'GET',
           url: `https://hex-post-team-api-server.herokuapp.com/api/order/status?orderId=${orderId}`,
         });
         statusData.shiftLoading();
-        console.log(res.data.data);
         return res.data.data;
       } catch (err) {
         statusData.shiftLoading();
-        console.dir(err);
         return err;
       }
     },

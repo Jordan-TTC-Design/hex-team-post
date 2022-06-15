@@ -36,17 +36,6 @@ export default {
         textContentShowData.value.isShowAll = false;
       }
     });
-    // function checkComment() {
-    //   console.log('checkComment');
-    //   if (props.postItem && props.postItem.comments.length > 1) {
-    //     commentsShowData.value.needHide = true;
-    //   }
-    // }
-    // watch(props.postItem.comments, () => {
-    //   console.log('watch');
-    //   checkComment();
-    // });
-
     async function addComment() {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
       const result = await postsData.addComment(

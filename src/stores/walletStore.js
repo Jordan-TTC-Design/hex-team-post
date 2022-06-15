@@ -32,7 +32,6 @@ const paymentStore = defineStore({
         }
         return res.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -49,13 +48,11 @@ const paymentStore = defineStore({
             authorization: `${userData.user?.token}`,
           },
         });
-        console.log(res);
         if (res.data.status === 'success') {
           this.diamondPurchaseRecord = res.data.data;
         }
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -72,13 +69,11 @@ const paymentStore = defineStore({
             authorization: `${userData.user?.token}`,
           },
         });
-        console.log(res);
         if (res.data.status === 'success') {
           this.diaryPurchaseRecord = res.data.data;
         }
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();
@@ -95,12 +90,9 @@ const paymentStore = defineStore({
             authorization: `${userData.user?.token}`,
           },
         });
-        console.log(res.data.data);
         this.diaryRetailRecord = res.data.data;
-
         return res.data.data;
       } catch (err) {
-        console.dir(err);
         return err;
       } finally {
         statusData.shiftLoading();

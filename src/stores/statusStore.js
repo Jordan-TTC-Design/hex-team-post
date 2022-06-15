@@ -67,9 +67,7 @@ const statusStore = defineStore({
       this.pageLoading = true;
       setTimeout(() => {
         this.pageLoading = false;
-        console.log(this.pageLoading);
       }, 2000);
-      console.log(this.pageLoading);
     },
     addLoading() {
       this.isLoading.push('loading');

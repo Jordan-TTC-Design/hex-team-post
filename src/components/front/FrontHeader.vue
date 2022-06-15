@@ -32,7 +32,6 @@ export default {
     }
     const userId = computed(() => userData.user.id);
     watch(userId, (newValue, oldValue) => {
-      console.log(newValue);
       if (newValue !== oldValue && newValue === '') {
         router.push('/');
       }

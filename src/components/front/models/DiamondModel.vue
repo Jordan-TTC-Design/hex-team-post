@@ -19,9 +19,7 @@ export default {
         const result = await paymentData.payDiamonProduct(productId, userData.user.token);
         if (result.status === 'success') {
           const { orderId } = result.data;
-          console.log(orderId);
-          const goToPay = await paymentData.goToPaymentPage(orderId, userData.user.token);
-          console.log(goToPay);
+          await paymentData.goToPaymentPage(orderId, userData.user.token);
         }
       });
     }

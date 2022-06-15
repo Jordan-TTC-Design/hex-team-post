@@ -26,7 +26,6 @@ export default {
     const morePostBtn = ref(false);
     const searchFilter = ref({});
     function resetFilter(sort = 'desc', query = '', likes = '') {
-      console.log(sort, query, likes);
       postsData.getPostsData.page = 1;
       searchFilter.value = {
         page: 1,

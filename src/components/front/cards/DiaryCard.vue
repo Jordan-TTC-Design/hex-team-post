@@ -51,7 +51,6 @@ export default {
     });
     async function deletePost() {
       const result = await postsData.deletePost(targetItem.value._id, userData.user.token);
-      console.log(result);
       if (result.status === 'success') {
         postsData.diaries.splice(props.postIndex, 1);
       }
@@ -70,16 +69,13 @@ export default {
       localUser = JSON.parse(localStorage.getItem('sd-user'));
       if (localUser) {
         if (isFollowed.value + 1 > 0) {
-          console.log('刪除');
           followData.deleteFollow(targetItem.value.user._id, userData.user.token);
         } else {
-          console.log('新增');
           followData.addFollow(targetItem.value.user._id, userData.user.token);
         }
       }
     }
     async function toogleLike() {
-      console.log(isLiked.value);
       if (localUser.token) {
         if (isLiked.value + 1 > 0) {
           postsData.deleteLike(targetItem.value._id, localUser.token);
@@ -89,13 +85,11 @@ export default {
       }
     }
     async function buyDiary() {
-      console.log(targetItem.value._id);
       statusData.openAskModel(
         '是否購買該篇日記',
         `點擊確認後將會扣除${targetItem.value.pay}顆鑽石`,
         async () => {
           const res = await postsData.buyDiary(targetItem.value._id, userData.user.token);
-          console.log(res);
           if (res.status === 'error' && res.message === '餘額不足') {
             statusData.openPopInfoModel(res.message);
           }
