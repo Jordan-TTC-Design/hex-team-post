@@ -21,7 +21,6 @@ export default {
     const morePostBtn = ref(false);
     const isLoading = ref(false);
     function resetFilter(sort = 'desc', query = '') {
-      postsData.getPostsData.page = 1;
       isLoading.value = false;
       morePostBtn.value = false;
       searchFilter.value = {
@@ -29,6 +28,7 @@ export default {
         sort,
         query,
       };
+      searchFilter.value.page = 1;
     }
     async function getPosts() {
       const result = await postsData.getUserPost(
@@ -46,12 +46,17 @@ export default {
       }
       isLoading.value = true;
     }
+    async function getMorePost() {
+      searchFilter.value.page += 1;
+      getPosts();
+    }
     async function search(data) {
       resetFilter(data.type, data.query, '');
       getPosts();
     }
     onMounted(async () => {
       statusData.addLoading();
+      resetFilter('desc', '', '');
       getPosts();
       statusData.shiftLoading();
     });
@@ -59,6 +64,7 @@ export default {
       props,
       posts,
       morePostBtn,
+      getMorePost,
       isLoading,
       search,
     };

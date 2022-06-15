@@ -25,7 +25,6 @@ export default {
     const morePostBtn = ref(false);
     const searchFilter = ref({});
     function resetFilter(sort = 'desc', query = '', likes = '') {
-      postsData.getPostsData.page = 1;
       morePostBtn.value = false;
       searchFilter.value = {
         page: 1,
@@ -33,6 +32,7 @@ export default {
         query,
         likes,
       };
+      searchFilter.value.page = 1;
     }
     async function getPosts() {
       const result = await postsData.getPosts(

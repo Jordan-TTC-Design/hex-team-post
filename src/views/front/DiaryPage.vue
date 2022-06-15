@@ -46,7 +46,6 @@ export default {
     }
 
     function resetFilter(sort = 'desc', query = '') {
-      postsData.getPostsData.page = 1;
       searchFilter.value = {
         page: 1,
         sort,
@@ -57,7 +56,7 @@ export default {
       isLoading.value = true;
       resetFilter();
       const result = await postsData.getBuyDiary(
-        postsData.getPostsData.page,
+        searchFilter.value.page,
         data.type === 'like' ? 'asc' : data.type,
         data.query,
         data.type === 'like' ? userData?.user?.id ?? '' : '',
@@ -76,7 +75,7 @@ export default {
       if (!result) {
         router.push('/');
       }
-      await postsData.getBuyDiary(postsData.getPostsData.page, 'desc', '', '', userData.user.token);
+      await postsData.getBuyDiary(searchFilter.value.page, 'desc', '', '', userData.user.token);
       await followData.getMySubscribed(userData.user.token);
     }
     init();

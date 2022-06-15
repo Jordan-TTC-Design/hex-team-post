@@ -238,7 +238,7 @@ export default {
       <ul class="commentList" :class="{ 'py-1': targetItem.comments.length > 0 }">
         <template v-for="(commentItem, index) in targetItem.comments" :key="commentItem.id">
           <li v-if="index < commentsShowData.showCount" class="commentList__item">
-            <RouterLink :to="`/profile/${targetItem.user.id}`" class="fs-6 fw-bolder text-dark">{{
+            <RouterLink :to="`/profile/${commentItem.user._id}`" class="fs-6 fw-bolder text-dark">{{
               commentItem.user.name
             }}</RouterLink>
             <p class="fs-6">{{ commentItem.comment }}</p>
